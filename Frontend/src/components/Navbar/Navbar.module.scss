@@ -1,0 +1,24 @@
+@use '../../Style/variables' as *;
+@use '../../Style/mixins' as *;
+
+.navbar {
+    @include flex-justify;
+    padding-right: $padding-md;
+    margin-bottom: $spacing;
+
+    .linkInfo {
+        @include links;
+
+        &:hover {
+            color: $primary-color;
+        }
+    }
+}
+
+.inputBox {
+    width: 200px;
+    height: 30px;
+    border-radius: 15px;
+    border: 1px solid gray;
+    padding-left: $padding-md;
+}

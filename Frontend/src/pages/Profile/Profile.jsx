@@ -3,13 +3,17 @@ import Navbar from '../../components/Navbar/Navbar'
 import Sidebar from '../../components/Sidebar/Sidebar'
 import { useState } from 'react'
 import Post from '../../components/Modals/Post/Post';
+import userAvailable from '../../utils/helper/userAvailable';
+import ROUTES from '../../constant/Route/route';
+import style from './Profile.module.scss'
 
 function Profile() {
   const [openPost, setOpenPost] = useState(false);
+  userAvailable(`${ROUTES.PROFILE}`)
   return (
     <>
       <Navbar />
-      <div className="profile-conainer">
+      <div className={style['profile-container']}>
         <Sidebar />
         {/* right side */}
         {/* followers , follwing , new post  */}

@@ -12,6 +12,7 @@ import {
   Paper,
 } from "@mui/material";
 import api from '../../utils/api';
+import userAvailable from '../../utils/helper/userAvailable';
 
 function Signup() {
   const navigate = useNavigate()
@@ -28,6 +29,8 @@ function Signup() {
     length: false,
     symbol: false,
   });
+
+  userAvailable(`${ROUTES.SIGNUP}`)
 
   const handleChange = (e) => {
     const { name, value } = e.target;
