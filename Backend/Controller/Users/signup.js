@@ -48,3 +48,19 @@ module.exports.postLogin = async (req, res) => {
         return res.status(500).json({ message: err.message })
     }
 }
+
+module.exports.getUser = async (req, res) => {
+    const token = req.cookies.token;
+    try {
+        // console.log(token)
+        if (!token) {
+            return res.status(404).json({ message: 'no cookie avaiable' })
+        }
+        const data = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findOne({ email: data.email });
+        return res.status(200).json(user);
+    }
+    catch (err) {
+        return res.status(500).json({ message: 'internal error' })
+    }
+}

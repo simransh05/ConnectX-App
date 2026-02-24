@@ -6,7 +6,7 @@ const postSchema = new mongoose.Schema({
         ref: 'User'
     },
     photoVideo: {
-        type: String
+        type: Buffer // less than 16mb 
     },
     caption: {
         type: String
@@ -15,15 +15,14 @@ const postSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     }],
-    comment: [{
-        user: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User'
-        },
-        message: {
-            type: String
-        }
-    }]
+    likeCount: {
+        type: Number,
+        default: 0
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
 })
 
 module.exports = new mongoose.model('Post', postSchema);

@@ -30,4 +30,5 @@ router.get(
     }
 );
 
+router.get('/user', controller1.getUser);
 module.exports = router;

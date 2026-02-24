@@ -1,0 +1,6 @@
+@use '../../Style/variables' as *;
+@use '../../Style/mixins' as *;
+
+.profile-container {
+    @include flex-justify;
+}

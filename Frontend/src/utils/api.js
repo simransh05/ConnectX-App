@@ -8,6 +8,9 @@ const api = {
     postLogin : async (data) => {
         return await apiInstance.post(`${ROUTES.LOGIN}`, data)
     },
+    getUser  : async () => {
+        return await apiInstance.get(`${ROUTES.USER}`)
+    }
 }
 
 export default api

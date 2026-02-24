@@ -1,0 +1,13 @@
+@use '../../Style/mixins' as *;
+@use '../../Style/variables' as *;
+
+.image {
+    border-radius: $circle;
+}
+
+.avatar {
+    background: orange;
+    color: $primary-color;
+    width: 80px;
+    height: 80px;
+}
