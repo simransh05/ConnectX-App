@@ -5,6 +5,7 @@
     @include flex-justify;
     padding-right: $padding-md;
     margin-bottom: $spacing;
+    border-bottom: $border-black;
 
     .linkInfo {
         @include links;

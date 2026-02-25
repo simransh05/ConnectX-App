@@ -6,7 +6,11 @@ const ROUTES = {
     ABOUT: '/about',
     NOTIFICATION: '/notification',
     MESSAGES: '/chats',
-    USER: '/user'
+    USER: '/user',
+    INDIVIDUAL: '/individual',
+    FOLLOW: '/follow',
+    POST: '/post',
+    LOGOUT: '/logout'
 }
 
 export default ROUTES;

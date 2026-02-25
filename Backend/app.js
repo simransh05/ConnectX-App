@@ -17,18 +17,31 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(session({
-    secret:'myKey',
-    resave: false,
-    saveUninitialized: true,
+  secret: 'myKey',
+  resave: false,
+  saveUninitialized: true,
 }));
 app.use(passport.initialize())
 app.use(passport.session())
 
 app.use('/', require('./Routes/routes'))
 
+const http = require("http");
+const { Server } = require("socket.io");
+const server = http.createServer(app);
+
+const io = new Server(server, {
+  cors: {
+    origin: process.env.BASE_URL,
+    credentials: true,
+  },
+});
+
+require("./socket/socket")(io);
+
 mongoose.connect(process.env.MONGO_URL)
   .then(() => {
-    app.listen(4000, () => {
+    server.listen(4000, () => {
       console.log(`Server started on port 4000`);
     });
   })

@@ -1,10 +1,10 @@
 import React from 'react'
-import userAvailable from '../../utils/helper/userAvailable'
+import useUserAvailable from '../../utils/helper/userAvailable'
 import ROUTES from '../../constant/Route/route'
 import Navbar from '../../components/Navbar/Navbar'
 
 function About() {
-  userAvailable(`${ROUTES.ABOUT}`)
+  useUserAvailable(`${ROUTES.ABOUT}`)
   return (
     <div>
       <Navbar />

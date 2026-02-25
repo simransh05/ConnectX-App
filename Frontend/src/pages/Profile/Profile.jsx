@@ -3,13 +3,13 @@ import Navbar from '../../components/Navbar/Navbar'
 import Sidebar from '../../components/Sidebar/Sidebar'
 import { useState } from 'react'
 import Post from '../../components/Modals/Post/Post';
-import userAvailable from '../../utils/helper/userAvailable';
+import useUserAvailable from '../../utils/helper/userAvailable';
 import ROUTES from '../../constant/Route/route';
 import style from './Profile.module.scss'
 
 function Profile() {
   const [openPost, setOpenPost] = useState(false);
-  userAvailable(`${ROUTES.PROFILE}`)
+  useUserAvailable(`${ROUTES.PROFILE}`)
   return (
     <>
       <Navbar />

@@ -12,7 +12,7 @@ import {
   Paper,
 } from "@mui/material";
 import api from '../../utils/api';
-import userAvailable from '../../utils/helper/userAvailable';
+import useUserAvailable from '../../utils/helper/userAvailable';
 
 function Signup() {
   const navigate = useNavigate()
@@ -30,7 +30,7 @@ function Signup() {
     symbol: false,
   });
 
-  userAvailable(`${ROUTES.SIGNUP}`)
+  useUserAvailable(`${ROUTES.SIGNUP}`)
 
   const handleChange = (e) => {
     const { name, value } = e.target;
