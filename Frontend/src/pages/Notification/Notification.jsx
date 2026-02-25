@@ -1,10 +1,10 @@
 import React from 'react'
-import userAvailable from '../../utils/helper/userAvailable'
+import useUserAvailable from '../../utils/helper/userAvailable'
 import ROUTES from '../../constant/Route/route'
 import Navbar from '../../components/Navbar/Navbar'
 
 function Notification() {
-  userAvailable(`${ROUTES.NOTIFICATION}`)
+  useUserAvailable(`${ROUTES.NOTIFICATION}`)
   return (
     <div>
       <Navbar />

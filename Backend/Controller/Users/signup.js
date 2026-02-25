@@ -43,7 +43,7 @@ module.exports.postLogin = async (req, res) => {
             secure: false,
             sameSite: 'lax'
         });
-        return res.status(200).json({ message: 'Succesful' })
+        return res.status(200).json(user)
     } catch (err) {
         return res.status(500).json({ message: err.message })
     }
@@ -59,6 +59,20 @@ module.exports.getUser = async (req, res) => {
         const data = jwt.verify(token, process.env.JWT_SECRET);
         const user = await User.findOne({ email: data.email });
         return res.status(200).json(user);
+    }
+    catch (err) {
+        return res.status(500).json({ message: 'internal error' })
+    }
+}
+
+module.exports.getLogout = async () => {
+    try {
+        res.clearCookie("token", {
+            httpOnly: true,
+            sameSite: "lax",
+            secure: false,
+        });
+        return res.status(200).json({ message: 'successfully logout' })
     }
     catch (err) {
         return res.status(500).json({ message: 'internal error' })

@@ -1,12 +1,24 @@
 const express = require('express');
 const router = express.Router();
-const controller1 = require('../Controller/Users/signup')
+const multer = require('multer');
+const upload = multer({
+    storage: multer.memoryStorage(),
+    limits: {
+        fileSize: 15 * 1024 * 1024 // 15mb
+    }
+})
 const passport = require('../Controller/Users/passport')
 require('dotenv').config()
 const jwt = require('jsonwebtoken')
-router.post('/signup', controller1.postSignup);
+const users = require('../Controller/Users/signup')
+const follow = require('../Controller/follow');
+const notification = require('../Controller/Notification');
+const message = require('../Controller/Message');
+const post = require('../Controller/Post')
 
-router.post('/login', controller1.postLogin);
+router.post('/signup', users.postSignup);
+
+router.post('/login', users.postLogin);
 router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
 
 router.get(
@@ -30,5 +42,20 @@ router.get(
     }
 );
 
-router.get('/user', controller1.getUser);
+router.get('/user', users.getUser);
+
+router.get('/logout', users.getLogout);
+
+router.get('/post/individual/:userId', post.getMyPosts);
+
+router.get('/post', post.getAllPosts);
+
+router.get('/notification/:userId', notification.getNotification);
+
+router.get('/chats/individual/:user1/:user2', message.getIndividualMessage);
+
+router.get('/chats/:userId', message.getMessages);
+
+router.get('/follow/:userId', follow.getFollow);
+
 module.exports = router;

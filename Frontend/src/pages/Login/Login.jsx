@@ -10,22 +10,25 @@ import {
   InputAdornment,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import api from '../../utils/api';
-import userAvailable from '../../utils/helper/userAvailable';
+import useUserAvailable from '../../utils/helper/userAvailable';
+import { CurrentUserContext } from '../../Context/currentUserProvider';
 
 function Login() {
   const navigate = useNavigate()
   const [data, setData] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
-  userAvailable();
+  useUserAvailable();
+  const { setCurrentUser } = useContext(CurrentUserContext);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       const res = await api.postLogin(data);
       if (res.status === 200) {
-        // console.log(res.data);
+        console.log(res.data);
+        setCurrentUser(res.data);
         navigate(`${ROUTES.HOME}`)
       }
 

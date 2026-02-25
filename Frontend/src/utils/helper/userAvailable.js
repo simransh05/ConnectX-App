@@ -4,17 +4,17 @@ import { useNavigate } from "react-router-dom";
 import ROUTES from "../../constant/Route/route";
 
 // custom hook - react hooks + logic + reusable function
-const userAvailable = (page) => {
+const useUserAvailable = (page) => {
     const { currentUser, loading } = useContext(CurrentUserContext);
-    const naviagte = useNavigate();
+    const navigate = useNavigate();
+    console.log(currentUser, loading)
 
     useEffect(() => {
         if (loading) return;
-        if (!currentUser && page) return naviagte(`${page}`);
-        if (!currentUser) return naviagte(`${ROUTES.LOGIN}`);
-        if (currentUser && page) return naviagte(page)
-        if (currentUser) return naviagte(`${ROUTES.HOME}`)
-    }, [loading])
+        if (!currentUser) navigate(`${ROUTES.LOGIN}`);
+        else if (currentUser && page) navigate(page);
+        else navigate(`${ROUTES.HOME}`)
+    }, [loading, currentUser])
 }
 
-export default userAvailable;
+export default useUserAvailable;
