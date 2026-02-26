@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { CurrentUserContext } from '../../Context/currentUserProvider'
 import UserAvatar from '../userAvatar/UserAvatar';
 import { Divider } from '@mui/material';
@@ -8,6 +8,7 @@ import socket from '../../Socket/socket';
 import { useNavigate } from 'react-router-dom';
 import ROUTES from '../../constant/Route/route';
 import api from '../../utils/api';
+import style from './Sidebar.module.scss'
 
 function Sidebar() {
   const navigate = useNavigate();
@@ -15,6 +16,19 @@ function Sidebar() {
   const [isEditing, setIsEditing] = useState(false);
   const [password, setPassword] = useState(false)
   const [formData, setFormData] = useState(null);
+
+  useEffect(() => {
+    if (currentUser) {
+      setFormData({
+        name: currentUser.name || "",
+        email: currentUser.email || "",
+        bio: currentUser.bio || "",
+        location: currentUser.location || "",
+        socialLinks: currentUser.socialLinks || []
+      });
+    }
+  }, [currentUser]);
+
   const handleLogout = async () => {
     const result = await Swal.fire({
       title: "Logout",
@@ -36,12 +50,33 @@ function Sidebar() {
 
     }
   }
+  const handleSubmit = async () => {
+    await api.updateProfile(data);
+  }
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }))
+  }
   return (
-    <div>
+    <div className={style.sidebar}>
       {isEditing ?
-        <>
-          <input type="text" />
-        </>
+        (
+          <form onSubmit={handleSubmit}>
+            <UserAvatar />
+            <input type="file" name='file' />
+            <label htmlFor='name'>Name</label>
+            <input type="text" name='name' onChange={handleChange} value={formData?.name} />
+            <label htmlFor='email'>Email</label>
+            <input type="text" name='email' onChange={handleChange} value={formData?.email} required />
+            <label htmlFor='bio'>Bio</label>
+            <input type="text" name='bio' onChange={handleChange} value={formData?.bio} />
+            <label htmlFor='location'>Location</label>
+            <input type="text" name='location' onChange={handleChange} value={formData?.location} />
+            <button onClick={() => setIsEditing(false)}>Cancel</button>
+            <button type='submit'>Update</button>
+          </form>
+        )
         :
         <>
           <UserAvatar />

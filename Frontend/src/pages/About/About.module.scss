@@ -1,0 +1,49 @@
+@use '../../Style/mixins' as *;
+@use '../../Style/variables' as *;
+
+.about-container {
+    max-width: 900px;
+    margin: 60px auto;
+    padding: 30px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.about-title {
+    text-align: center;
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+.about-description {
+    font-size: 16px;
+    margin-bottom: 30px;
+    color: #555;
+}
+
+.about-section {
+    margin-bottom: 25px;
+}
+
+.about-section h2 {
+    margin-bottom: 10px;
+    font-size: 20px;
+}
+
+.about-section ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.about-section li {
+    margin-bottom: 8px;
+    font-size: 15px;
+}
+
+.about-footer {
+    text-align: center;
+    margin-top: 30px;
+    font-weight: bold;
+    font-size: 18px;
+}

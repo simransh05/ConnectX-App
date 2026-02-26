@@ -65,6 +65,34 @@ module.exports.getUser = async (req, res) => {
     }
 }
 
+module.exports.getAllUsers = async (req, res) => {
+    try {
+        const users = await User.find();
+        if (!users) {
+            return res.status(200).json([])
+        }
+        return res.status(200).json(users);
+    }
+    catch (err) {
+        return res.status(500).json({ message: 'internal error' })
+    }
+}
+
+module.exports.updateProfile = async (req, res) => {
+    const { data } = req.body;
+    try {
+        // update the entire data where change 
+        const users = await User.find();
+        if (!users) {
+            return res.status(200).json([])
+        }
+        return res.status(200).json(users);
+    }
+    catch (err) {
+        return res.status(500).json({ message: 'internal error' })
+    }
+}
+
 module.exports.getLogout = async () => {
     try {
         res.clearCookie("token", {

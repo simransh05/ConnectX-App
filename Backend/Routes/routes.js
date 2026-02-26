@@ -42,7 +42,11 @@ router.get(
     }
 );
 
-router.get('/user', users.getUser);
+router.get('/user/individual', users.getUser);
+
+router.post('/update/user', users.updateProfile);
+
+router.get('/user', users.getAllUsers);
 
 router.get('/logout', users.getLogout);
 

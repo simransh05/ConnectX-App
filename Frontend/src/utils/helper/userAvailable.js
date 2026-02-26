@@ -7,7 +7,7 @@ import ROUTES from "../../constant/Route/route";
 const useUserAvailable = (page) => {
     const { currentUser, loading } = useContext(CurrentUserContext);
     const navigate = useNavigate();
-    console.log(currentUser, loading)
+    // console.log(currentUser, loading)
 
     useEffect(() => {
         if (loading) return;
