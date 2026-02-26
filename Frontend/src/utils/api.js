@@ -9,6 +9,9 @@ const api = {
         return await apiInstance.post(`${ROUTES.LOGIN}`, data)
     },
     getUser: async () => {
+        return await apiInstance.get(`${ROUTES.USER}${ROUTES.INDIVIDUAL}`)
+    },
+    getAllUser: async () => {
         return await apiInstance.get(`${ROUTES.USER}`)
     },
     getMyPosts: async (userId) => {
@@ -29,9 +32,12 @@ const api = {
     getFollow: async (userId) => {
         return await apiInstance.get(`${ROUTES.FOLLOW}/${userId}`)
     },
-    logout : async () => {
+    logout: async () => {
         return await apiInstance.get(`${ROUTES.LOGOUT}`)
     },
+    updateProfile: async (data) => {
+        return await apiInstance.post(`${ROUTES.UPDATE}${ROUTES.USER}`, data)
+    }
 }
 
 export default api

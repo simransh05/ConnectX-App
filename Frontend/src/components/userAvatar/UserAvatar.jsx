@@ -4,17 +4,17 @@ import getInitial from '../../utils/helper/getInitials';
 import style from './userAvatar.module.scss'
 import { CurrentUserContext } from '../../Context/currentUserProvider';
 
-function UserAvatar() {
-    const { currentUser } = useContext(CurrentUserContext);
+function UserAvatar({ user }) {
+
     return (
         <>
-            {currentUser?.profilePic ?
+            {user?.profilePic ?
                 <img src="" alt="" className={style.image} /> :
                 <Avatar sx={{
                     height: 70,
                     width: 70,
                     background: "orange"
-                }}>{getInitial(currentUser?.name)}</Avatar>
+                }}>{getInitial(user?.name)}</Avatar>
             }
         </>
     )

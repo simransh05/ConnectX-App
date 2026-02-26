@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Navbar from '../../components/Navbar/Navbar'
 import Sidebar from '../../components/Sidebar/Sidebar'
 import { useState } from 'react'
@@ -6,10 +6,15 @@ import Post from '../../components/Modals/Post/Post';
 import useUserAvailable from '../../utils/helper/userAvailable';
 import ROUTES from '../../constant/Route/route';
 import style from './Profile.module.scss'
+import api from '../../utils/api';
 
 function Profile() {
   const [openPost, setOpenPost] = useState(false);
   useUserAvailable(`${ROUTES.PROFILE}`)
+
+  useEffect(() => {
+    const res = api.getFollow();
+  }, [])
   return (
     <>
       <Navbar />

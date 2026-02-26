@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 
 function OthersProfile() {
-    const { userId } = useParams();
+    const { name } = useParams();
     useEffect(() => {
         // get apis for all of them 
     }, [])

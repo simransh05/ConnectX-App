@@ -11,7 +11,6 @@ import ROUTES from './constant/Route/route'
 import CurrentUserProvider from './Context/currentUserProvider'
 import SocketProvider from './Context/socketProvider'
 import OthersProfile from './pages/OthersProfile/OthersProfile'
-import OneOneChat from './pages/One-One-Chat/OneOneChat'
 
 function App() {
   return (
@@ -27,8 +26,7 @@ function App() {
               <Route path={ROUTES.PROFILE} element={<Profile />} />
               <Route path={ROUTES.NOTIFICATION} element={<Notification />} />
               <Route path={ROUTES.MESSAGES} element={<Messages />} />
-              <Route path={`${ROUTES.PROFILE}/:userId`} element={<OthersProfile />} />
-              <Route path={`${ROUTES.MESSAGES}/:userId`} element={<OneOneChat />} />
+              <Route path={`${ROUTES.PROFILE}/:name`} element={<OthersProfile />} />
             </Routes>
           </Router>
         </SocketProvider>
