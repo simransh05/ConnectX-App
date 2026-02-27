@@ -1,18 +1,20 @@
 @use '../../Style/variables' as *;
 @use '../../Style/mixins' as *;
 
-.profile-container {
+.otherContainer {
     @include space-flex;
 }
 
-.right {
+.otherSidebar {
     @include flex-column;
-    width: 80%;
+    width: 20%;
 }
 
-.head-profile {
-    display: flex;
-    justify-content: space-around;
+.followInfo {
+    @include space-flex;
     border-bottom: $border-black;
-    // height: 40px;
+}
+
+.postSide {
+    width: 80%;
 }

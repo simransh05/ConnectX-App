@@ -66,8 +66,11 @@ module.exports.getUser = async (req, res) => {
 }
 
 module.exports.getAllUsers = async (req, res) => {
+    const { userId } = req.params;
     try {
-        const users = await User.find();
+        const users = await User.find({
+            _id: { $ne: userId }
+        });
         if (!users) {
             return res.status(200).json([])
         }
@@ -79,21 +82,33 @@ module.exports.getAllUsers = async (req, res) => {
 }
 
 module.exports.updateProfile = async (req, res) => {
-    const { data } = req.body;
     try {
-        // update the entire data where change 
-        const users = await User.find();
-        if (!users) {
-            return res.status(200).json([])
-        }
-        return res.status(200).json(users);
-    }
-    catch (err) {
-        return res.status(500).json({ message: 'internal error' })
-    }
-}
+        const { name, email, bio, location } = req.body;
 
-module.exports.getLogout = async () => {
+        const updateData = {
+            name,
+            email,
+            bio,
+            location,
+        };
+
+        if (req.file) {
+            updateData.profilePic = req.file.buffer;
+        }
+
+        const user = await User.findOneAndUpdate(
+            email,
+            updateData,
+            { new: true }
+        );
+
+        res.status(200).json(user);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
+module.exports.getLogout = async (req, res) => {
     try {
         res.clearCookie("token", {
             httpOnly: true,

@@ -1,6 +1,25 @@
 @use '../../Style/mixins' as *;
 @use '../../Style/variables' as *;
 
-// .sidebar {
-//     @include flex-justify;
-// }
+
+.sidebar-container {
+    width: 20%;
+    border: $border-black;
+    position: sticky;
+    top: 0
+}
+
+.sidebar {
+    @include flex-column;
+    align-items: center;
+}
+
+.uploadBtn {
+    border: $border-black;
+    background-color: blueviolet;
+    color: white;
+    padding: $padding-md;
+    border-radius: 10px;
+    margin: $padding-md;
+    cursor: pointer;
+}
