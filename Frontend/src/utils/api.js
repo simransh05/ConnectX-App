@@ -11,10 +11,10 @@ const api = {
     getUser: async () => {
         return await apiInstance.get(`${ROUTES.USER}${ROUTES.INDIVIDUAL}`)
     },
-    getAllUser: async () => {
-        return await apiInstance.get(`${ROUTES.USER}`)
+    getAllUser: async (userId) => {
+        return await apiInstance.get(`${ROUTES.USER}/${userId}`)
     },
-    getMyPosts: async (userId) => {
+    getIndividualPosts: async (userId) => {
         return await apiInstance.get(`${ROUTES.POST}${ROUTES.INDIVIDUAL}/${userId}`)
     },
     getAllPosts: async () => {

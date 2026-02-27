@@ -44,9 +44,9 @@ router.get(
 
 router.get('/user/individual', users.getUser);
 
-router.post('/update/user', users.updateProfile);
+router.post('/update/user',upload.single('profilePic'), users.updateProfile);
 
-router.get('/user', users.getAllUsers);
+router.get('/user/:userId', users.getAllUsers);
 
 router.get('/logout', users.getLogout);
 

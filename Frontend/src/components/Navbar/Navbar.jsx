@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Link, Routes } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import ROUTES from '../../constant/Route/route'
 import style from './Navbar.module.scss'
 import { CurrentUserContext } from '../../Context/currentUserProvider'
@@ -10,34 +10,69 @@ import { userStore } from '../../Zustand/AllUsers'
 function Navbar() {
   const { currentUser, loading } = useContext(CurrentUserContext);
   const { allUsers, fetchAllUsers } = userStore();
-  const [search, setSearch] = useState(null);
+  const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState(null);
+  const navigate = useNavigate();
   useEffect(() => {
     if (loading) return;
     // get the allusers
-    fetchAllUsers()
+    fetchAllUsers(currentUser?._id)
 
   }, [loading])
 
+  const handleChange = (e) => {
+    const value = e.target.value;
+    setSearch(value)
+    const searchHistory = value.toLowerCase();
+    const data = allUsers.filter(u => u.name.toLowerCase().includes(searchHistory))
+    setSearchResult(data)
+  }
+
+  const formatName = (name) => {
+    const parts = name.split(" ");
+    return parts.join("-");
+  }
+
+  const handleClick = (id) => {
+    navigate(`${ROUTES.PROFILE}/${id}`)
+    setSearch("");
+    setSearchResult(null);
+  }
   console.log(allUsers);
   return (
     <div className={style.navbar}>
       {/* image */}
       <img src="/ConnectX.png" alt="profile-image" height={80} width={80} />
       {/* search bar (for user) */}
+      <div className={style.searchUser}>
+        <input
+          type="text"
+          className={style.inputBox}
+          placeholder="search user"
+          onChange={handleChange}
+        />
 
-      {/* idea is to when click any of the suggestions then go to that person naviagte(/profile/name) */}
-      <input type="text" className={style.inputBox} placeholder='search user' onChange={(e) => setSearch(e.target.value)} />
-
-      {search && searchResult?.length > 0 ?
-        searchResult.map((u) => (
-          <div key={u._id} className="search-user">
-            <UserAvatar user={u} />
-            <div>{u.name}</div>
+        {search && (
+          <div className={style.searchContainer}>
+            {searchResult?.length > 0 ? (
+              searchResult.map((u) => (
+                <div
+                  key={u._id}
+                  className={style.searchResult}
+                  onClick={() => handleClick(u._id)}
+                >
+                  <UserAvatar user={u} />
+                  <div>{u.name}</div>
+                </div>
+              ))
+            ) : (
+              <div className={style.noUser}>No User Available</div>
+            )}
           </div>
-        )) :
-        search && <div className="no-user">No User Available</div>
-      }
+        )}
+      </div>
+      {/* idea is to when click any of the suggestions then go to that person naviagte(/profile/name) */}
+
       {/* routes */}
 
       <Link to={ROUTES.HOME} className={style.linkInfo}>Home</Link>

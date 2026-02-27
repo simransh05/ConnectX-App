@@ -1,0 +1,39 @@
+@use '../../Style/variables' as *;
+@use '../../Style/mixins' as *;
+
+.chat-header {
+    height: 15%;
+    @include flex-justify;
+    border: $border-black;
+    padding: 0 $padding-md ;
+}
+
+.chat-body {
+    height: 70%;
+    border: $border-black;
+}
+
+.chat-footer {
+    height: 12%;
+    border: $border-black;
+    @include flex-justify;
+
+    .input-field {
+        height: 80%;
+        width: 80%;
+        border-radius: 15px;
+        margin-left: $padding-md;
+
+    }
+
+    .buttonSend {
+        width: 15%;
+        height: 80%;
+        color: white;
+        font-size: 14px;
+        font-weight: 400;
+        background-color: green;
+        margin: 10px;
+        cursor: pointer;
+    }
+}

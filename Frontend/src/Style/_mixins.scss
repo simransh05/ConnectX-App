@@ -1,13 +1,23 @@
 @use './variables' as *;
 
-@mixin flex-justify {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
 @mixin links {
     text-decoration: none;
     font-size: 18px;
     color: $link-color;
+}
+
+@mixin flex-column { 
+    display: flex;
+    flex-direction: column;
+}
+
+@mixin space-flex {
+    display: flex;
+    justify-content: space-between;
+}
+
+@mixin flex-justify {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }

@@ -12,6 +12,7 @@ function Post({ open, onClose }) {
             <DialogTitle>Create Post</DialogTitle>
             <DialogContent>
                 <form onSubmit={handleSubmit}>
+                    
                     <Button>Add File</Button>
                     {/* images */}
                     {/* caption */}

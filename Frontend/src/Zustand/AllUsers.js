@@ -6,8 +6,8 @@ export const userStore = create((set) => ({
     allUsers: [],
     // loading: true,
 
-    fetchAllUsers: async () => {
-        const res = await api.getAllUser();
+    fetchAllUsers: async (userId) => {
+        const res = await api.getAllUser(userId);
         set({ allUsers: res.data.length != 0 ? res.data : [] })
     }
 }))

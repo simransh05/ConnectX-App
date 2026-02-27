@@ -9,8 +9,11 @@ const useUserAvailable = (page) => {
     const navigate = useNavigate();
     // console.log(currentUser, loading)
 
+    // console.log(page)
+
     useEffect(() => {
         if (loading) return;
+        if(!currentUser && page === `${ROUTES.SIGNUP}`) return navigate(page);
         if (!currentUser) navigate(`${ROUTES.LOGIN}`);
         else if (currentUser && page) navigate(page);
         else navigate(`${ROUTES.HOME}`)
