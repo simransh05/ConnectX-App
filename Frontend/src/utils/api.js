@@ -37,7 +37,13 @@ const api = {
     },
     updateProfile: async (data) => {
         return await apiInstance.post(`${ROUTES.UPDATE}${ROUTES.USER}`, data)
-    }
+    },
+    postUploadPost: async (data) => {
+        return await apiInstance.post(`${ROUTES.POST}`, data)
+    },
+    postPassword: async (data) => {
+        return await apiInstance.post(`${ROUTES.USER}${ROUTES.UPDATE}`, data)
+    },
 }
 
 export default api

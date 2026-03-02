@@ -98,6 +98,7 @@ function Sidebar() {
     data.append("email", formData.email);
     data.append("bio", formData.bio);
     data.append("location", formData.location);
+    data.append('userId', currentUser?._id)
 
     if (formData.profilePic) {
       data.append("profilePic", formData.profilePic);
@@ -194,7 +195,7 @@ function Sidebar() {
             </>
           ))}
           <button onClick={() => setIsEditing(true)}>Update</button>
-          <button onClick={() => setPassword(true)}>Change Passowrd</button>
+          {!currentUser?.googleId && <button onClick={() => setPassword(true)}>Change Passowrd</button>}
           <button onClick={handleLogout}>Logout</button>
         </div>
       }

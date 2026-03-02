@@ -21,6 +21,9 @@ function Profile() {
   console.log(detail);
   const posts = useIndividualPosts(currentUser?._id);
   console.log(posts);
+  const handleSuccess = async () => {
+    await api.getIndividualPosts();
+  }
   return (
     <>
       <Navbar />
@@ -43,6 +46,7 @@ function Profile() {
               <Post
                 open={() => setOpenPost(true)}
                 onClose={() => setOpenPost(false)}
+                onSuccess={handleSuccess}
               />}
           </div>
           <PostShow
