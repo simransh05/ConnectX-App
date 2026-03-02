@@ -1,0 +1,15 @@
+@use '../../Style/mixins' as *;
+@use '../../Style/variables' as *;
+
+.postContainer {
+    @include space-flex;
+}
+
+.imagePost {
+    width: 120px;
+    height: 120px;
+}
+
+.noPost {
+    margin: auto;
+}

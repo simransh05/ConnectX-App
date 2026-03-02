@@ -44,15 +44,19 @@ router.get(
 
 router.get('/user/individual', users.getUser);
 
-router.post('/update/user',upload.single('profilePic'), users.updateProfile);
+router.post('/update/user', upload.single('profilePic'), users.updateProfile);
 
 router.get('/user/:userId', users.getAllUsers);
+
+router.post('/user/update', users.postPassword);
 
 router.get('/logout', users.getLogout);
 
 router.get('/post/individual/:userId', post.getMyPosts);
 
 router.get('/post', post.getAllPosts);
+
+router.post('/post', upload.single('photoVideo'), post.postUploadPost);
 
 router.get('/notification/:userId', notification.getNotification);
 
