@@ -6,11 +6,12 @@ import OneOneChat from '../One-One-Chat/OneOneChat'
 import api from '../../utils/api'
 import { CurrentUserContext } from '../../Context/currentUserProvider'
 import style from './Messages.module.scss'
+import { SelectedUserContext } from '../../Context/SelectedUserProvider'
 
 function Messages() {
   useUserAvailable(`${ROUTES.MESSAGES}`)
   const { currentUser } = useContext(CurrentUserContext);
-  const [user, setUser] = useState(null);
+  const { setSelectedUser } = useContext(SelectedUserContext);
   const [myChats, setMyChats] = useState(null);
   useEffect(() => {
     const fetchMyChatUsers = async () => {
@@ -29,7 +30,7 @@ function Messages() {
         <div className={style["left-side"]}>
           {myChats?.length > 0 ?
             myChats.map(c => (
-              <div className={style.people} onClick={() => setUser(c)}>
+              <div className={style.people} onClick={() => setSelectedUser(c)}>
                 <span>{c.sendBy._id === currentUser?._id ? c.sendTo : c.sendBy}</span>
               </div>
             )) :
@@ -40,9 +41,7 @@ function Messages() {
         </div>
 
         <div className={style["right-side"]}>
-          <OneOneChat
-            other={user}
-          />
+          <OneOneChat />
         </div>
       </div>
 

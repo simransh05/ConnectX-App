@@ -2,14 +2,29 @@
 @use '../../Style/variables' as *;
 
 .postContainer {
-    @include space-flex;
+    @include flex-wrap;
 }
 
 .imagePost {
-    width: 120px;
-    height: 120px;
+    width: 100%;
+    height: 60%;
+    border-radius: 10px;
+}
+
+.imageProfile {
+    width: 40px;
+    height: 40px;
+    border-radius: $circle;
 }
 
 .noPost {
     margin: auto;
+    margin-top: 200px
+}
+
+.postInd {
+    height: 300px;
+    width: 300px;
+    border: $border-black;
+    margin: 0 10px;
 }

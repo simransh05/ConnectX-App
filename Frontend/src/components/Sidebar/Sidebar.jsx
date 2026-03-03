@@ -9,6 +9,8 @@ import { useNavigate } from 'react-router-dom';
 import ROUTES from '../../constant/Route/route';
 import api from '../../utils/api';
 import style from './Sidebar.module.scss'
+import { CiLocationOn } from "react-icons/ci";
+import { FaLink } from "react-icons/fa";
 
 function Sidebar() {
   const navigate = useNavigate();
@@ -99,6 +101,7 @@ function Sidebar() {
     data.append("bio", formData.bio);
     data.append("location", formData.location);
     data.append('userId', currentUser?._id)
+    data.append("socialLinks", JSON.stringify(formData.socialLinks))
 
     if (formData.profilePic) {
       data.append("profilePic", formData.profilePic);
@@ -182,21 +185,23 @@ function Sidebar() {
           <UserAvatar
             user={currentUser}
           />
-          <div>{currentUser?.name}</div>
-          <div>{currentUser?.email}</div>
-          <div>{currentUser?.bio}</div>
-          <div>{currentUser?.location}</div>
-          <div>Joined On {new Date(currentUser?.joinedAt).toLocaleDateString()}</div>
+          <div className={style.sidebarName}>{currentUser?.name}</div>
+          <div className={style.sidebarBio}>{currentUser?.bio}</div>
           {currentUser?.socialLinks && <Divider />}
           {currentUser?.socialLinks?.map((s) => (
-            <>
-              <div>{s?.platform}</div>
-              <div>{s?.url}</div>
-            </>
+            <div className={style.socials} key={s._id}>
+              <FaLink />
+              <a href={s.url} target='_blank' className={style.socialLink}>{s.platform}</a>
+            </div>
           ))}
-          <button onClick={() => setIsEditing(true)}>Update</button>
-          {!currentUser?.googleId && <button onClick={() => setPassword(true)}>Change Passowrd</button>}
-          <button onClick={handleLogout}>Logout</button>
+          <Divider />
+          <div className={style.sidebarLocation}><CiLocationOn /> {currentUser?.location}</div>
+          <div>Joined On {new Date(currentUser?.joinedAt).toLocaleDateString("en-US",{ month: "long" , year : "numeric"})}</div>
+
+          <button onClick={() => setIsEditing(true)} className={style.edit}>Edit Profile</button>
+          {!currentUser?.googleId && <button onClick={() => setPassword(true)} className={style.passwordChange}>Change Passowrd</button>}
+          <button onClick={handleLogout} className={style.logout}>Logout</button>
+
         </div>
       }
       {password &&

@@ -1,6 +1,7 @@
 const User = require("../../models/user");
 const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const { formatUser } = require("./format");
 require('dotenv').config()
 module.exports.postSignup = async (req, res) => {
     const { name, email, password } = req.body;
@@ -47,23 +48,6 @@ module.exports.postLogin = async (req, res) => {
     } catch (err) {
         return res.status(500).json({ message: err.message })
     }
-}
-
-function formatUser(user) {
-    // console.log('format', user);
-    if (!user) return null;
-    return {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        socialLinks: user.socialLinks,
-        joinedAt: user.joinedAt,
-        bio: user.bio,
-        location: user.location,
-        profilePic: user.profilePic
-            ? `data:${user.profilePicType};base64,${user.profilePic.toString("base64")}`
-            : null
-    };
 }
 
 module.exports.getUser = async (req, res) => {
@@ -124,16 +108,18 @@ module.exports.postPassword = async (req, res) => {
 }
 
 module.exports.updateProfile = async (req, res) => {
+    // console.log('body', req.body)
+    const { name, bio, location, userId, socialLinks } = req.body;
     try {
-        const { name, email, bio, location, userId } = req.body;
-        // console.log('line 88', name, email, bio, location)
+        let socialLinks1 = JSON.parse(socialLinks);
+        // console.log('social', socialLinks1)
         const updateData = {
             name,
-            email,
             bio,
             location,
+            socialLinks: socialLinks1
         };
-
+        // console.log('update', updateData)
         if (req.file) {
             updateData.profilePic = req.file.buffer;
         }

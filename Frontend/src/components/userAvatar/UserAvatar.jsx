@@ -3,7 +3,7 @@ import getInitial from '../../utils/helper/getInitials';
 import style from './userAvatar.module.scss'
 
 function UserAvatar({ user }) {
-// console.log(user?.profilePic)
+console.log(user)
     return (
         <>
             {user?.profilePic ?

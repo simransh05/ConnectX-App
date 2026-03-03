@@ -9,12 +9,15 @@ import { userStore } from '../../Zustand/AllUsers';
 import UserAvatar from '../../components/userAvatar/UserAvatar';
 import { Divider } from '@mui/material';
 import style from './OthersProfile.module.scss'
+import { useContext } from 'react';
+import { SelectedUserContext } from '../../Context/SelectedUserProvider';
 
 function OthersProfile() {
     const { userId } = useParams();
     const navigate = useNavigate()
     const { allUsers } = userStore()
     const { detail } = useFollowDetail(userId)
+    const { setSelectedUser } = useContext(SelectedUserContext);
     console.log(detail)
 
     const { posts } = useIndividualPosts(userId)
@@ -22,6 +25,7 @@ function OthersProfile() {
     // get apis for all of them 
 
     const handleUser = () => {
+        setSelectedUser(userInfo);
         // set select user is this user and navigate to chat page
         navigate(`${ROUTES.MESSAGES}`)
     }
@@ -43,10 +47,7 @@ function OthersProfile() {
                         user={userInfo}
                     />
                     <div>{userInfo?.name}</div>
-                    <div>{userInfo?.email}</div>
                     <div>{userInfo?.bio}</div>
-                    <div>{userInfo?.location}</div>
-                    <div>Joined On {new Date(userInfo?.joinedAt).toLocaleDateString()}</div>
                     {userInfo?.socialLinks?.length > 0 && <Divider />}
                     {userInfo?.socialLinks?.map((s) => (
                         <div key={s._id}>
@@ -54,10 +55,15 @@ function OthersProfile() {
                             <div>{s?.url}</div>
                         </div>
                     ))}
+                    <Divider />
+                    <div>{userInfo?.location}</div>
+                    <div>Joined On {new Date(userInfo?.joinedAt).toLocaleDateString("en-US",{ month: "long" , year : "numeric"})}</div>
                 </div>
                 {/* posts side */}
                 <div className={style.postSide}>
                     <div className={style.followInfo}>
+                        <button onClick={handleUser}>Message</button>
+                        <button onClick={handleClick}>Follow</button>
                         <div>
                             <div>Followers</div>
                             <div>{detail?.follower?.length}</div>
@@ -66,8 +72,6 @@ function OthersProfile() {
                             <div>Followering</div>
                             <div>{detail?.following?.length}</div>
                         </div>
-                        <button onClick={handleClick}>Follow</button>
-                        <button onClick={handleUser}>Message</button>
                     </div>
 
 

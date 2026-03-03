@@ -34,8 +34,8 @@ function Post({ open, onClose, onSuccess }) {
                     showCancelButton: false,
                     showConfirmButton: false
                 })
+                onSuccess();
                 onClose();
-                onSuccess()
             }
         }
         catch (err) {

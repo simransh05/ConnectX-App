@@ -1,0 +1,6 @@
+@use '../../../Style/variables' as *;
+@use '../../../Style/mixins' as *;
+
+.commentDrawer .MuiDrawer-paper{
+    height: 600px;
+}
