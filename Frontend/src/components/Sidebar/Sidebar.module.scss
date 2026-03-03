@@ -9,9 +9,52 @@
     top: 0
 }
 
+.edit,
+.passwordChange {
+    padding: $padding-md;
+    margin: $padding-md;
+    cursor: pointer;
+    border-radius: 10px;
+    border: none;
+    background-color: blueviolet;
+    color: white;
+
+    & :hover {
+        background-color: rgb(77, 11, 139);
+    }
+}
+
+.logout {
+    padding: $padding-md;
+    margin: $padding-md;
+    cursor: pointer;
+    border-radius: 10px;
+    border: none;
+    background-color: red;
+
+    & :hover {
+        background-color: rgb(179, 4, 4);
+    }
+
+}
+
+.sidebarName {
+    font-weight: bold;
+    // font-size: 14px;
+}
+
+.socialLink {
+    text-decoration: none;
+    color: black;
+    cursor: pointer;
+}
+
 .sidebar {
     @include flex-column;
-    align-items: center;
+    & > div {
+        margin: $padding-md;
+    }
+    // align-items: center;
 }
 
 .uploadBtn {

@@ -8,10 +8,12 @@
 .otherSidebar {
     @include flex-column;
     width: 20%;
+    border: $border-black;
 }
 
 .followInfo {
-    @include space-flex;
+    @include flex-space;
+    text-align: center;
     border-bottom: $border-black;
 }
 

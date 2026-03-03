@@ -44,6 +44,12 @@ const api = {
     postPassword: async (data) => {
         return await apiInstance.post(`${ROUTES.USER}${ROUTES.UPDATE}`, data)
     },
+    getComments: async (postId) => {
+        return await apiInstance.get(`${ROUTES.POST}${ROUTES.COMMENT}/${postId}`)
+    },
+    postComment: async (data) => {
+        return await apiInstance.post(`${ROUTES.POST}${ROUTES.COMMENT}`, data)
+    }
 }
 
 export default api

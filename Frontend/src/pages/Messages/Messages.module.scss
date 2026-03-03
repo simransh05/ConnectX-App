@@ -15,3 +15,7 @@
 .right-side {
     width: 75%;
 }
+
+.noChats {
+    @include flex-center
+}

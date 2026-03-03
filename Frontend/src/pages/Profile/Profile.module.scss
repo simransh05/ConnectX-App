@@ -15,4 +15,18 @@
     justify-content: space-around;
     border-bottom: $border-black;
     // height: 40px;
+    // margin: $padding-md 0;
+    padding-bottom: $padding-md;
+    text-align: center;
+
+    button{
+        background-color: blue;
+        color: white;
+        font-size: 17px;
+        font-weight: 500;
+        border: none;
+        border-radius: 10px;
+        padding: $padding-md;
+        cursor: pointer;
+    }
 }

@@ -2,10 +2,14 @@
 @use '../../Style/mixins' as *;
 
 .chat-header {
-    height: 15%;
+    min-height: 15%;
     @include flex-justify;
     border: $border-black;
     padding: 0 $padding-md ;
+}
+
+.chat-section {
+    height: 82vh;
 }
 
 .chat-body {
@@ -14,7 +18,7 @@
 }
 
 .chat-footer {
-    height: 12%;
+    height: 15%;
     border: $border-black;
     @include flex-justify;
 
@@ -36,4 +40,10 @@
         margin: 10px;
         cursor: pointer;
     }
+}
+
+.selectuser {
+    height: 82vh;
+    @include flex-center;
+    border: $border-black;
 }

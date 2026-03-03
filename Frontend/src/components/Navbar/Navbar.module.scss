@@ -6,6 +6,9 @@
     padding-right: $padding-md;
     margin-bottom: $spacing;
     border-bottom: $border-black;
+    position: sticky;
+    top: 0;
+    background-color: white;
 
     .linkInfo {
         @include links;

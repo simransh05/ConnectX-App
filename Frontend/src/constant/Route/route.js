@@ -11,7 +11,8 @@ const ROUTES = {
     FOLLOW: '/follow',
     POST: '/post',
     LOGOUT: '/logout',
-    UPDATE: '/update'
+    UPDATE: '/update',
+    COMMENT : '/comment'
 }
 
 export default ROUTES;

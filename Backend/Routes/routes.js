@@ -14,7 +14,8 @@ const users = require('../Controller/Users/signup')
 const follow = require('../Controller/follow');
 const notification = require('../Controller/Notification');
 const message = require('../Controller/Message');
-const post = require('../Controller/Post')
+const post = require('../Controller/Post');
+const comment = require('../Controller/comment')
 
 router.post('/signup', users.postSignup);
 
@@ -52,7 +53,7 @@ router.post('/user/update', users.postPassword);
 
 router.get('/logout', users.getLogout);
 
-router.get('/post/individual/:userId', post.getMyPosts);
+router.get('/post/individual/:userId', post.getIndividualPosts);
 
 router.get('/post', post.getAllPosts);
 
@@ -65,5 +66,9 @@ router.get('/chats/individual/:user1/:user2', message.getIndividualMessage);
 router.get('/chats/:userId', message.getMessages);
 
 router.get('/follow/:userId', follow.getFollow);
+
+router.post('/post/comment' , comment.postComment);
+
+router.get('/post/comment/:postId' , comment.getComment);
 
 module.exports = router;

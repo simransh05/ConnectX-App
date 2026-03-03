@@ -19,10 +19,10 @@ function Profile() {
 
   const { detail } = useFollowDetail(currentUser?._id);
   console.log(detail);
-  const posts = useIndividualPosts(currentUser?._id);
+  const { posts } = useIndividualPosts(currentUser?._id);
   console.log(posts);
   const handleSuccess = async () => {
-    await api.getIndividualPosts();
+    await api.getIndividualPosts(currentUser?._id);
   }
   return (
     <>

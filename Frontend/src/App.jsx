@@ -11,25 +11,28 @@ import ROUTES from './constant/Route/route'
 import CurrentUserProvider from './Context/currentUserProvider'
 import SocketProvider from './Context/socketProvider'
 import OthersProfile from './pages/OthersProfile/OthersProfile'
+import SelectedUserProvider from './Context/SelectedUserProvider'
 
 function App() {
   return (
     <>
       <CurrentUserProvider>
-        <SocketProvider>
-          <Router>
-            <Routes>
-              <Route path={ROUTES.SIGNUP} element={<Signup />} />
-              <Route path={ROUTES.LOGIN} element={<Login />} />
-              <Route path={ROUTES.HOME} element={<Home />} />
-              <Route path={ROUTES.ABOUT} element={<About />} />
-              <Route path={ROUTES.PROFILE} element={<Profile />} />
-              <Route path={ROUTES.NOTIFICATION} element={<Notification />} />
-              <Route path={ROUTES.MESSAGES} element={<Messages />} />
-              <Route path={`${ROUTES.PROFILE}/:userId`} element={<OthersProfile />} />
-            </Routes>
-          </Router>
-        </SocketProvider>
+        <SelectedUserProvider>
+          <SocketProvider>
+            <Router>
+              <Routes>
+                <Route path={ROUTES.SIGNUP} element={<Signup />} />
+                <Route path={ROUTES.LOGIN} element={<Login />} />
+                <Route path={ROUTES.HOME} element={<Home />} />
+                <Route path={ROUTES.ABOUT} element={<About />} />
+                <Route path={ROUTES.PROFILE} element={<Profile />} />
+                <Route path={ROUTES.NOTIFICATION} element={<Notification />} />
+                <Route path={ROUTES.MESSAGES} element={<Messages />} />
+                <Route path={`${ROUTES.PROFILE}/:userId`} element={<OthersProfile />} />
+              </Routes>
+            </Router>
+          </SocketProvider>
+        </SelectedUserProvider>
       </CurrentUserProvider>
     </>
   )
