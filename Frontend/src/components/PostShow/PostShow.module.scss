@@ -3,6 +3,7 @@
 
 .postContainer {
     @include flex-wrap;
+    @include flex-center
 }
 
 .imagePost {

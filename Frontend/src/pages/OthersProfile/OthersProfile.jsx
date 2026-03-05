@@ -11,6 +11,7 @@ import { Divider } from '@mui/material';
 import style from './OthersProfile.module.scss'
 import { useContext } from 'react';
 import { SelectedUserContext } from '../../Context/SelectedUserProvider';
+import { FaLink } from 'react-icons/fa';
 
 function OthersProfile() {
     const { userId } = useParams();
@@ -45,19 +46,20 @@ function OthersProfile() {
                 <div className={style.otherSidebar}>
                     <UserAvatar
                         user={userInfo}
+                        size={70}
                     />
                     <div>{userInfo?.name}</div>
                     <div>{userInfo?.bio}</div>
                     {userInfo?.socialLinks?.length > 0 && <Divider />}
                     {userInfo?.socialLinks?.map((s) => (
-                        <div key={s._id}>
-                            <div>{s?.platform}</div>
-                            <div>{s?.url}</div>
+                        <div className={style.socials} key={s._id}>
+                            <FaLink />
+                            <a href={s.url} target='_blank' className={style.socialLink}>{s.platform}</a>
                         </div>
                     ))}
                     <Divider />
                     <div>{userInfo?.location}</div>
-                    <div>Joined On {new Date(userInfo?.joinedAt).toLocaleDateString("en-US",{ month: "long" , year : "numeric"})}</div>
+                    <div>Joined On {new Date(userInfo?.joinedAt).toLocaleDateString("en-US", { month: "long", year: "numeric" })}</div>
                 </div>
                 {/* posts side */}
                 <div className={style.postSide}>

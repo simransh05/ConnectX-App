@@ -4,12 +4,15 @@ import { CurrentUserContext } from '../../Context/currentUserProvider';
 import UserAvatar from '../../components/userAvatar/UserAvatar';
 import style from './OneOneChat.module.scss'
 import { SelectedUserContext } from '../../Context/SelectedUserProvider';
+import socket from '../../Socket/socket';
+import { useRef } from 'react';
 
 function OneOneChat() {
   const [chats, setChat] = useState(null);
   const { currentUser } = useContext(CurrentUserContext);
   const { selectedUser } = useContext(SelectedUserContext);
   const [message, setMessage] = useState("");
+  const scroll = useRef(null);
   // get chat of that person
   useEffect(() => {
     const fetchChat = async () => {
@@ -22,10 +25,38 @@ function OneOneChat() {
     fetchChat()
   }, [selectedUser]);
 
-  console.log(selectedUser)
+  useEffect(() => {
+    scroll.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chats])
 
-  const handleClick = () => {
+  console.log(chats)
+
+  useEffect(() => {
+    socket.on('receive', ({ sender, reciever, msg }) => {
+      console.log(sender, reciever, msg)
+      setChat(prev => [...prev, { sender, reciever, message: msg }])
+    })
+    return () => {
+      socket.off('receive');
+    }
+  }, [])
+
+  const handleEnter = (e) => {
+    if(e.key === 'Enter') {
+      handleClick();
+    }
+  }
+
+  const handleClick = (e) => {
+    // e.preventDefault();
     // socket
+    socket.emit('send', { sender: currentUser?._id, receiver: selectedUser?._id, msg: message }, (res) => {
+      console.log(res)
+      if (res.status === 200) {
+        setChat(prev => [...prev, { sender: currentUser?._id, receiver: selectedUser?._id, message }])
+      }
+    });
+    setMessage("");
   }
 
   return (
@@ -37,18 +68,20 @@ function OneOneChat() {
           <div className={style["chat-header"]}>
             <UserAvatar
               user={selectedUser}
+              size={60}
             />
             <div>{selectedUser?.name}</div>
             <button>:</button>
           </div>
           <div className={style["chat-body"]}>
-            <div>hello</div>
-            <div>hello</div>
-            <div>hello</div>
+            {chats?.map((c, idx) => (
+              <div className={c.sender === currentUser?._id ? style.sender : style.receiver} key={idx}>{c.message}</div>
+            ))}
+            <div ref={scroll}></div>
             {/* space and data */}
           </div>
           <div className={style["chat-footer"]}>
-            <input type="text" name='chat' className={style['input-field']} placeholder='Type a message' onChange={(e) => setMessage(e.target.value)} />
+            <input type="text" name='chat' className={style['input-field']} placeholder='Type a message' onChange={(e) => setMessage(e.target.value)} value={message} onKeyDown={handleEnter}/>
             <button onClick={handleClick} className={style.buttonSend}>Send</button>
           </div>
         </div>

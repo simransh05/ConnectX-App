@@ -7,6 +7,7 @@ import api from '../../utils/api'
 import { CurrentUserContext } from '../../Context/currentUserProvider'
 import style from './Messages.module.scss'
 import { SelectedUserContext } from '../../Context/SelectedUserProvider'
+import UserAvatar from '../../components/userAvatar/UserAvatar'
 
 function Messages() {
   useUserAvailable(`${ROUTES.MESSAGES}`)
@@ -23,6 +24,8 @@ function Messages() {
     }
     fetchMyChatUsers();
   }, [currentUser])
+
+  console.log(myChats)
   return (
     <div>
       <Navbar />
@@ -30,8 +33,12 @@ function Messages() {
         <div className={style["left-side"]}>
           {myChats?.length > 0 ?
             myChats.map(c => (
-              <div className={style.people} onClick={() => setSelectedUser(c)}>
-                <span>{c.sendBy._id === currentUser?._id ? c.sendTo : c.sendBy}</span>
+              <div className={style.people} onClick={() => setSelectedUser(c)} key={c?._id}>
+                <UserAvatar
+                user={c}
+                size={50}
+                />
+                <div>{c?.name}</div>
               </div>
             )) :
 

@@ -29,7 +29,10 @@ function PostShow({ posts }) {
                     <div key={idx} className={style.postInd}>
                         <img src={p?.photoVideo} alt="Image" className={style.imagePost} />
                         <div>
-                            <img src={p?.userId?.profilePic} alt="profile pic" className={style.imageProfile} />
+                            <UserAvatar
+                            user={p.userId}
+                            size={30}
+                            />
                             <span> {p?.userId?.name}</span>
                         </div>
                         <div className={style.postCaption}>{p?.caption}</div>

@@ -9,12 +9,21 @@
     @include flex-column;
     width: 20%;
     border: $border-black;
+    & > div {
+        margin: $padding-md;
+    }
 }
 
 .followInfo {
     @include flex-space;
     text-align: center;
     border-bottom: $border-black;
+}
+
+.socialLink {
+    text-decoration: none;
+    color: black;
+    cursor: pointer;
 }
 
 .postSide {

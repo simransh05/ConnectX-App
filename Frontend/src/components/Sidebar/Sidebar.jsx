@@ -184,9 +184,10 @@ function Sidebar() {
         <div className={style.sidebar}>
           <UserAvatar
             user={currentUser}
+            size={70}
           />
           <div className={style.sidebarName}>{currentUser?.name}</div>
-          <div className={style.sidebarBio}>{currentUser?.bio}</div>
+          {currentUser?.bio && <div className={style.sidebarBio}>{currentUser?.bio}</div>}
           {currentUser?.socialLinks && <Divider />}
           {currentUser?.socialLinks?.map((s) => (
             <div className={style.socials} key={s._id}>
@@ -195,7 +196,7 @@ function Sidebar() {
             </div>
           ))}
           <Divider />
-          <div className={style.sidebarLocation}><CiLocationOn /> {currentUser?.location}</div>
+          {currentUser?.location && <div className={style.sidebarLocation}><CiLocationOn /> {currentUser?.location}</div>}
           <div>Joined On {new Date(currentUser?.joinedAt).toLocaleDateString("en-US",{ month: "long" , year : "numeric"})}</div>
 
           <button onClick={() => setIsEditing(true)} className={style.edit}>Edit Profile</button>
