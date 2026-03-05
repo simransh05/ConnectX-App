@@ -15,6 +15,39 @@
 .chat-body {
     height: 70%;
     border: $border-black;
+    @include flex-column;
+    overflow-y: scroll;
+    background-color: rgb(240, 228, 206);
+}
+
+.sender,
+.receiver {
+    max-width: 60%;
+    width: fit-content;
+    height: 20px;
+    border: $border-black;
+    border-radius: $padding-md;
+    background-color: white;
+    color: black;
+    font-size: 16px;
+    padding: 5px;
+    margin: 5px 0;
+}
+
+.sender {
+    margin-left: auto;
+    text-align: right;
+    margin-right: $padding-md;
+    background-color: rgb(77, 122, 10);
+    color: white;
+}
+
+.receiver {
+    margin-right: auto;
+    text-align: left;
+    margin-left: $padding-md;
+    background-color: rgb(105, 107, 102);
+    color: white;
 }
 
 .chat-footer {

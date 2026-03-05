@@ -17,5 +17,16 @@
 }
 
 .noChats {
-    @include flex-center
+    @include flex-center;
+}
+
+.people {
+    display: flex;
+    border-bottom: $border-black;
+    padding: $padding-md;
+    cursor: pointer;
+    div {
+        margin : auto 0;
+        margin-left: $padding-md;
+    }
 }

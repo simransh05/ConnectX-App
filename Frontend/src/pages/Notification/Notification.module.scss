@@ -1,0 +1,8 @@
+@use '../../Style/mixins' as *;
+@use '../../Style/variables' as *;
+
+.notifyContainer {
+    @include flex-center;
+    max-height: 82vh;
+    padding-top: $padding-md;
+}

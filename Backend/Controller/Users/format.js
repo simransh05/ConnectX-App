@@ -52,3 +52,14 @@ module.exports.formatComment = (comment) => {
         _id: comment._id
     }
 }
+
+module.exports.formatChat = (user) => {
+    if (!user) return null;
+    return {
+        _id: user._id,
+        name: user.name,
+        profilePic: user.profilePic
+            ? `data:${user.profilePicType};base64,${user.profilePic.toString("base64")}`
+            : null
+    }
+}

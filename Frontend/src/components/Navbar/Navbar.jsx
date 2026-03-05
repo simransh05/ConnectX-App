@@ -61,7 +61,9 @@ function Navbar() {
                   className={style.searchResult}
                   onClick={() => handleClick(u._id)}
                 >
-                  <UserAvatar user={u} />
+                  <UserAvatar user={u} 
+                  size={40}
+                  />
                   <div>{u.name}</div>
                 </div>
               ))
@@ -82,6 +84,7 @@ function Navbar() {
       <Link to={ROUTES.PROFILE} className={style.linkInfo}>
         <UserAvatar
           user={currentUser}
+          size={70}
         />
       </Link>
       {/* home , messages , notification (notification idea to delete after 7 days or 30 days) 

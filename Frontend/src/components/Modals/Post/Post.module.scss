@@ -10,6 +10,11 @@
     color: white;
 }
 
+.note {
+    text-align: center;
+    margin-bottom: $padding-md;
+}
+
 .imageDiv {
     position: relative;
     width: fit-content;
@@ -46,6 +51,7 @@
     display: flex;
     justify-content: center;
     flex-direction: column;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 }
 
 .captionInput .MuiInputBase-input {

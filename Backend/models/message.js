@@ -1,11 +1,11 @@
 const mongoose = require('mongoose')
 
 const messageSchema = new mongoose.Schema({
-    sendBy: {
+    sender: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
-    sendTo: {
+    receiver: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
@@ -13,6 +13,10 @@ const messageSchema = new mongoose.Schema({
         type: String,
         require: true
     },
+    deleteBy: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }],
     sendAt: {
         type: Date,
         default: Date.now
