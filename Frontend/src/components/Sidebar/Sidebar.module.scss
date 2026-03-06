@@ -7,7 +7,6 @@
     border: $border-black;
     position: sticky;
     top: 0;
-    z-index: -1;
 }
 
 .edit,
@@ -39,29 +38,95 @@
 
 }
 
-.sidebarName {
-    font-weight: bold;
-    // font-size: 14px;
+.sidebar {
+    @include flex-column;
+
+    &>input {
+        width: auto;
+    }
+
+    &>div {
+        margin: $padding-md;
+    }
+
+    // align-items: center;
 }
 
-.socialLink {
-    text-decoration: none;
-    color: black;
+.editSidebar {
+    @include flex-column;
+
+    &>div {
+        display: flex;
+        margin: $padding-md;
+    }
+
+    input {
+        padding: $padding-md;
+        padding-right: 0;
+    }
+}
+
+.addSocial {
+    background-color: blue;
+    padding: $padding-md;
+    width: 50%;
+    color: white;
+    border-radius: $padding-md;
+    border: none;
+    margin: 0 auto;
+}
+
+.removeSocial {
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: $padding-md;
+    padding: $padding-md;
+}
+
+button {
     cursor: pointer;
 }
 
-.sidebar {
-    @include flex-column;
-    & > div {
-        margin: $padding-md;
+.btnUpdate {
+    @include flex-space;
+
+    .cancelProfile {
+        background-color: white;
+        // color: white;
+        border: $border-black;
+        border-radius: $padding-md;
+        padding: $padding-md;
+        width: 40%;
     }
-    // align-items: center;
+
+    .updateProfile {
+        background-color: blueviolet;
+        color: white;
+        border: none;
+        width: 40%;
+        border-radius: $padding-md;
+        padding: $padding-md;
+    }
+}
+
+label {
+    padding: $padding-md;
+}
+
+.profilePicInfo {
+    @include flex-column
+}
+
+.btnGroup {
+    display: flex;
 }
 
 .uploadBtn {
     border: $border-black;
     background-color: blueviolet;
     color: white;
+    text-align: center;
     padding: $padding-md;
     border-radius: 10px;
     margin: $padding-md;

@@ -18,12 +18,29 @@
     @include flex-space;
     text-align: center;
     border-bottom: $border-black;
+    padding-bottom: $padding-md;
 }
 
 .socialLink {
     text-decoration: none;
     color: black;
     cursor: pointer;
+}
+
+.messageBtn {
+    border: $border-black;
+    border-radius: $padding-md;
+    color: black;
+    padding: $padding-md;
+    background: none;
+}
+
+.followBtn {
+    border: none;
+    background-color: blue;
+    border-radius: $padding-md;
+    color: white;
+    padding: $padding-md;
 }
 
 .postSide {

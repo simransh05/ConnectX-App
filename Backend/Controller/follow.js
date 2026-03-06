@@ -22,19 +22,19 @@ module.exports.getFollow = async (req, res) => {
     }
 };
 
-module.exports.postFollow = async (req, res) => { // one doc like add follower me and following them
-    const { userId, other } = req.params;
+module.exports.postFollow = async (sender, receiver) => { // one doc like add follower me and following them
     try {
-        const alreadyFollow = await Follow.findOne({ follower: userId, following: other })
+        const alreadyFollow = await Follow.findOne({ follower: sender, following: receiver })
         if (alreadyFollow) {
-            return res.status(404).json({ message: 'already follow' })
+            return 'already follow'
         }
-        await Follow.create({
-            follower: userId,
-            following: other
+        const follow = await Follow.create({
+            follower: sender,
+            following: receiver
         })
+        return { status: 200, follow }
 
     } catch (err) {
-        return res.status(500).json({ message: err.message });
+        console.error(err.message)
     }
 }

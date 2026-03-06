@@ -9,6 +9,8 @@
     position: sticky;
     top: 0;
     background-color: white;
+    z-index: 100;
+    width: 98dvw;
 
     .linkInfo {
         @include links;
@@ -20,7 +22,7 @@
 }
 
 .inputBox {
-    width: 240px;
+    width: 100%;
     height: 30px;
     border-radius: 15px;
     border: 1px solid gray;
@@ -29,7 +31,7 @@
 
 .searchUser {
   position: relative;
-  width: 250px;
+  width: 20%;
 }
 
 .searchContainer {
@@ -61,3 +63,4 @@
   padding: 10px;
   text-align: center;
 }
+

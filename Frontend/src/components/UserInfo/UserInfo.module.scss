@@ -1,0 +1,13 @@
+@use '../../Style/mixins' as *;
+@use '../../Style/variables' as *;
+
+.sidebarName {
+    font-weight: bold;
+    // font-size: 14px;
+}
+
+.socialLink {
+    text-decoration: none;
+    color: black;
+    cursor: pointer;
+}
