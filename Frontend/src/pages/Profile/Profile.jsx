@@ -24,6 +24,10 @@ function Profile() {
   const handleSuccess = async () => {
     await api.getIndividualPosts(currentUser?._id);
   }
+
+  const handleClick = () => {
+    // get the list of the follow list  in side drawer 
+  }
   return (
     <>
       <Navbar />
@@ -33,12 +37,12 @@ function Profile() {
         {/* followers , follwing , new post  */}
         <div className={style.right}>
           <div className={style["head-profile"]}>
-            <div>
+            <div onClick={() => handleClick('follower')}>
               <div>Followers</div>
               <div>{detail?.follower?.length}</div>
             </div>
-            <div>
-              <div>Followering</div>
+            <div onClick={() => handleClick('following')}>
+              <div>Following</div>
               <div>{detail?.following?.length}</div>
             </div>
             <button onClick={() => setOpenPost(true)}>New Post</button>

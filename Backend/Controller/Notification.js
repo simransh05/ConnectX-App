@@ -12,3 +12,7 @@ module.exports.getNotification = async (req, res) => {
         return res.status(500).json({ message: err.message })
     }
 }
+
+module.exports.postNotification = async (sender, receiver, type, postId) => {
+    // idea to add this for the currentuser is the sender and the reciever is who's post or whom 
+}

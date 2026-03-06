@@ -9,8 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import ROUTES from '../../constant/Route/route';
 import api from '../../utils/api';
 import style from './Sidebar.module.scss'
-import { CiLocationOn } from "react-icons/ci";
-import { FaLink } from "react-icons/fa";
+import UserInfo from '../UserInfo/UserInfo';
 
 function Sidebar() {
   const navigate = useNavigate();
@@ -122,17 +121,20 @@ function Sidebar() {
     <div className={style['sidebar-container']}>
       {isEditing ?
         (
-          <form onSubmit={handleSubmit} className={style.sidebar}>
-            {preview ?
-              <Avatar
-                src={preview}
-                sx={{ width: 60, height: 60 }}
-              />
-              :
-              <UserAvatar
-                user={currentUser}
-              />
-            }
+          <form onSubmit={handleSubmit} className={style.editSidebar}>
+            <div className={style.profilePicInfo}>
+              {preview ?
+                <Avatar
+                  src={preview}
+                  sx={{ width: 80, height: 8000 }}
+                />
+                :
+                <UserAvatar
+                  user={currentUser}
+                  size={80}
+                />
+              }
+            </div>
 
             <label className={style.uploadBtn}>
               Change Profile Picture
@@ -144,74 +146,78 @@ function Sidebar() {
               />
             </label>
 
+            <div className={style.nameInfo}>
+              <label htmlFor='name'>Name: </label>
+              <input type="text" name='name' onChange={handleChange} value={formData?.name} />
+            </div>
 
-            <label htmlFor='name'>Name</label>
-            <input type="text" name='name' onChange={handleChange} value={formData?.name} />
-            <div>{formData.email}</div>
-            <label htmlFor='bio'>Bio</label>
-            <input type="text" name='bio' onChange={handleChange} value={formData?.bio} />
-            <label htmlFor='location'>Location</label>
-            <input type="text" name='location' onChange={handleChange} value={formData?.location} />
+            <div>Email: {formData.email}</div>
+            <div className={style.bioInfo}>
+              <label htmlFor='bio'>Bio: </label>
+              <input type="text" name='bio' onChange={handleChange} value={formData?.bio} />
+            </div>
+            <div className={style.locationInfo}>
+              <label htmlFor='location'>Location: </label>
+              <input type="text" name='location' onChange={handleChange} value={formData?.location} />
+            </div>
+            <div className={style.socialInfo}>
+              Social Links:
+            </div>
             {formData?.socialLinks.map((s, index) => (
-              <div key={index}>
-                <input
-                  value={s.platform}
-                  onChange={(e) =>
-                    handleSocialChange(index, "platform", e.target.value)
-                  }
-                />
-                <input
-                  value={s.url}
-                  onChange={(e) =>
-                    handleSocialChange(index, "url", e.target.value)
-                  }
-                />
-                <button type="button" onClick={() => removeSocial(index)}>
+              <div key={index} className={style.indSocial}>
+                <div className={style.inputSocial}>
+                  <input
+                    value={s.platform}
+                    onChange={(e) =>
+                      handleSocialChange(index, "platform", e.target.value)
+                    }
+                  />
+                  <input
+                    value={s.url}
+                    onChange={(e) =>
+                      handleSocialChange(index, "url", e.target.value)
+                    }
+                  />
+                </div>
+                <button type="button" onClick={() => removeSocial(index)} className={style.removeSocial}>
                   Remove
                 </button>
               </div>
             ))}
 
-            <button type="button" onClick={handleAdd}>
+            <button type="button" onClick={handleAdd} className={style.addSocial}>
               Add Social Link
             </button>
+            <div className={style.btnUpdate}>
+              <button type='submit' onClick={handleCancel} className={style.cancelProfile}>Cancel</button>
+              <button type='submit' className={style.updateProfile}>Update</button>
+            </div>
 
-            <button type='submit' onClick={handleCancel}>Cancel</button>
-            <button type='submit'>Update</button>
           </form>
         )
         :
         <div className={style.sidebar}>
-          <UserAvatar
+          <UserInfo
             user={currentUser}
-            size={70}
           />
-          <div className={style.sidebarName}>{currentUser?.name}</div>
-          {currentUser?.bio && <div className={style.sidebarBio}>{currentUser?.bio}</div>}
-          {currentUser?.socialLinks && <Divider />}
-          {currentUser?.socialLinks?.map((s) => (
-            <div className={style.socials} key={s._id}>
-              <FaLink />
-              <a href={s.url} target='_blank' className={style.socialLink}>{s.platform}</a>
-            </div>
-          ))}
-          <Divider />
-          {currentUser?.location && <div className={style.sidebarLocation}><CiLocationOn /> {currentUser?.location}</div>}
-          <div>Joined On {new Date(currentUser?.joinedAt).toLocaleDateString("en-US",{ month: "long" , year : "numeric"})}</div>
+          <div className={style.btnGroup}>
+            <button onClick={() => setIsEditing(true)} className={style.edit}>Edit Profile</button>
+            {!currentUser?.googleId && <button onClick={() => setPassword(true)} className={style.passwordChange}>Change Passowrd</button>}
 
-          <button onClick={() => setIsEditing(true)} className={style.edit}>Edit Profile</button>
-          {!currentUser?.googleId && <button onClick={() => setPassword(true)} className={style.passwordChange}>Change Passowrd</button>}
+          </div>
           <button onClick={handleLogout} className={style.logout}>Logout</button>
 
         </div>
       }
-      {password &&
+      {
+        password &&
         <Password
           open={() => setPassword(true)}
           onClose={() => setPassword(false)}
-        />}
+        />
+      }
 
-    </div>
+    </div >
   )
 }
 

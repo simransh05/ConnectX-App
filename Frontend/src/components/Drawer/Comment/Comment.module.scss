@@ -1,6 +1,47 @@
 @use '../../../Style/variables' as *;
 @use '../../../Style/mixins' as *;
 
-.commentDrawer .MuiDrawer-paper{
-    height: 600px;
+.commentDrawer .MuiPaper-root {
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif
+}
+
+.sendComment {
+    @include flex-space;
+
+    input {
+        width: 60%;
+        padding: $padding-md;
+        margin-top: $padding-md;
+    }
+
+    button {
+        width: 20%;
+        padding: $padding-md;
+        margin-top: $padding-md;
+        border: none;
+        border-radius: $padding-md;
+        background-color: green;
+        color: white;
+    }
+}
+
+.imageComment {
+    width: 50px;
+    height: 50px;
+    border-radius: $circle;
+}
+
+.indComment {
+    display: flex;
+}
+
+.commentName,
+.commentMessage {
+    padding: $padding-md;
+    margin: auto 0;
+}
+
+.commentName {
+    font-size: 16px;
+    font-weight: 600;
 }

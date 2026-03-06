@@ -39,20 +39,22 @@ function Comment({ open, onClose, onSuccess, postId }) {
         <Drawer open={open} onClose={onClose} anchor='bottom' className={style.commentDrawer}
             PaperProps={{
                 sx: {
-                    height: '300px'
+                    height: '300px',
+                    borderTopLeftRadius: '10px',
+                    borderTopRightRadius: '10px'
                 }
             }}>
-            <div className="sendComment">
+            <div className={style.sendComment}>
                 <input type='text' name='comment' placeholder='Add Comment' onChange={(e) => setCommentInput(e.target.value)} />
                 <button onClick={handleComment}>Send</button>
             </div>
 
             <div>
                 {commentData?.map(c => (
-                    <div key={c?._id}>
-                        <img src={c?.userId?.profilePic} alt="profile pic" width={40} height={40} />
-                        <span>{c?.userId?.name}</span>
-                        <span>{c?.message}</span>
+                    <div key={c?._id} className={style.indComment}>
+                        <img src={c?.userId?.profilePic} alt="profile pic"  className={style.imageComment}/>
+                        <div className={style.commentName}>{c?.userId?.name}</div>
+                        <p className={style.commentMessage}>{c?.message}</p>
                     </div>
                 ))}
             </div>

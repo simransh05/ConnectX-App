@@ -9,14 +9,14 @@ import { allPostStore } from '../../Zustand/AllPosts';
 import api from '../../utils/api';
 function PostShow({ posts }) {
     const [commentDrawer, setCommentDawer] = useState(false);
-    const [postid ,setpostId] = useState(null);
+    const [postid, setpostId] = useState(null);
     console.log(posts);
-    const handleClick =(id) =>{
+    const handleClick = (id) => {
         setCommentDawer(true);
-        setpostId(id)   
+        setpostId(id)
     }
 
-    const handleClose = ()=>{
+    const handleClose = () => {
         setCommentDawer(false)
         setpostId(null);
     }
@@ -30,28 +30,24 @@ function PostShow({ posts }) {
                         <img src={p?.photoVideo} alt="Image" className={style.imagePost} />
                         <div>
                             <UserAvatar
-                            user={p.userId}
-                            size={30}
+                                user={p.userId}
+                                size={30}
                             />
                             <span> {p?.userId?.name}</span>
                         </div>
                         <div className={style.postCaption}>{p?.caption}</div>
-                        <div>
-                            <button>
-                                <AiOutlineLike />
-                            </button>
+                        <div className={style.postInfo}>
+                            <AiOutlineLike className={style.likeImage} />
                             <span>{p.likeCount > 0 && p.likeCount}</span>
-                            <button onClick={()=>handleClick(p._id)}>
-                                <FaRegComment />
-                            </button>
+                            <FaRegComment className={style.commentImage} onClick={() => handleClick(p._id)} />
                             <span>{p.commentCount}</span>
                         </div>
                         {commentDrawer &&
-                        <Comment
-                        open={() => setCommentDawer(true)}
-                        onClose={handleClose}
-                        postId={postid}
-                        /> }
+                            <Comment
+                                open={() => setCommentDawer(true)}
+                                onClose={handleClose}
+                                postId={postid}
+                            />}
 
                     </div>
                 )) :
