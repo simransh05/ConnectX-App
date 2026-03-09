@@ -1,20 +1,21 @@
 const Follow = require('../models/follow');
+const { formatFollow } = require('./Users/format');
 
 module.exports.getFollow = async (req, res) => {
     const { userId } = req.params;
 
     try {
         const following = await Follow.find({ follower: userId })
-            .populate('following', 'name profilePic');
+            .populate('following', 'name profilePic _id');
 
         const follower = await Follow.find({ following: userId })
-            .populate('follower', 'name profilePic');
+            .populate('follower', 'name profilePic _id');
 
-        console.log("follow", following, follower)
+        console.log("follow", follower)
 
         return res.status(200).json({
-            follower,
-            following
+            follower: follower.map(formatFollow),
+            following: following.map(formatFollow)
         });
 
     } catch (err) {

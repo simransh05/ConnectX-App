@@ -27,7 +27,7 @@ function Notification() {
     <div>
       <Navbar />
       <div className={style.notifyContainer}>
-        {notification.length > 0 ?
+        {notification?.length > 0 ?
           notification?.map((n, idx) => (
             <div className={style.notify} key={idx}>{ }</div>
           )): 

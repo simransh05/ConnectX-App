@@ -6,12 +6,15 @@ import style from './OneOneChat.module.scss'
 import { SelectedUserContext } from '../../Context/SelectedUserProvider';
 import socket from '../../Socket/socket';
 import { useRef } from 'react';
+import { CiMenuKebab } from "react-icons/ci";
+import { Menu, MenuItem } from '@mui/material';
 
 function OneOneChat() {
   const [chats, setChat] = useState(null);
   const { currentUser } = useContext(CurrentUserContext);
   const { selectedUser } = useContext(SelectedUserContext);
   const [message, setMessage] = useState("");
+  const [menu, setMenu] = useState(false);
   const scroll = useRef(null);
   // get chat of that person
   useEffect(() => {
@@ -42,7 +45,7 @@ function OneOneChat() {
   }, [])
 
   const handleEnter = (e) => {
-    if(e.key === 'Enter') {
+    if (e.key === 'Enter') {
       handleClick();
     }
   }
@@ -71,7 +74,20 @@ function OneOneChat() {
               size={60}
             />
             <div>{selectedUser?.name}</div>
-            <button>:</button>
+            <div className={style.menuParent}>
+              <button className={style.menuBtn} onClick={() => setMenu(true)}>
+                <CiMenuKebab
+                  style={{
+                    fontSize: '14px'
+                  }}
+                />
+              </button>
+              {/* menu */}
+              <Menu open={menu} onClose={() => setMenu(false)}>
+                <MenuItem>Delete Chat</MenuItem>
+              </Menu>
+            </div>
+
           </div>
           <div className={style["chat-body"]}>
             {chats?.map((c, idx) => (
@@ -81,7 +97,7 @@ function OneOneChat() {
             {/* space and data */}
           </div>
           <div className={style["chat-footer"]}>
-            <input type="text" name='chat' className={style['input-field']} placeholder='Type a message' onChange={(e) => setMessage(e.target.value)} value={message} onKeyDown={handleEnter}/>
+            <input type="text" name='chat' className={style['input-field']} placeholder='Type a message' onChange={(e) => setMessage(e.target.value)} value={message} onKeyDown={handleEnter} />
             <button onClick={handleClick} className={style.buttonSend}>Send</button>
           </div>
         </div>

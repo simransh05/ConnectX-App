@@ -7,27 +7,23 @@ import useUserAvailable from '../../utils/helper/userAvailable';
 import ROUTES from '../../constant/Route/route';
 import style from './Profile.module.scss'
 import api from '../../utils/api';
-import useFollowDetail from '../../utils/helper/followDetails';
 import { CurrentUserContext } from '../../Context/currentUserProvider';
 import useIndividualPosts from '../../utils/helper/IndividualPosts';
 import PostShow from '../../components/PostShow/PostShow';
+import FollowInfo from '../../components/FollowInfo/FollowInfo';
 
 function Profile() {
   const [openPost, setOpenPost] = useState(false);
   const { currentUser } = useContext(CurrentUserContext);
   useUserAvailable(`${ROUTES.PROFILE}`)
 
-  const { detail } = useFollowDetail(currentUser?._id);
-  console.log(detail);
   const { posts } = useIndividualPosts(currentUser?._id);
   console.log(posts);
-  const handleSuccess = async () => {
-    await api.getIndividualPosts(currentUser?._id);
+  const handleSuccess = () => {
+    useIndividualPosts(currentUser?._id);
   }
 
-  const handleClick = () => {
-    // get the list of the follow list  in side drawer 
-  }
+
   return (
     <>
       <Navbar />
@@ -37,14 +33,9 @@ function Profile() {
         {/* followers , follwing , new post  */}
         <div className={style.right}>
           <div className={style["head-profile"]}>
-            <div onClick={() => handleClick('follower')}>
-              <div>Followers</div>
-              <div>{detail?.follower?.length}</div>
-            </div>
-            <div onClick={() => handleClick('following')}>
-              <div>Following</div>
-              <div>{detail?.following?.length}</div>
-            </div>
+            <FollowInfo
+              userId={currentUser?._id}
+            />
             <button onClick={() => setOpenPost(true)}>New Post</button>
             {openPost &&
               <Post

@@ -13,6 +13,7 @@ import UserInfo from '../../components/UserInfo/UserInfo';
 import socket from '../../Socket/socket';
 import { CurrentUserContext } from '../../Context/currentUserProvider';
 import { useState } from 'react';
+import FollowInfo from '../../components/FollowInfo/FollowInfo';
 
 function OthersProfile() {
     const { userId } = useParams();
@@ -48,11 +49,15 @@ function OthersProfile() {
 
     useEffect(() => {
         if (!detail) return;
-        const alreadyFollow = detail.follower.some(f => f._id === currentUser?._id)
+        // console.log(detail.follower);
+        const alreadyFollow = detail.follower.some(f => f.userId === currentUser?._id)
+        console.log(alreadyFollow , currentUser?._id)
         if (alreadyFollow) {
             setIsFollow(true);
         }
     }, [detail])
+
+    console.log(isFollow)
 
     return (
         <>
@@ -69,16 +74,11 @@ function OthersProfile() {
                     <div className={style.followInfo}>
                         <button onClick={handleUser} className={style.messageBtn}>Message</button>
                         {isFollow ?
-                            <button disabled>Following</button>
+                            <button disabled className={style.alreadyFollow}>Following</button>
                             : <button onClick={handleClick} className={style.followBtn}>Follow</button>}
-                        <div className={style.followerInfo}>
-                            <div>Followers</div>
-                            <div>{detail?.follower?.length}</div>
-                        </div>
-                        <div className={style.followingInfo}>
-                            <div>Followering</div>
-                            <div>{detail?.following?.length}</div>
-                        </div>
+                        <FollowInfo
+                            userId={userId}
+                        />
                     </div>
 
 

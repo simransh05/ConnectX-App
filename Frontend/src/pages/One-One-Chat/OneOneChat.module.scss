@@ -12,6 +12,12 @@
     height: 82vh;
 }
 
+.menuBtn {
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
 .chat-body {
     height: 70%;
     border: $border-black;

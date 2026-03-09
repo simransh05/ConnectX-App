@@ -63,3 +63,16 @@ module.exports.formatChat = (user) => {
             : null
     }
 }
+
+module.exports.formatFollow = (data) => {
+    const user = data?.following?.name ?  data?.following : data?.follower;
+    console.log('user', user)
+    return {
+        _id: data._id,
+        name: user?.name,
+        userId: user?._id,
+        profilePic: user?.profilePic
+            ? `data:${user.profilePicType};base64,${user.profilePic.toString("base64")}`
+            : null
+    }
+}

@@ -1,0 +1,24 @@
+@use '../../../Style/mixins' as *;
+@use '../../../Style/variables' as *;
+
+.indFollow {
+    gap: $padding-md;
+    display: flex;
+    margin: $padding-md;
+    cursor: pointer;
+}
+
+.username {
+    margin: auto 0;
+}
+
+.headFollow {
+    text-align: center;
+    margin: $padding-md;
+    padding: $padding-md;
+}
+
+.noFollow {
+    margin: 0 auto;
+    margin-top: 30px;
+}

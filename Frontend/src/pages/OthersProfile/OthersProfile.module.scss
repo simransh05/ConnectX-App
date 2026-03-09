@@ -9,7 +9,8 @@
     @include flex-column;
     width: 20%;
     border: $border-black;
-    & > div {
+
+    &>div {
         margin: $padding-md;
     }
 }
@@ -33,6 +34,12 @@
     color: black;
     padding: $padding-md;
     background: none;
+}
+
+.alreadyFollow {
+    border-radius: 5px;
+    cursor: auto;
+    // border: $border-black;
 }
 
 .followBtn {

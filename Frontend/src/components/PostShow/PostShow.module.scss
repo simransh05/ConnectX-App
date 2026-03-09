@@ -10,13 +10,7 @@
     width: 100%;
     height: 60%;
     border-radius: 10px;
-    object-fit: cover;
-}
-
-input,
-input:focus {
-    border: $border-black;
-    border-radius: $padding-md;
+    object-fit: contain;
 }
 
 .imageProfile {
@@ -37,7 +31,8 @@ input:focus {
 
 .postInd {
     height: 300px;
-    width: 300px;
+    width: 275px;
     border: $border-black;
     margin: 0 10px;
+    border-radius: $padding-md;
 }
