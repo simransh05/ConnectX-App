@@ -15,4 +15,16 @@ module.exports.getNotification = async (req, res) => {
 
 module.exports.postNotification = async (sender, receiver, type, postId) => {
     // idea to add this for the currentuser is the sender and the reciever is who's post or whom 
+    try {
+        const notify = await Notification.create({
+            sender,
+            receiver,
+            type,
+            postId: postId || null
+        })
+
+        return { notify, status: 200 };
+    } catch (err) {
+        console.error(err.message)
+    }
 }

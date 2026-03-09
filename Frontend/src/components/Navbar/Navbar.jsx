@@ -5,11 +5,14 @@ import style from './Navbar.module.scss'
 import { CurrentUserContext } from '../../Context/currentUserProvider'
 import UserAvatar from '../userAvatar/UserAvatar'
 import { userStore } from '../../Zustand/AllUsers'
+import socket from '../../Socket/socket'
+import api from '../../utils/api'
 
 
 function Navbar() {
   const { currentUser, loading } = useContext(CurrentUserContext);
   const { allUsers, fetchAllUsers } = userStore();
+  const [number, setNumber] = useState(0);
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState(null);
   const navigate = useNavigate();
@@ -28,10 +31,23 @@ function Navbar() {
     setSearchResult(data)
   }
 
-  const formatName = (name) => {
-    const parts = name.split(" ");
-    return parts.join("-");
-  }
+  useEffect(() => {
+    socket.on('receiver-notify', ({ sender, receiver, type, postId }) => {
+      // number increase 
+      setNumber(prev => prev + 1)
+    })
+    return () => {
+      socket.off('receiver-notify');
+    }
+  }, [])
+
+  useEffect(() => {
+    const fetchNotification = async () => {
+      const res = await api.getNotification(currentUser?._id)
+      console.log(res.data);
+    }
+    fetchNotification();
+  },[])
 
   const handleClick = (id) => {
     navigate(`${ROUTES.PROFILE}/${id}`)
@@ -61,8 +77,8 @@ function Navbar() {
                   className={style.searchResult}
                   onClick={() => handleClick(u._id)}
                 >
-                  <UserAvatar user={u} 
-                  size={40}
+                  <UserAvatar user={u}
+                    size={40}
                   />
                   <div>{u.name}</div>
                 </div>

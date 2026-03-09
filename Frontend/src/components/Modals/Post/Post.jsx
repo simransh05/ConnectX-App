@@ -86,8 +86,8 @@ function Post({ open, onClose, onSuccess }) {
                     />
                 </DialogContent>
                 <DialogActions sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <Button onClick={onClose}>Cancel</Button>
-                    <Button type='submit'>Post</Button>
+                    <Button onClick={onClose} sx={{ textTransform: 'none', fontSize: '16px' }}>Cancel</Button>
+                    <Button type='submit' sx={{ textTransform: 'none', fontSize: '16px' }}>Post</Button>
                 </DialogActions>
             </form>
         </Dialog >

@@ -31,6 +31,7 @@
     border-radius: 10px;
     border: none;
     background-color: red;
+    color: white;
 
     & :hover {
         background-color: rgb(179, 4, 4);
@@ -60,9 +61,22 @@
         margin: $padding-md;
     }
 
+    input,
+    input:focus {
+        width: auto;
+        border: $border-black;
+        border-radius: $padding-md;
+    }
+
     input {
         padding: $padding-md;
         padding-right: 0;
+    }
+}
+
+.locationInfo {
+    input {
+        width: 60%;
     }
 }
 
