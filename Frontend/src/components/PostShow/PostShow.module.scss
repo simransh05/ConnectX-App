@@ -19,6 +19,17 @@
     border-radius: $circle;
 }
 
+.commentImage {
+    height: 20px;
+    width: 20px;
+}
+
+.likedImage {
+    color: blue;
+    height: 20px;
+    width: 20px;
+}
+
 .postInfo {
     display: flex;
     gap: 5px;
@@ -29,10 +40,15 @@
     margin-top: 200px
 }
 
+.likeImage {
+    height: 20px;
+    width: 20px;
+}
+
 .postInd {
     height: 300px;
-    width: 275px;
+    width: 270px;
     border: $border-black;
-    margin: 0 10px;
+    margin: $padding-md;
     border-radius: $padding-md;
 }

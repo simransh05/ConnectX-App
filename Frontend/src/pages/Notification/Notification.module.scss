@@ -1,8 +1,36 @@
 @use '../../Style/mixins' as *;
 @use '../../Style/variables' as *;
 
+.notifyList {
+    @include flex-column;
+}
+
 .notifyContainer {
+    @include flex-justify
+}
+
+.notify {
+    // individual
+    gap: $padding-md;
+    display: flex;
+    margin: $padding-md;
+
+    div {
+        margin: auto 0;
+    }
+}
+
+.deleteNotify {
+    color: white;
+    background-color: red;
+    border: none;
+    top: 0;
+    padding: $padding-md;
+    border-radius: $padding-md;
+    
+}
+
+.noNotify {
     @include flex-center;
-    max-height: 82vh;
-    padding-top: $padding-md;
+    margin-top: 30px;
 }

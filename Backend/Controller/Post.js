@@ -4,7 +4,7 @@ const { formatPost } = require("./Users/format");
 module.exports.getIndividualPosts = async (req, res) => {
     const { userId } = req.params;
     try {
-        const posts = await Post.find({ userId }).populate('likes userId');
+        const posts = await Post.find({ userId }).populate('userId');
         if (!posts) {
             return res.status(200).json([])
         }
@@ -17,7 +17,7 @@ module.exports.getIndividualPosts = async (req, res) => {
 
 module.exports.getAllPosts = async (req, res) => {
     try {
-        const posts = await Post.find().populate('likes userId');
+        const posts = await Post.find().populate('userId');
         // console.log('posts 34', posts)
         if (!posts) {
             return res.status(200).json([])
@@ -44,5 +44,22 @@ module.exports.postUploadPost = async (req, res) => {
         return res.status(200).json({ message: 'Successful' })
     } catch (err) {
         return res.status(500).json({ message: err.message })
+    }
+}
+
+module.exports.postLike = async (postId, userId) => {
+    try {
+        const updated = await Post.findByIdAndUpdate(
+            postId,
+            {
+                $set: { likes: userId },
+                $inc: { likeCount: 1 }
+            }
+        )
+        console.log(updated)
+        return updated;
+    }
+    catch (err) {
+        console.error(err.message)
     }
 }

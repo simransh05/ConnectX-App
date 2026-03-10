@@ -50,7 +50,7 @@ function OneOneChat() {
     }
   }
 
-  const handleClick = (e) => {
+  const handleClick = () => {
     // e.preventDefault();
     // socket
     socket.emit('send', { sender: currentUser?._id, receiver: selectedUser?._id, msg: message }, (res) => {
@@ -60,6 +60,13 @@ function OneOneChat() {
       }
     });
     setMessage("");
+  }
+
+  const handleDelete = async () => {
+    const res = await api.deleteChat(currentUser?._id);
+    if (res.status === 200) {
+      setChat(null);
+    }
   }
 
   return (
@@ -75,16 +82,17 @@ function OneOneChat() {
             />
             <div>{selectedUser?.name}</div>
             <div className={style.menuParent}>
-              <button className={style.menuBtn} onClick={() => setMenu(true)}>
-                <CiMenuKebab
-                  style={{
-                    fontSize: '14px'
-                  }}
-                />
-              </button>
+
+              <CiMenuKebab
+                style={{
+                  fontSize: '14px'
+                }}
+                className={style.menuBtn}
+                onClick={() => setMenu(true)}
+              />
               {/* menu */}
-              <Menu open={menu} onClose={() => setMenu(false)}>
-                <MenuItem>Delete Chat</MenuItem>
+              <Menu open={menu} onClose={() => setMenu(false)} className={style.deleteBtn}>
+                <MenuItem onClick={handleDelete}>Delete Chat</MenuItem>
               </Menu>
             </div>
 

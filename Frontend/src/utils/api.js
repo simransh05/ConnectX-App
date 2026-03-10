@@ -49,7 +49,13 @@ const api = {
     },
     postComment: async (data) => {
         return await apiInstance.post(`${ROUTES.POST}${ROUTES.COMMENT}`, data)
-    }
+    },
+    deleteChat : async (userId) => {
+        return await apiInstance.post(`${ROUTES.MESSAGES}${ROUTES.DELETE}/${userId}`)
+    },
+    deleteNotify :  async (userId) => {
+        return await apiInstance.post(`${ROUTES.NOTIFICATION}${ROUTES.DELETE}/${userId}`)
+    },
 }
 
 export default api

@@ -42,12 +42,14 @@ function Navbar() {
   }, [])
 
   useEffect(() => {
+    if (!currentUser) return;
     const fetchNotification = async () => {
       const res = await api.getNotification(currentUser?._id)
-      console.log(res.data);
+      console.log(res.data.length);
+      setNumber(res.data.length);
     }
     fetchNotification();
-  },[])
+  }, [currentUser])
 
   const handleClick = (id) => {
     navigate(`${ROUTES.PROFILE}/${id}`)
@@ -94,7 +96,11 @@ function Navbar() {
       {/* routes */}
 
       <Link to={ROUTES.HOME} className={style.linkInfo}>Home</Link>
-      <Link to={ROUTES.NOTIFICATION} className={style.linkInfo}>Notifications</Link>
+      <div className={style.notifyLink}>
+        <Link to={ROUTES.NOTIFICATION} className={style.linkInfo}>Notifications</Link>
+        {number > 0 && <div className={style.numNotify}>{number}</div>}
+      </div>
+
       <Link to={ROUTES.MESSAGES} className={style.linkInfo}>Messages</Link>
       <Link to={ROUTES.ABOUT} className={style.linkInfo}>About</Link>
       <Link to={ROUTES.PROFILE} className={style.linkInfo}>
