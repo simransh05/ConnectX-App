@@ -9,5 +9,10 @@
 .socialLink {
     text-decoration: none;
     color: black;
+    margin:0 5px ;
     cursor: pointer;
+}
+
+.socials {
+    gap: $padding-md;
 }

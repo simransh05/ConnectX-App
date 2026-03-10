@@ -12,10 +12,20 @@
     height: 82vh;
 }
 
+.menuParent {
+    position: relative;
+}
+
 .menuBtn {
     border: none;
     background: none;
     cursor: pointer;
+}
+
+.deleteBtn {
+    position: absolute;
+    top: 105%;
+    bottom: 0;
 }
 
 .chat-body {

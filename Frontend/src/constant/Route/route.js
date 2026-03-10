@@ -12,7 +12,8 @@ const ROUTES = {
     POST: '/post',
     LOGOUT: '/logout',
     UPDATE: '/update',
-    COMMENT : '/comment'
+    COMMENT: '/comment',
+    DELETE: '/delete'
 }
 
 export default ROUTES;

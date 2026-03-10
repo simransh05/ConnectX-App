@@ -41,6 +41,7 @@
 
 .sidebar {
     @include flex-column;
+    height: fit-content;
 
     &>input {
         width: auto;
@@ -55,6 +56,7 @@
 
 .editSidebar {
     @include flex-column;
+    height: fit-content;
 
     &>div {
         display: flex;

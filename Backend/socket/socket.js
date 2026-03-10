@@ -2,6 +2,7 @@ let userMap = new Map();
 const Follow = require('../Controller/follow');
 const Message = require('../Controller/Message');
 const Notification = require('../Controller/Notification');
+const Post = require('../Controller/Post');
 module.exports = (io) => {
     io.on('connection', (socket) => {
         socket.on('register', (userId) => {
@@ -22,13 +23,17 @@ module.exports = (io) => {
         })
 
         socket.on('send-notify', async ({ sender, receiver, type, postId }, callback) => {
+            console.log('send', sender, receiver, type, postId)
             if (type === 'follow') {
                 await Notification.postNotification(sender, receiver, type);
                 await Follow.postFollow(sender, receiver);
                 // await post follow and post notification
-            } else {
+            } else if (type === 'like') {
                 await Notification.postNotification(sender, receiver, type, postId);
+                await Post.postLike(postId, sender)
                 // postid and data add like comment
+            } else if (type === 'comment') {
+                await Notification.postNotification(sender, receiver, type, postId);
             }
             callback({ status: 200 }) // for making follow to already follow
             const receiverId = userMap.get(receiver);

@@ -28,12 +28,23 @@ module.exports.getMessages = async (req, res) => {
         });
 
         const users = Array.from(usersMap.values());
-
-        console.log(users);
         if (!messages) {
             return res.status(200).json([])
         }
         return res.status(200).json(users.map(formatChat));
+    } catch (err) {
+        return res.status(500).json({ message: err.message })
+    }
+}
+
+module.exports.deleteChat = async (req, res) => {
+    const { userId } = req.params;
+    try {
+        await Message.findByIdAndUpdate(
+            userId,
+            { $push: { deleteBy: userId } }
+        )
+        return res.status(200).json({ message: 'Success' })
     } catch (err) {
         return res.status(500).json({ message: err.message })
     }
@@ -50,10 +61,12 @@ module.exports.getIndividualMessage = async (req, res) => {
         })
             .sort({ sendAt: 1 });
         // console.log('messages', messages)
+        const filterMessage = messages.filter(m => !m.deleteBy.includes(user1));
+        console.log(filterMessage)
         if (!messages) {
             return res.status(200).json([])
         }
-        return res.status(200).json(messages);
+        return res.status(200).json(filterMessage);
     } catch (err) {
         return res.status(500).json({ message: err.message })
     }
@@ -70,7 +83,7 @@ module.exports.postMessage = async (sender, receiver, msg) => {
             receiver,
             message: msg
         })
-        return {message , status : 200};
+        return { message, status: 200 };
     }
     catch (err) {
         console.error(err.message)

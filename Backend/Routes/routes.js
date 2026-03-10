@@ -61,9 +61,13 @@ router.post('/post', upload.single('photoVideo'), post.postUploadPost);
 
 router.get('/notification/:userId', notification.getNotification);
 
+router.post('/notification/delete/:userId', notification.deleteNotify)
+
 router.get('/chats/individual/:user1/:user2', message.getIndividualMessage);
 
 router.get('/chats/:userId', message.getMessages);
+
+router.post('/chats/delete/:userId' , message.deleteChat)
 
 router.get('/follow/:userId', follow.getFollow);
 

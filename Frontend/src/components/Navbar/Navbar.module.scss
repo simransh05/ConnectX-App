@@ -29,6 +29,21 @@
     padding-left: $padding-md;
 }
 
+.notifyLink { 
+  position: relative;
+}
+
+.numNotify {
+  position: absolute;
+  top: -80%;
+  border: $border-black;
+  border-radius: $circle;
+  padding: 5px;
+  color: white;
+  background-color: blueviolet;
+  right: -20%;
+}
+
 .searchUser {
   position: relative;
   width: 20%;

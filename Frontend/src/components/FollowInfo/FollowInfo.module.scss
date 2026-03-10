@@ -1,0 +1,7 @@
+@use '../../Style/mixins' as *;
+@use '../../Style/variables' as *;
+
+.follower,
+.following {
+    cursor: pointer;
+}

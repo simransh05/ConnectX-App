@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import useFollowDetail from '../../utils/helper/followDetails';
 import Follow from '../Drawer/Follow/Follow';
+import style from './FollowInfo.module.scss'
 
 function FollowInfo({ userId }) {
     const { detail } = useFollowDetail(userId);
@@ -16,11 +17,11 @@ function FollowInfo({ userId }) {
     }
     return (
         <>
-            <div onClick={() => handleClick('follower')}>
+            <div onClick={() => handleClick('follower')} className={style.follower}>
                 <div>Followers</div>
                 <div>{detail?.follower?.length}</div>
             </div>
-            <div onClick={() => handleClick('following')}>
+            <div onClick={() => handleClick('following')} className={style.following}>
                 <div>Following</div>
                 <div>{detail?.following?.length}</div>
             </div>
