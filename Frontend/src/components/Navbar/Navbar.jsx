@@ -36,8 +36,13 @@ function Navbar() {
       // number increase 
       setNumber(prev => prev + 1)
     })
+
+    socket.on('deleted', () => {
+      setNumber(0)
+    })
     return () => {
       socket.off('receiver-notify');
+      socket.off('deleted')
     }
   }, [])
 
@@ -66,7 +71,7 @@ function Navbar() {
         <input
           type="text"
           className={style.inputBox}
-          placeholder="search user"
+          placeholder="Search User..."
           onChange={handleChange}
         />
 

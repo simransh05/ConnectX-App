@@ -150,3 +150,18 @@ module.exports.getLogout = async (req, res) => {
         return res.status(500).json({ message: 'internal error' })
     }
 }
+
+module.exports.savePostUser = async (req, res) => {
+    const { userId, postId } = req.body;
+    console.log(req.body)
+    try {
+        await User.findByIdAndUpdate(
+            userId,
+            { $addToSet: { savedPost: postId } }
+        )
+        return res.status(200).json({ message: 'successful' })
+    }
+    catch (err) {
+        return res.status(500).json({ message: 'internal error' })
+    }
+}

@@ -11,7 +11,7 @@ module.exports.getFollow = async (req, res) => {
         const follower = await Follow.find({ following: userId })
             .populate('follower', 'name profilePic _id');
 
-        console.log("follow", follower)
+        // console.log("follow", follower)
 
         return res.status(200).json({
             follower: follower.map(formatFollow),

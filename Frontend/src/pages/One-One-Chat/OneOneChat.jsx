@@ -8,14 +8,15 @@ import socket from '../../Socket/socket';
 import { useRef } from 'react';
 import { CiMenuKebab } from "react-icons/ci";
 import { Menu, MenuItem } from '@mui/material';
+import Swal from 'sweetalert2';
 
 function OneOneChat() {
   const [chats, setChat] = useState(null);
   const { currentUser } = useContext(CurrentUserContext);
   const { selectedUser } = useContext(SelectedUserContext);
   const [message, setMessage] = useState("");
-  const [menu, setMenu] = useState(false);
   const scroll = useRef(null);
+  const [anchorEl, setAnchorEl] = useState(null);
   // get chat of that person
   useEffect(() => {
     const fetchChat = async () => {
@@ -61,12 +62,31 @@ function OneOneChat() {
     });
     setMessage("");
   }
+  const handleMenuClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const handleDelete = async () => {
-    const res = await api.deleteChat(currentUser?._id);
-    if (res.status === 200) {
-      setChat(null);
+    const result = await Swal.fire({
+      title: 'Delete Chat',
+      text: 'Are you sure you want to delete chat',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      showConfirmButton: true,
+      cancelButtonText: 'No'
+    })
+    if (result.isConfirmed) {
+      const res = await api.deleteChat(currentUser?._id, selectedUser?._id);
+      if (res.status === 200) {
+        setChat(null);
+      }
     }
+
   }
 
   return (
@@ -88,10 +108,12 @@ function OneOneChat() {
                   fontSize: '14px'
                 }}
                 className={style.menuBtn}
-                onClick={() => setMenu(true)}
+                onClick={handleMenuClick}
               />
               {/* menu */}
-              <Menu open={menu} onClose={() => setMenu(false)} className={style.deleteBtn}>
+              <Menu anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleClose} className={style.deleteBtn}>
                 <MenuItem onClick={handleDelete}>Delete Chat</MenuItem>
               </Menu>
             </div>

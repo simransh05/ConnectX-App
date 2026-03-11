@@ -9,6 +9,7 @@ import { CurrentUserContext } from '../../Context/currentUserProvider'
 import { useState } from 'react'
 import style from './Notification.module.scss'
 import UserAvatar from '../../components/userAvatar/UserAvatar'
+import socket from '../../Socket/socket'
 
 function Notification() {
   useUserAvailable(`${ROUTES.NOTIFICATION}`);
@@ -43,44 +44,58 @@ function Notification() {
     }
   };
 
-  const handleDelete = async () => {
-    const res = await api.deleteNotify(currentUser?._id);
-    if (res.status === 200) {
-      setNotification(null);
-    }
+  useEffect(() => {
+    socket.on('receiver-notify', ({ sender, receiver, type, postId }) => {
+      setNotification(prev => [...prev, { sender, receiver, type, createdAt: new Date.now()
+    }])
+  })
+
+  return () => {
+    socket.off('receiver-notify')
   }
+}, [])
 
-  console.log(notification)
-  return (
-    <>
-      <Navbar />
-      <div className={style.notifyContainer}>
-        {notification?.length > 0 ? (
-          <div className={style.notifyList}>
-            {notification.map((n, idx) => (
-              <div className={style.notify} key={idx}>
-                <UserAvatar
-                  user={n}
-                  size={40}
-                />
+const handleDelete = async () => {
+  const res = await api.deleteNotify(currentUser?._id);
+  console.log(res.data, res.status)
+  if (res.status === 200) {
+    socket.emit('delete');
+    setNotification(null);
+  }
+}
 
-                <div>{getNotificationText(n)}</div>
+console.log(notification)
+return (
+  <>
+    <Navbar />
+    {notification?.length > 0 ? (
+      <div className={style.containerNotify}>
+        <div className={style.notifyList}>
+          {notification.map((n, idx) => (
+            <div className={style.notify} key={idx}>
+              <UserAvatar
+                user={n}
+                size={40}
+              />
 
-                <div>{new Date(n?.createdAt).toUTCString()}</div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className={style.noNotify}>No Notifications</div>
-        )}
+              <div>{getNotificationText(n)}</div>
 
-        {notification?.length > 0 && <button className={style.deleteNotify} onClick={handleDelete}> Delete Notification</button>}
+              <div>{new Date(n.createdAt).toDateString()} {new Date(n?.createdAt).toTimeString()}</div>
+            </div>
+          ))}
+        </div>
+        <button className={style.deleteNotify} onClick={handleDelete}> Delete Notification</button>
       </div>
+    ) : (
+      <div className={style.notifyContainer}>
+        <div className={style.noNotify}>No Notifications</div>
+      </div>
+    )}
 
-      {/* have all the notifications  (list per person)*/}
-      {/* get all the notification */}
-    </>
-  )
+    {/* have all the notifications  (list per person)*/}
+    {/* get all the notification */}
+  </>
+)
 }
 
 export default Notification

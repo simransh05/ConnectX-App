@@ -51,6 +51,8 @@ router.get('/user/:userId', users.getAllUsers);
 
 router.post('/user/update', users.postPassword);
 
+router.post('/post/save' , users.savePostUser);
+
 router.get('/logout', users.getLogout);
 
 router.get('/post/individual/:userId', post.getIndividualPosts);
@@ -67,12 +69,12 @@ router.get('/chats/individual/:user1/:user2', message.getIndividualMessage);
 
 router.get('/chats/:userId', message.getMessages);
 
-router.post('/chats/delete/:userId' , message.deleteChat)
+router.post('/chats/delete/:userId/:other', message.deleteChat)
 
 router.get('/follow/:userId', follow.getFollow);
 
-router.post('/post/comment' , comment.postComment);
+router.post('/post/comment', comment.postComment);
 
-router.get('/post/comment/:postId' , comment.getComment);
+router.get('/post/comment/:postId', comment.getComment);
 
 module.exports = router;

@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { CurrentUserContext } from '../../../Context/currentUserProvider';
 import { useContext } from 'react';
 import socket from '../../../Socket/socket';
+import UserAvatar from '../../userAvatar/UserAvatar';
 
 function Comment({ open, onClose, onSuccess, post }) {
     const [commentInput, setCommentInput] = useState("");
@@ -20,16 +21,22 @@ function Comment({ open, onClose, onSuccess, post }) {
         }
         fetchComment();
     }, [])
+
+    const handleEnter = (e) => {
+        if (e.key === 'Enter') {
+            handleComment();
+        }
+    }
+
     const handleComment = async (e) => {
-        e.preventDefault();
         if (!commentInput.trim()) return;
         const data = {
             userId: currentUser?._id,
             comment: commentInput,
             postId: post?._id
         }
-        socket.emit('send-notify' , {sender :  currentUser?._id , receiver : post.userId._id , type : 'comment' , postId : post._id}, (res)=> {
-            if(res.status === 200) {
+        socket.emit('send-notify', { sender: currentUser?._id, receiver: post.userId._id, type: 'comment', postId: post._id }, (res) => {
+            if (res.status === 200) {
 
             }
         })
@@ -49,22 +56,32 @@ function Comment({ open, onClose, onSuccess, post }) {
         <Drawer open={open} onClose={onClose} anchor='bottom' className={style.commentDrawer}
             PaperProps={{
                 sx: {
-                    height: '300px',
+                    height: '500px',
                     borderTopLeftRadius: '10px',
                     borderTopRightRadius: '10px'
                 }
             }}>
-            <div className={style.sendComment}>
-                <input type='text' name='comment' placeholder='Add Comment' onChange={(e) => setCommentInput(e.target.value)} value={commentInput}/>
-                <button onClick={handleComment}>Send</button>
+            <div className={style.commentInputContainer}>
+                <div className={style.sendComment}>
+                    <textarea type='text' name='comment' placeholder='Add Comment' onChange={(e) => setCommentInput(e.target.value)} value={commentInput} onKeyDown={handleEnter} />
+                    <button onClick={handleComment}>Send</button>
+                </div>
             </div>
 
             <div>
                 {commentData?.map(c => (
-                    <div key={c?._id} className={style.indComment}>
-                        <img src={c?.userId?.profilePic} alt="profile pic"  className={style.imageComment}/>
-                        <div className={style.commentName}>{c?.userId?.name}</div>
-                        <p className={style.commentMessage}>{c?.message}</p>
+                    <div key={c?._id} className={style.commentContainer}>
+                        <div className={style.indComment}>
+                            <UserAvatar
+                                user={c.userId}
+                                size={50}
+                            />
+                            <div className={style.commentName}>{c?.userId?.name}</div>
+                        </div>
+                        <div className={style.commentMessage}>
+                            <p>{c?.message}</p>
+                        </div>
+
                     </div>
                 ))}
             </div>
