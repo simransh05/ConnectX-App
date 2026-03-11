@@ -4,7 +4,7 @@ const { formatChat } = require("./Users/format");
 module.exports.getMessages = async (req, res) => {
     const { userId } = req.params;
     try {
-        console.log('userId', typeof userId)
+        // console.log('userId', typeof userId)
         const messages = await Message.find({
             $or: [
                 { sender: userId },
@@ -38,11 +38,18 @@ module.exports.getMessages = async (req, res) => {
 }
 
 module.exports.deleteChat = async (req, res) => {
-    const { userId } = req.params;
+    const { userId, other } = req.params;
     try {
-        await Message.findByIdAndUpdate(
-            userId,
-            { $push: { deleteBy: userId } }
+        await Message.updateMany(
+            {
+                $or: [
+                    { sender: userId, receiver: other },
+                    { sender: other, receiver: userId }
+                ]
+            },
+            {
+                $addToSet: { deleteBy: userId }
+            }
         )
         return res.status(200).json({ message: 'Success' })
     } catch (err) {
@@ -62,7 +69,7 @@ module.exports.getIndividualMessage = async (req, res) => {
             .sort({ sendAt: 1 });
         // console.log('messages', messages)
         const filterMessage = messages.filter(m => !m.deleteBy.includes(user1));
-        console.log(filterMessage)
+        // console.log(filterMessage)
         if (!messages) {
             return res.status(200).json([])
         }
@@ -75,7 +82,7 @@ module.exports.getIndividualMessage = async (req, res) => {
 module.exports.postMessage = async (sender, receiver, msg) => {
     try {
         if (!sender || !receiver || !msg) {
-            console.log('Field is required')
+            console.error('Field is required')
             return;
         }
         const message = await Message.create({

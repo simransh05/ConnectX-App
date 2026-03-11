@@ -11,11 +11,11 @@ module.exports = (io) => {
             console.log('user connected', socket.id, socket.userId);
         })
         socket.on('send', async ({ sender, receiver, msg }, callback) => {
-            console.log('send', sender, receiver, msg)
+            // console.log('send', sender, receiver, msg)
             const receiverId = userMap.get(receiver);
-            console.log('receive', receiverId);
+            // console.log('receive', receiverId);
             const res = await Message.postMessage(sender, receiver, msg);
-            console.log('status', res?.status);
+            // console.log('status', res?.status);
             if (res.status === 200) {
                 callback({ status: 200 })
             }
@@ -40,6 +40,9 @@ module.exports = (io) => {
             io.to(receiverId).emit('receiver-notify', { sender, receiver, type, postId: postId || null })
         })
 
+        socket.on('delete', () => {
+            io.to(socket.id).emit('deleted');
+        })
         // socket.on()
         // chat , notification 
 

@@ -76,7 +76,7 @@ function Post({ open, onClose, onSuccess }) {
                         />
                     </label>}
                     <br />
-                    <div className={style.note}>Note: File should be of less than 15MB </div>
+                    {!preview && <div className={style.note}>Note: File should be of less than 15MB </div>}
                     <TextField
                         label='Caption'
                         value={caption}

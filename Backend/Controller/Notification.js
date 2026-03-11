@@ -4,7 +4,7 @@ const { formatNotify } = require("./Users/format");
 module.exports.getNotification = async (req, res) => {
     const { userId } = req.params;
     try {
-        const notification = await Notification.find({ receiver: userId }).populate('sender')
+        const notification = await Notification.find({ receiver: userId }).populate('sender').sort({ createdAt: -1 })
         // console.log('notify' , notification)
         if (!notification) {
             return res.status(200).json([])
@@ -33,10 +33,12 @@ module.exports.postNotification = async (sender, receiver, type, postId) => {
 
 module.exports.deleteNotify = async (req, res) => {
     const { userId } = req.params;
+    console.log(userId);
     try {
-        await Notification.findByIdAndDelete(
-            userId
-        )
+        await Notification.deleteMany({
+            receiver: userId
+        })
+        console.log('here 41')
         return res.status(200).json({ message: 'Success' })
     } catch (err) {
         return res.status(500).json({ message: err.message })

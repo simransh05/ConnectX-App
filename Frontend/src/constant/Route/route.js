@@ -13,7 +13,8 @@ const ROUTES = {
     LOGOUT: '/logout',
     UPDATE: '/update',
     COMMENT: '/comment',
-    DELETE: '/delete'
+    DELETE: '/delete',
+    SAVE: '/save'
 }
 
 export default ROUTES;

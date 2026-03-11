@@ -6,7 +6,12 @@
 }
 
 .notifyContainer {
-    @include flex-justify
+    @include flex-center;
+}
+
+.containerNotify {
+    @include flex-justify;
+    align-items: flex-start;
 }
 
 .notify {
@@ -20,14 +25,20 @@
     }
 }
 
+.noNotifyContainer {
+    @include flex-center
+}
+
 .deleteNotify {
     color: white;
     background-color: red;
     border: none;
     top: 0;
-    padding: $padding-md;
+    margin-top: 40px;
+    margin-right: 100px;
+    padding: 20px;
     border-radius: $padding-md;
-    
+
 }
 
 .noNotify {

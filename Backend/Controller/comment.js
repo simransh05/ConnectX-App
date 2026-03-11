@@ -17,11 +17,11 @@ module.exports.getComment = async (req, res) => {
 }
 
 module.exports.postComment = async (req, res) => {
-    console.log(res.body);
+    // console.log(req.body);
     const { postId, comment, userId } = req.body;
     try {
 
-        console.log('post', postId, comment, userId)
+        // console.log('post', postId, comment, userId)
         if (!postId || !comment || !userId) {
             return res.status(404).json({ message: 'Failed' })
         }

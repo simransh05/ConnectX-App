@@ -49,17 +49,20 @@ module.exports.postUploadPost = async (req, res) => {
 
 module.exports.postLike = async (postId, userId) => {
     try {
-        const updated = await Post.findByIdAndUpdate(
-            postId,
+        const updated = await Post.findOneAndUpdate(
             {
-                $set: { likes: userId },
+                _id: postId,
+                likes: { $ne: userId }   
+            },
+            {
+                $push: { likes: userId },
                 $inc: { likeCount: 1 }
-            }
-        )
-        console.log(updated)
+            },
+            { new: true }
+        );
+
         return updated;
+    } catch (err) {
+        console.error(err.message);
     }
-    catch (err) {
-        console.error(err.message)
-    }
-}
+};

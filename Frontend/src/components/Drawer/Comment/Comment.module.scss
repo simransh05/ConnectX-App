@@ -5,18 +5,37 @@
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif
 }
 
+.commentInputContainer {
+    position: sticky;
+    top: 0;
+    background-color: white;
+}
+
 .sendComment {
     @include flex-space;
+    position: relative;
 
-    input {
-        width: 60%;
+    textarea {
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        width: 95%;
+        height: 70px;
+        background-color: lightgray;
+        border-radius: $padding-md;
         padding: $padding-md;
         margin-top: $padding-md;
+        border: $border-black;
+
+        & :focus {
+            border: $border-black;
+        }
     }
 
     button {
-        width: 20%;
+        position: absolute;
         padding: $padding-md;
+        bottom: 10px;
+        right: 40px;
+        padding: 12px 40px;
         margin-top: $padding-md;
         border: none;
         border-radius: $padding-md;
@@ -33,12 +52,31 @@
 
 .indComment {
     display: flex;
+    margin: 0 $padding-md;
+    width: 98vw;
+
+    & :first-child {
+        margin-top: $padding-md;
+    }
 }
 
 .commentName,
 .commentMessage {
     padding: $padding-md;
     margin: auto 0;
+
+    p {
+        font-family: cursive;
+        margin: $padding-md;
+        padding-bottom: $padding-md;
+        border-bottom: 1px solid gray;
+    }
+
+    // border-bottom: 1px solid gray;
+}
+
+.commentMessage {
+    @include flex-column;
 }
 
 .commentName {

@@ -28,6 +28,10 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String
     },
+    savedPost: [{
+        type: mongoose.Schema.Types.ObjectId,
+        req: 'Post'
+    }],
     socialLinks: [
         {
             platform: {

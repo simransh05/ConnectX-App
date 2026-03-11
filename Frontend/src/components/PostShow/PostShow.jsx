@@ -7,6 +7,8 @@ import { useState } from 'react';
 import Comment from '../Drawer/Comment/Comment';
 import { allPostStore } from '../../Zustand/AllPosts';
 import api from '../../utils/api';
+import { CiBookmark } from "react-icons/ci";
+import { FaBookmark } from "react-icons/fa";
 import socket from '../../Socket/socket';
 import { AiFillLike } from "react-icons/ai";
 import { CurrentUserContext } from '../../Context/currentUserProvider';
@@ -16,6 +18,7 @@ function PostShow({ posts }) {
     const [postid, setpostId] = useState(null);
     const [post, setPost] = useState(null);
     const [liked, setLiked] = useState(new Set());
+    const [saved, setSaved] = useState(new Set());
     useEffect(() => {
         if (!posts) return;
         setPost(posts);
@@ -23,7 +26,13 @@ function PostShow({ posts }) {
             posts?.filter(p => p.likes?.includes(currentUser?._id))
                 .map(p => p._id)
         );
-        console.log(likedSet)
+
+        const savedSet = new Set(
+            posts?.filter(p => currentUser?.savedPost?.includes(p?._id))
+                .map(p => p._id)
+        )
+        setSaved(savedSet);
+        console.log(savedSet, likedSet)
         setLiked(likedSet);
     }, [posts, currentUser])
 
@@ -33,7 +42,9 @@ function PostShow({ posts }) {
         setpostId(p)
     }
 
-    console.log(liked)
+    posts?.map(p => {
+        console.log(p.likes, p._id)
+    })
 
 
     const handleClose = () => {
@@ -57,6 +68,19 @@ function PostShow({ posts }) {
         })
     }
 
+    const handleSave = async (postId) => {
+        // add in set and save api 
+        if (saved.has(postId)) return;
+        const data = {
+            postId,
+            userId: currentUser?._id
+        }
+        const res = await api.savePost(data);
+        if (res.status === 200) {
+            setSaved(prev => new Set([...prev, postId]));
+        }
+    }
+
     const handleSuccess = (postId) => {
         // count increase
         setPost(prev =>
@@ -75,12 +99,12 @@ function PostShow({ posts }) {
                 post?.map((p, idx) => (
                     <div key={idx} className={style.postInd}>
                         <img src={p?.photoVideo} alt="Image" className={style.imagePost} />
-                        <div>
+                        <div className={style.postUserInfo}>
                             <UserAvatar
                                 user={p.userId}
                                 size={30}
                             />
-                            <span> {p?.userId?.name}</span>
+                            <div> {p?.userId?.name}</div>
                         </div>
                         <div className={style.postCaption}>{p?.caption}</div>
                         <div className={style.postInfo}>
@@ -92,6 +116,7 @@ function PostShow({ posts }) {
                             <span>{p.likeCount > 0 && p.likeCount}</span>
                             <FaRegComment className={style.commentImage} onClick={() => handleClick(p)} />
                             <span>{p.commentCount}</span>
+                            {saved?.has(p._id) ? <FaBookmark className={style.alreadySave} /> : <CiBookmark className={style.addSave} onClick={() => handleSave(p._id)} />}
                         </div>
 
                     </div>
@@ -102,7 +127,7 @@ function PostShow({ posts }) {
                 <Comment
                     open={() => setCommentDawer(true)}
                     onClose={handleClose}
-                    onSuccess={()=>handleSuccess(postid._id)}
+                    onSuccess={() => handleSuccess(postid._id)}
                     post={postid}
                 />}
         </div>
