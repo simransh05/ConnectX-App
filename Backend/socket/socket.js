@@ -11,14 +11,14 @@ module.exports = (io) => {
             console.log('user connected', socket.id, socket.userId);
         })
         socket.on('send', async ({ sender, receiver, msg }, callback) => {
-            // console.log('send', sender, receiver, msg)
-            const receiverId = userMap.get(receiver);
+            console.log('send', sender, receiver, msg)
             // console.log('receive', receiverId);
             const res = await Message.postMessage(sender, receiver, msg);
-            // console.log('status', res?.status);
+            console.log('status', res?.status, res);
             if (res.status === 200) {
                 callback({ status: 200 })
             }
+            const receiverId = userMap.get(receiver);
             io.to(receiverId).emit('receive', { sender, receiver, msg })
         })
 

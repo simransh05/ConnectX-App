@@ -19,7 +19,7 @@
     @include flex-space;
     text-align: center;
     border-bottom: $border-black;
-    padding-bottom: $padding-md;
+    padding: $padding-md 0;
 }
 
 .socialLink {

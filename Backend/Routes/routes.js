@@ -59,6 +59,8 @@ router.get('/post/individual/:userId', post.getIndividualPosts);
 
 router.get('/post', post.getAllPosts);
 
+router.delete('/post/:postId' , post.deletePost)
+
 router.post('/post', upload.single('photoVideo'), post.postUploadPost);
 
 router.get('/notification/:userId', notification.getNotification);

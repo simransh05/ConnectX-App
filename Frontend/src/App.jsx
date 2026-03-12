@@ -27,7 +27,7 @@ function App() {
                 <Route path={ROUTES.ABOUT} element={<About />} />
                 <Route path={ROUTES.PROFILE} element={<Profile />} />
                 <Route path={ROUTES.NOTIFICATION} element={<Notification />} />
-                <Route path={ROUTES.MESSAGES} element={<Messages />} />
+                <Route path={`${ROUTES.MESSAGES}/:userId?`} element={<Messages />} />
                 <Route path={`${ROUTES.PROFILE}/:userId`} element={<OthersProfile />} />
               </Routes>
             </Router>

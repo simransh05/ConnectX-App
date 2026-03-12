@@ -46,6 +46,7 @@ function Profile() {
           </div>
           <PostShow
             posts={posts}
+            isProfile={true}
           />
 
           {/* all post of mine */}

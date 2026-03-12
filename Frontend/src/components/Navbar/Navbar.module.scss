@@ -4,7 +4,7 @@
 .navbar {
     @include flex-justify;
     padding-right: $padding-md;
-    margin-bottom: $spacing;
+    // margin-bottom: $spacing;
     border-bottom: $border-black;
     position: sticky;
     top: 0;

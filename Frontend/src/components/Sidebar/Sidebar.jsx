@@ -168,12 +168,14 @@ function Sidebar() {
                 <div className={style.inputSocial}>
                   <input
                     value={s.platform}
+                    name='platform'
                     onChange={(e) =>
                       handleSocialChange(index, "platform", e.target.value)
                     }
                   />
                   <input
                     value={s.url}
+                    name='url'
                     onChange={(e) =>
                       handleSocialChange(index, "url", e.target.value)
                     }
@@ -189,7 +191,7 @@ function Sidebar() {
               Add Social Link
             </button>
             <div className={style.btnUpdate}>
-              <button type='submit' onClick={handleCancel} className={style.cancelProfile}>Cancel</button>
+              <button type='button' onClick={handleCancel} className={style.cancelProfile}>Cancel</button>
               <button type='submit' className={style.updateProfile}>Update</button>
             </div>
 

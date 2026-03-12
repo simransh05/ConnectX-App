@@ -56,7 +56,7 @@ function Comment({ open, onClose, onSuccess, post }) {
         <Drawer open={open} onClose={onClose} anchor='bottom' className={style.commentDrawer}
             PaperProps={{
                 sx: {
-                    height: '500px',
+                    height: '60%',
                     borderTopLeftRadius: '10px',
                     borderTopRightRadius: '10px'
                 }

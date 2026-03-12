@@ -9,8 +9,10 @@ import { useRef } from 'react';
 import { CiMenuKebab } from "react-icons/ci";
 import { Menu, MenuItem } from '@mui/material';
 import Swal from 'sweetalert2';
+import { useParams } from 'react-router-dom';
 
 function OneOneChat() {
+  const { userId } = useParams()
   const [chats, setChat] = useState(null);
   const { currentUser } = useContext(CurrentUserContext);
   const { selectedUser } = useContext(SelectedUserContext);
@@ -20,7 +22,7 @@ function OneOneChat() {
   // get chat of that person
   useEffect(() => {
     const fetchChat = async () => {
-      if (selectedUser != null) {
+      if (selectedUser?._id) {
         const res = await api.getIndividualMessage(currentUser?._id, selectedUser?._id)
         console.log(res.data)
         setChat(res.data);
@@ -93,48 +95,49 @@ function OneOneChat() {
     <>
       {/* right side with whom we are chatting onclick */}
       {/* map the chats with them  if currentUser chat them on right else left (scss) */}
-      {selectedUser ? (
-        <div className={style["chat-section"]}>
-          <div className={style["chat-header"]}>
-            <UserAvatar
-              user={selectedUser}
-              size={60}
-            />
-            <div>{selectedUser?.name}</div>
-            <div className={style.menuParent}>
-
-              <CiMenuKebab
-                style={{
-                  fontSize: '14px'
-                }}
-                className={style.menuBtn}
-                onClick={handleMenuClick}
+      {/* <div className={style["chat-section"]}> */}
+        {selectedUser ? (
+          <>
+            <div className={style["chat-header"]}>
+              <UserAvatar
+                user={selectedUser}
+                size={60}
               />
-              {/* menu */}
-              <Menu anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleClose} className={style.deleteBtn}>
-                <MenuItem onClick={handleDelete}>Delete Chat</MenuItem>
-              </Menu>
+              <div>{selectedUser?.name}</div>
+              <div className={style.menuParent}>
+
+                <CiMenuKebab
+                  style={{
+                    fontSize: '14px'
+                  }}
+                  className={style.menuBtn}
+                  onClick={handleMenuClick}
+                />
+                {/* menu */}
+                <Menu anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose} className={style.deleteBtn}>
+                  <MenuItem onClick={handleDelete}>Delete Chat</MenuItem>
+                </Menu>
+              </div>
+
             </div>
-
-          </div>
-          <div className={style["chat-body"]}>
-            {chats?.map((c, idx) => (
-              <div className={c.sender === currentUser?._id ? style.sender : style.receiver} key={idx}>{c.message}</div>
-            ))}
-            <div ref={scroll}></div>
-            {/* space and data */}
-          </div>
-          <div className={style["chat-footer"]}>
-            <input type="text" name='chat' className={style['input-field']} placeholder='Type a message' onChange={(e) => setMessage(e.target.value)} value={message} onKeyDown={handleEnter} />
-            <button onClick={handleClick} className={style.buttonSend}>Send</button>
-          </div>
-        </div>
-      ) : (
-        <div className={style.selectuser}>Select the user</div>
-      )}
-
+            <div className={style["chat-body"]}>
+              {chats?.map((c, idx) => (
+                <div className={c.sender === currentUser?._id ? style.sender : style.receiver} key={idx}>{c.message}</div>
+              ))}
+              <div ref={scroll}></div>
+              {/* space and data */}
+            </div>
+            <div className={style["chat-footer"]}>
+              <input type="text" name='chat' className={style['input-field']} placeholder='Type a message' onChange={(e) => setMessage(e.target.value)} value={message} onKeyDown={handleEnter} />
+              <button onClick={handleClick} className={style.buttonSend}>Send</button>
+            </div>
+          </>
+        ) : (
+          <div className={style.selectuser}>Select the user</div>
+        )}
+      {/* </div> */}
       {/* idea is to have the header body footer */}
     </ >
   )

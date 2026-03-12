@@ -8,9 +8,17 @@ import { CurrentUserContext } from '../../Context/currentUserProvider'
 import style from './Messages.module.scss'
 import { SelectedUserContext } from '../../Context/SelectedUserProvider'
 import UserAvatar from '../../components/userAvatar/UserAvatar'
+import { useNavigate, useParams } from 'react-router-dom'
 
 function Messages() {
-  useUserAvailable(`${ROUTES.MESSAGES}`)
+  const navigate = useNavigate()
+  const { userId } = useParams()
+  if (userId) {
+    useUserAvailable(`${ROUTES.MESSAGES}/${userId}`)
+  } else {
+    useUserAvailable(`${ROUTES.MESSAGES}`)
+  }
+
   const { currentUser } = useContext(CurrentUserContext);
   const { setSelectedUser } = useContext(SelectedUserContext);
   const [myChats, setMyChats] = useState(null);
@@ -25,23 +33,30 @@ function Messages() {
     fetchMyChatUsers();
   }, [currentUser])
 
+  console.log(userId);
+
+  const handleClick = (c) => {
+    setSelectedUser(c);
+    navigate(`${ROUTES.MESSAGES}/${c?._id}`)
+  }
+
   console.log(myChats)
   return (
-    <div>
+    <>
       <Navbar />
       <div className={style["message-container"]}>
         <div className={style["left-side"]}>
           {myChats?.length > 0 ?
             myChats.map(c => (
-              <div className={style.people} onClick={() => setSelectedUser(c)} key={c?._id}>
+              <div className={style.people} onClick={() => handleClick(c)} key={c?._id}>
                 <UserAvatar
-                user={c}
-                size={50}
+                  user={c}
+                  size={50}
                 />
                 <div>{c?.name}</div>
               </div>
-            )) :
-
+            ))
+            :
             <div className={style.noChats}>No Chats</div>}
           {/* list of people chat with and sort with latest */}
           {/* list.map then onClick send in the other  */}
@@ -52,7 +67,7 @@ function Messages() {
         </div>
       </div>
 
-    </div>
+    </>
   )
 }
 

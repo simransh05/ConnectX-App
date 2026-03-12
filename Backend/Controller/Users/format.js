@@ -8,6 +8,7 @@ module.exports.formatUser = (user) => {
         socialLinks: user.socialLinks,
         joinedAt: user.joinedAt,
         bio: user.bio,
+        savedPost: user.savedPost,
         location: user.location,
         profilePic: user.profilePic
             ? `data:${user.profilePicType};base64,${user.profilePic.toString("base64")}`
@@ -88,6 +89,6 @@ module.exports.formatNotify = (user) => {
             : null,
         name: user.sender.name,
         userId: user.sender._id,
-        createdAt : user.createdAt
+        createdAt: user.createdAt
     }
 }
