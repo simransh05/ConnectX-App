@@ -5,15 +5,17 @@ import { FaRegComment } from "react-icons/fa6";
 import UserAvatar from '../userAvatar/UserAvatar';
 import { useState } from 'react';
 import Comment from '../Drawer/Comment/Comment';
-import { allPostStore } from '../../Zustand/AllPosts';
 import api from '../../utils/api';
 import { CiBookmark } from "react-icons/ci";
 import { FaBookmark } from "react-icons/fa";
 import socket from '../../Socket/socket';
 import { AiFillLike } from "react-icons/ai";
 import { CurrentUserContext } from '../../Context/currentUserProvider';
-function PostShow({ posts }) {
+import Swal from 'sweetalert2';
+import { allPostStore } from '../../Zustand/AllPosts';
+function PostShow({ posts, isProfile }) {
     const [commentDrawer, setCommentDawer] = useState(false);
+    const { fetchAllPosts } = allPostStore()
     const { currentUser } = useContext(CurrentUserContext);
     const [postid, setpostId] = useState(null);
     const [post, setPost] = useState(null);
@@ -32,11 +34,11 @@ function PostShow({ posts }) {
                 .map(p => p._id)
         )
         setSaved(savedSet);
-        console.log(savedSet, likedSet)
+        console.log(savedSet, likedSet, currentUser)
         setLiked(likedSet);
     }, [posts, currentUser])
 
-    console.log('posts', posts);
+    // console.log('posts', posts);
     const handleClick = (p) => {
         setCommentDawer(true);
         setpostId(p)
@@ -92,6 +94,27 @@ function PostShow({ posts }) {
         );
     }
 
+    const handleDelete = async (postId) => {
+        const result = await Swal.fire({
+            title: 'Delete Post',
+            text: 'Are you sure you want to delete post',
+            showCancelButton: true,
+            showConfirmButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No'
+        })
+        if (result.isConfirmed) {
+            const res = await api.deletePost(postId);
+            if (res.status === 200) {
+                fetchAllPosts();
+                const res1 = await api.getIndividualPosts(currentUser?._id);
+                if (res1.status === 200) {
+                    setPost(prev => prev.filter(p => p._id != postId))
+                }
+            }
+        }
+    }
+
     console.log(postid)
     return (
         <div className={style.postContainer}>
@@ -115,10 +138,13 @@ function PostShow({ posts }) {
                             }
                             <span>{p.likeCount > 0 && p.likeCount}</span>
                             <FaRegComment className={style.commentImage} onClick={() => handleClick(p)} />
-                            <span>{p.commentCount}</span>
+                            <span>{p.commentCount > 0 && p.commentCount}</span>
                             {saved?.has(p._id) ? <FaBookmark className={style.alreadySave} /> : <CiBookmark className={style.addSave} onClick={() => handleSave(p._id)} />}
                         </div>
-
+                        {isProfile &&
+                            <div className={style.deletePost}>
+                                <button onClick={() => handleDelete(p._id)} className={style.isProfile}>Delete Post</button>
+                            </div>}
                     </div>
                 )) :
                 <div className={style.noPost}>No Post Available</div>

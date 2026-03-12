@@ -12,7 +12,7 @@ function Post({ open, onClose, onSuccess }) {
     const { currentUser } = useContext(CurrentUserContext);
     // on submit form get all the data with who send this post user id 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        e?.preventDefault();
         try {
             if (!preview || !caption) {
                 return;
@@ -44,6 +44,12 @@ function Post({ open, onClose, onSuccess }) {
         // = data have all things which user add + id user
     }
 
+    const handleEnter = (e)=> {
+        console.log(e.key)
+        if(e.key === 'Enter') {
+            handleSubmit();
+        }
+    }
     const handleFile = (e) => {
         const selected = e.target.files[0];
         if (!selected) return;
@@ -83,6 +89,7 @@ function Post({ open, onClose, onSuccess }) {
                         onChange={(e) => setCaption(e.target.value)}
                         className={style.captionInput}
                         fullWidth
+                        onKeyDown={handleEnter}
                     />
                 </DialogContent>
                 <DialogActions sx={{ display: 'flex', justifyContent: 'center' }}>

@@ -40,6 +40,21 @@
     border-radius: $circle;
 }
 
+.isProfile {
+    background-color: red;
+    color: white;
+    width: 50%;
+    padding: $padding-md;
+    border: none;
+    border-radius: $padding-md;
+    margin-top: 5px;
+    align-items: center;
+}
+
+.deletePost {
+    @include flex-center
+}
+
 .commentImage {
     height: 20px;
     width: 20px;

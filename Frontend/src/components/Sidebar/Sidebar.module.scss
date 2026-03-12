@@ -82,6 +82,23 @@
     }
 }
 
+.bioInfo {
+    input {
+        width: 75%
+    }
+}
+
+.indSocial {
+    input {
+        width: 85%;
+        margin-bottom: 5px;
+    }
+
+    input:focus {
+        width: 85%;
+    }
+}
+
 .addSocial {
     background-color: blue;
     padding: $padding-md;

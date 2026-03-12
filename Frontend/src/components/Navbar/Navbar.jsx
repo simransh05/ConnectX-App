@@ -7,11 +7,13 @@ import UserAvatar from '../userAvatar/UserAvatar'
 import { userStore } from '../../Zustand/AllUsers'
 import socket from '../../Socket/socket'
 import api from '../../utils/api'
+import { SelectedUserContext } from '../../Context/SelectedUserProvider'
 
 
 function Navbar() {
   const { currentUser, loading } = useContext(CurrentUserContext);
   const { allUsers, fetchAllUsers } = userStore();
+  const { setSelectedUser } = useContext(SelectedUserContext)
   const [number, setNumber] = useState(0);
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState(null);
@@ -106,7 +108,7 @@ function Navbar() {
         {number > 0 && <div className={style.numNotify}>{number}</div>}
       </div>
 
-      <Link to={ROUTES.MESSAGES} className={style.linkInfo}>Messages</Link>
+      <Link to={ROUTES.MESSAGES} className={style.linkInfo} onClick={() => setSelectedUser(null)}>Messages</Link>
       <Link to={ROUTES.ABOUT} className={style.linkInfo}>About</Link>
       <Link to={ROUTES.PROFILE} className={style.linkInfo}>
         <UserAvatar

@@ -51,6 +51,11 @@ module.exports.deleteChat = async (req, res) => {
                 $addToSet: { deleteBy: userId }
             }
         )
+        await Message.deleteMany(
+            {
+                deleteBy: [userId, other]
+            },
+        )
         return res.status(200).json({ message: 'Success' })
     } catch (err) {
         return res.status(500).json({ message: err.message })

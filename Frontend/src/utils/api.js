@@ -50,15 +50,18 @@ const api = {
     postComment: async (data) => {
         return await apiInstance.post(`${ROUTES.POST}${ROUTES.COMMENT}`, data)
     },
-    deleteChat : async (userId , other) => {
+    deleteChat: async (userId, other) => {
         return await apiInstance.post(`${ROUTES.MESSAGES}${ROUTES.DELETE}/${userId}/${other}`)
     },
-    deleteNotify :  async (userId) => {
+    deleteNotify: async (userId) => {
         return await apiInstance.post(`${ROUTES.NOTIFICATION}${ROUTES.DELETE}/${userId}`)
     },
-    savePost : async (data) => {
+    savePost: async (data) => {
         return await apiInstance.post(`${ROUTES.POST}${ROUTES.SAVE}`, data)
-    }
+    },
+    deletePost: async (postId) => {
+        return await apiInstance.delete(`${ROUTES.POST}/${postId}`)
+    },
 }
 
 export default api

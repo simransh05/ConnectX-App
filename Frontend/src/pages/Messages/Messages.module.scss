@@ -2,18 +2,20 @@
 @use '../../Style/mixins' as *;
 
 .message-container {
-    height: 82vh;
+    height: 83vh;
     @include space-flex
 }
 
 .left-side {
     width: 20%;
+    height: 100%;
     border: $border-black;
-    padding: $padding-md;
+    padding: 0 $padding-md ;
 }
 
 .right-side {
     width: 75%;
+    height: 100%
 }
 
 .noChats {
@@ -25,8 +27,9 @@
     border-bottom: $border-black;
     padding: $padding-md;
     cursor: pointer;
+
     div {
-        margin : auto 0;
+        margin: auto 0;
         margin-left: $padding-md;
     }
 }
