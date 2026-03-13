@@ -18,7 +18,7 @@ const useIndividualPosts = (userId) => {
         fetchPosts()
     }, [userId]);
 
-    return { posts };
+    return { posts, setPosts };
 }
 
 export default useIndividualPosts;

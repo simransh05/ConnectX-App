@@ -7,12 +7,13 @@ import { CurrentUserContext } from '../../../Context/currentUserProvider';
 
 function Post({ open, onClose, onSuccess }) {
     const [preview, setPreview] = useState(null);
+    const [fileType, setFileType] = useState(null);
     const [file, setFile] = useState(null);
     const [caption, setCaption] = useState('');
     const { currentUser } = useContext(CurrentUserContext);
     // on submit form get all the data with who send this post user id 
     const handleSubmit = async (e) => {
-        e?.preventDefault();
+        e.preventDefault();
         try {
             if (!preview || !caption) {
                 return;
@@ -20,10 +21,11 @@ function Post({ open, onClose, onSuccess }) {
             const formData = new FormData();
             formData.append('caption', caption);
             formData.append('userId', currentUser?._id)
+            formData.append('fileType', fileType)
             if (preview) {
                 formData.append('photoVideo', file)
             }
-            console.log(formData)
+            // console.log(formData)
             const res = await api.postUploadPost(formData);
             if (res.status === 200) {
                 Swal.fire({
@@ -34,8 +36,8 @@ function Post({ open, onClose, onSuccess }) {
                     showCancelButton: false,
                     showConfirmButton: false
                 })
-                onSuccess();
                 onClose();
+                onSuccess();
             }
         }
         catch (err) {
@@ -44,17 +46,24 @@ function Post({ open, onClose, onSuccess }) {
         // = data have all things which user add + id user
     }
 
-    const handleEnter = (e)=> {
-        console.log(e.key)
-        if(e.key === 'Enter') {
+    const handleEnter = (e) => {
+        // console.log(e.key)
+        if (e.key === 'Enter') {
             handleSubmit();
         }
     }
+
     const handleFile = (e) => {
-        const selected = e.target.files[0];
-        if (!selected) return;
-        setFile(selected)
-        setPreview(URL.createObjectURL(selected));
+        const file = e.target.files[0];
+        if (file.size > 15 * 1024 * 1024) {
+            alert("Max 15MB allowed");
+            return;
+        }
+        if (!file) return;
+        setFile(file)
+        setPreview(URL.createObjectURL(file));
+        console.log(file.type)
+        setFileType(file.type);
     };
     return (
         <Dialog open={open} onClose={onClose}>
@@ -63,7 +72,13 @@ function Post({ open, onClose, onSuccess }) {
                 <DialogContent className={style.postContent}>
                     {preview &&
                         <div className={style.imageDiv}>
-                            <img src={preview} alt="image" className={style.imagePreview} />
+                            {fileType.startsWith("image") && (
+                                <img src={preview} alt="preview" className={style.imagePreview} />
+                            )}
+
+                            {fileType.startsWith("video") && (
+                                <video src={preview} controls width={200} className={style.imagePreview} />
+                            )}
                             <span className={style.remove} onClick={() => {
                                 setPreview(null);
                                 setFile(null);
@@ -72,11 +87,12 @@ function Post({ open, onClose, onSuccess }) {
 
                     }
                     {!preview && <label className={style.inputLabel}>
-                        Upload Image
+                        Upload File
                         <input
                             type="file"
-                            accept="image/*"
+                            accept="image/*,video/*"
                             hidden
+                            name='file'
                             onChange={handleFile}
                             className={style.inputField}
                         />

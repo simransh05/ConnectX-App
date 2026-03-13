@@ -10,6 +10,7 @@ function UserInfo({ user }) {
             <UserAvatar
                 user={user}
                 size={70}
+                IsSidebar={true}
             />
             <div className={style.sidebarName}>{user?.name}</div>
             {user?.bio && <div className={style.sidebarBio}>{user?.bio}</div>}

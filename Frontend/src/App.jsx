@@ -12,6 +12,7 @@ import CurrentUserProvider from './Context/currentUserProvider'
 import SocketProvider from './Context/socketProvider'
 import OthersProfile from './pages/OthersProfile/OthersProfile'
 import SelectedUserProvider from './Context/SelectedUserProvider'
+import SavedPost from './pages/SavedPost/SavedPost'
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
                 <Route path={ROUTES.ABOUT} element={<About />} />
                 <Route path={ROUTES.PROFILE} element={<Profile />} />
                 <Route path={ROUTES.NOTIFICATION} element={<Notification />} />
+                <Route path={ROUTES.SAVEDPOST} element={<SavedPost />} />
                 <Route path={`${ROUTES.MESSAGES}/:userId?`} element={<Messages />} />
                 <Route path={`${ROUTES.PROFILE}/:userId`} element={<OthersProfile />} />
               </Routes>

@@ -8,6 +8,9 @@ const postSchema = new mongoose.Schema({
     photoVideo: {
         type: Buffer // less than 16mb 
     },
+    fileType: {
+        type: String
+    },
     caption: {
         type: String
     },

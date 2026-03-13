@@ -24,7 +24,7 @@ function OneOneChat() {
     const fetchChat = async () => {
       if (selectedUser?._id) {
         const res = await api.getIndividualMessage(currentUser?._id, selectedUser?._id)
-        console.log(res.data)
+        // console.log(res.data)
         setChat(res.data);
       }
     }
@@ -35,11 +35,11 @@ function OneOneChat() {
     scroll.current?.scrollIntoView({ behavior: "smooth" });
   }, [chats])
 
-  console.log(chats)
+  // console.log(chats)
 
   useEffect(() => {
     socket.on('receive', ({ sender, reciever, msg }) => {
-      console.log(sender, reciever, msg)
+      // console.log(sender, reciever, msg)
       setChat(prev => [...prev, { sender, reciever, message: msg }])
     })
     return () => {
@@ -57,6 +57,7 @@ function OneOneChat() {
     // e.preventDefault();
     // socket
     socket.emit('send', { sender: currentUser?._id, receiver: selectedUser?._id, msg: message }, (res) => {
+      // if user is not online then add in notification
       console.log(res)
       if (res.status === 200) {
         setChat(prev => [...prev, { sender: currentUser?._id, receiver: selectedUser?._id, message }])
@@ -96,47 +97,47 @@ function OneOneChat() {
       {/* right side with whom we are chatting onclick */}
       {/* map the chats with them  if currentUser chat them on right else left (scss) */}
       {/* <div className={style["chat-section"]}> */}
-        {selectedUser ? (
-          <>
-            <div className={style["chat-header"]}>
-              <UserAvatar
-                user={selectedUser}
-                size={60}
+      {selectedUser ? (
+        <>
+          <div className={style["chat-header"]}>
+            <UserAvatar
+              user={selectedUser}
+              size={60}
+            />
+            <div>{selectedUser?.name}</div>
+            <div className={style.menuParent}>
+
+              <CiMenuKebab
+                style={{
+                  fontSize: '14px'
+                }}
+                className={style.menuBtn}
+                onClick={handleMenuClick}
               />
-              <div>{selectedUser?.name}</div>
-              <div className={style.menuParent}>
+              {/* menu */}
+              <Menu anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleClose} className={style.deleteBtn}>
+                <MenuItem onClick={handleDelete}>Delete Chat</MenuItem>
+              </Menu>
+            </div>
 
-                <CiMenuKebab
-                  style={{
-                    fontSize: '14px'
-                  }}
-                  className={style.menuBtn}
-                  onClick={handleMenuClick}
-                />
-                {/* menu */}
-                <Menu anchorEl={anchorEl}
-                  open={Boolean(anchorEl)}
-                  onClose={handleClose} className={style.deleteBtn}>
-                  <MenuItem onClick={handleDelete}>Delete Chat</MenuItem>
-                </Menu>
-              </div>
-
-            </div>
-            <div className={style["chat-body"]}>
-              {chats?.map((c, idx) => (
-                <div className={c.sender === currentUser?._id ? style.sender : style.receiver} key={idx}>{c.message}</div>
-              ))}
-              <div ref={scroll}></div>
-              {/* space and data */}
-            </div>
-            <div className={style["chat-footer"]}>
-              <input type="text" name='chat' className={style['input-field']} placeholder='Type a message' onChange={(e) => setMessage(e.target.value)} value={message} onKeyDown={handleEnter} />
-              <button onClick={handleClick} className={style.buttonSend}>Send</button>
-            </div>
-          </>
-        ) : (
-          <div className={style.selectuser}>Select the user</div>
-        )}
+          </div>
+          <div className={style["chat-body"]}>
+            {chats?.map((c, idx) => (
+              <div className={c.sender === currentUser?._id ? style.sender : style.receiver} key={idx}>{c.message}</div>
+            ))}
+            <div ref={scroll}></div>
+            {/* space and data */}
+          </div>
+          <div className={style["chat-footer"]}>
+            <input type="text" name='chat' className={style['input-field']} placeholder='Type a message' onChange={(e) => setMessage(e.target.value)} value={message} onKeyDown={handleEnter} />
+            <button onClick={handleClick} className={style.buttonSend}>Send</button>
+          </div>
+        </>
+      ) : (
+        <div className={style.selectuser}>Select the user</div>
+      )}
       {/* </div> */}
       {/* idea is to have the header body footer */}
     </ >

@@ -2,10 +2,14 @@ import React, { useContext, useEffect, useState } from 'react'
 import { CurrentUserContext } from '../../Context/currentUserProvider'
 import UserAvatar from '../userAvatar/UserAvatar';
 import { Avatar, Divider } from '@mui/material';
+import { MdModeEdit } from "react-icons/md";
 import Password from '../Modals/Password/Password';
 import Swal from 'sweetalert2'
 import socket from '../../Socket/socket';
+import { FaBookmark } from "react-icons/fa";
+import { FaPowerOff } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
+import { MdOutlineWifiPassword } from "react-icons/md";
 import ROUTES from '../../constant/Route/route';
 import api from '../../utils/api';
 import style from './Sidebar.module.scss'
@@ -132,6 +136,7 @@ function Sidebar() {
                 <UserAvatar
                   user={currentUser}
                   size={80}
+                  IsSidebar={true}
                 />
               }
             </div>
@@ -202,13 +207,22 @@ function Sidebar() {
           <UserInfo
             user={currentUser}
           />
-          <div className={style.btnGroup}>
-            <button onClick={() => setIsEditing(true)} className={style.edit}>Edit Profile</button>
-            {!currentUser?.googleId && <button onClick={() => setPassword(true)} className={style.passwordChange}>Change Passowrd</button>}
-
+          <div className={style.edit} onClick={() => setIsEditing(true)}>
+            <MdModeEdit /> Edit Profile
           </div>
-          <button onClick={handleLogout} className={style.logout}>Logout</button>
 
+          {!currentUser?.googleId &&
+            <div className={style.passwordChange} onClick={() => setPassword(true)} >
+              <MdOutlineWifiPassword /> Change Password
+            </div>
+          }
+
+          <div className={style.savedPostBtn} onClick={() => navigate(`${ROUTES.SAVEDPOST}`)}>
+            <FaBookmark /> Saved Posts
+          </div>
+          <div onClick={handleLogout} className={style.logout}>
+            <FaPowerOff /> Logout
+          </div>
         </div>
       }
       {

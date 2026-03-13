@@ -14,7 +14,8 @@ const ROUTES = {
     UPDATE: '/update',
     COMMENT: '/comment',
     DELETE: '/delete',
-    SAVE: '/save'
+    SAVE: '/save',
+    SAVEDPOST: '/saved-posts'
 }
 
 export default ROUTES;

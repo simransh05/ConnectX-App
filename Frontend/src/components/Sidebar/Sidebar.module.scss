@@ -11,6 +11,8 @@
 
 .edit,
 .passwordChange {
+    @include flex-center;
+    gap: 5px;
     padding: $padding-md;
     margin: $padding-md;
     cursor: pointer;
@@ -18,10 +20,6 @@
     border: none;
     background-color: blueviolet;
     color: white;
-
-    & :hover {
-        background-color: rgb(77, 11, 139);
-    }
 }
 
 .logout {
@@ -32,6 +30,8 @@
     border: none;
     background-color: red;
     color: white;
+    @include flex-center;
+    gap: 5px;
 
     & :hover {
         background-color: rgb(179, 4, 4);
@@ -99,6 +99,18 @@
     }
 }
 
+.savedPostBtn {
+    @include flex-center;
+    gap: 5px;
+    border: none;
+    background-color: blueviolet;
+    color: white;
+    border-radius: $padding-md;
+    cursor: pointer;
+    padding: $padding-md;
+    font-size: 15px;
+}
+
 .addSocial {
     background-color: blue;
     padding: $padding-md;
@@ -149,10 +161,6 @@ label {
 
 .profilePicInfo {
     @include flex-column
-}
-
-.btnGroup {
-    display: flex;
 }
 
 .uploadBtn {

@@ -17,10 +17,11 @@ function Profile() {
   const { currentUser } = useContext(CurrentUserContext);
   useUserAvailable(`${ROUTES.PROFILE}`)
 
-  const { posts } = useIndividualPosts(currentUser?._id);
+  const { posts, setPosts } = useIndividualPosts(currentUser?._id);
   console.log(posts);
-  const handleSuccess = () => {
-    useIndividualPosts(currentUser?._id);
+  const handleSuccess = async () => {
+    const post = await api.getIndividualPosts(currentUser?._id);
+    setPosts(post);
   }
 
 

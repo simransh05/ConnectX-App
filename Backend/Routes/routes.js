@@ -51,7 +51,9 @@ router.get('/user/:userId', users.getAllUsers);
 
 router.post('/user/update', users.postPassword);
 
-router.post('/post/save' , users.savePostUser);
+router.post('/post/save', users.savePostUser);
+
+router.get('/post/save/:userId', post.getSavedPost);
 
 router.get('/logout', users.getLogout);
 
@@ -59,7 +61,7 @@ router.get('/post/individual/:userId', post.getIndividualPosts);
 
 router.get('/post', post.getAllPosts);
 
-router.delete('/post/:postId' , post.deletePost)
+router.delete('/post/:postId', post.deletePost)
 
 router.post('/post', upload.single('photoVideo'), post.postUploadPost);
 
