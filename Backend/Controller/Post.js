@@ -56,12 +56,13 @@ module.exports.deletePost = async (req, res) => {
 }
 
 module.exports.postUploadPost = async (req, res) => {
-    const { caption, userId } = req.body;
-    // console.log(caption, userId)
+    const { caption, userId, fileType } = req.body;
+    console.log('post upload', caption, userId, fileType)
     try {
         const allData = {
             caption,
-            userId
+            userId,
+            fileType
         }
         if (req.file) {
             allData.photoVideo = req.file.buffer;
@@ -93,3 +94,20 @@ module.exports.postLike = async (postId, userId) => {
         console.error(err.message);
     }
 };
+
+module.exports.getSavedPost = async (req, res) => {
+    const { userId } = req.params;
+    try {
+        const user = await User.findById(userId).populate({
+            path: "savedPost",
+            populate: {
+                path: "userId"
+            }
+        });
+        const posts = user.savedPost;
+        console.log('populated current user posts', posts);
+        return res.status(200).json(posts.map(formatPost));
+    } catch (err) {
+        return res.status(500).json({ message: err.message })
+    }
+}

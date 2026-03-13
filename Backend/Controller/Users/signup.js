@@ -89,16 +89,16 @@ module.exports.postPassword = async (req, res) => {
         if (!oldPass || !newPass) {
             return res.status(404).json({ message: "Fields required" })
         }
-        console.log('old new', oldPass, newPass)
+        // console.log('old new', oldPass, newPass)
         const user = await User.findById(userId);
-        console.log('user', user);
+        // console.log('user', user);
         const valid = await bcrypt.compare(oldPass, user.password);
-        console.log('valid', valid)
+        // console.log('valid', valid)
         if (!valid) {
             return res.status(404).json({ message: 'Old password not valid' })
         }
         const hashed = await bcrypt.hash(newPass, 10);
-        console.log('hashed', hashed)
+        // console.log('hashed', hashed)
         user.password = hashed;
         await user.save();
         return res.status(200).json({ message: 'Successfully updated' })
@@ -153,7 +153,7 @@ module.exports.getLogout = async (req, res) => {
 
 module.exports.savePostUser = async (req, res) => {
     const { userId, postId } = req.body;
-    console.log(req.body)
+    // console.log(req.body)
     try {
         await User.findByIdAndUpdate(
             userId,

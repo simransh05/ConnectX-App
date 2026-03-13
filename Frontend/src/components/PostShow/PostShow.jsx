@@ -16,11 +16,12 @@ import { allPostStore } from '../../Zustand/AllPosts';
 function PostShow({ posts, isProfile }) {
     const [commentDrawer, setCommentDawer] = useState(false);
     const { fetchAllPosts } = allPostStore()
-    const { currentUser } = useContext(CurrentUserContext);
+    const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
     const [postid, setpostId] = useState(null);
     const [post, setPost] = useState(null);
     const [liked, setLiked] = useState(new Set());
     const [saved, setSaved] = useState(new Set());
+    console.log(currentUser)
     useEffect(() => {
         if (!posts) return;
         setPost(posts);
@@ -34,7 +35,7 @@ function PostShow({ posts, isProfile }) {
                 .map(p => p._id)
         )
         setSaved(savedSet);
-        console.log(savedSet, likedSet, currentUser)
+        // console.log(savedSet, likedSet, currentUser)
         setLiked(likedSet);
     }, [posts, currentUser])
 
@@ -44,9 +45,9 @@ function PostShow({ posts, isProfile }) {
         setpostId(p)
     }
 
-    posts?.map(p => {
-        console.log(p.likes, p._id)
-    })
+    // posts?.map(p => {
+    //     console.log(p.likes, p._id)
+    // })
 
 
     const handleClose = () => {
@@ -80,6 +81,7 @@ function PostShow({ posts, isProfile }) {
         const res = await api.savePost(data);
         if (res.status === 200) {
             setSaved(prev => new Set([...prev, postId]));
+            // setCurrentUser(prev => [{ ...prev, }])
         }
     }
 
@@ -109,19 +111,24 @@ function PostShow({ posts, isProfile }) {
                 fetchAllPosts();
                 const res1 = await api.getIndividualPosts(currentUser?._id);
                 if (res1.status === 200) {
-                    setPost(prev => prev.filter(p => p._id != postId))
+                    setPost(prev => prev?.filter(p => p._id != postId))
                 }
             }
         }
     }
 
-    console.log(postid)
+    console.log(posts)
     return (
         <div className={style.postContainer}>
             {post?.length > 0 ?
                 post?.map((p, idx) => (
                     <div key={idx} className={style.postInd}>
-                        <img src={p?.photoVideo} alt="Image" className={style.imagePost} />
+                        {p?.fileType?.includes("image") && (
+                            <img src={p?.photoVideo} alt="Image" className={style.imagePost} />
+                        )}
+                        {p?.fileType?.includes("video") && (
+                            <video src={p?.photoVideo} alt="Video" className={style.imagePost} controls/>
+                        )}
                         <div className={style.postUserInfo}>
                             <UserAvatar
                                 user={p.userId}

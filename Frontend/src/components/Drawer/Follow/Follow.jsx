@@ -10,7 +10,7 @@ import { CurrentUserContext } from '../../../Context/currentUserProvider'
 function Follow({ open, onClose, data, type }) {
     const navigate = useNavigate();
     const { currentUser } = useContext(CurrentUserContext);
-    console.log(data)
+    // console.log(data)
     const formatName = (name) => {
         return name.charAt(0).toUpperCase() + name.slice(1, name.length)
     }

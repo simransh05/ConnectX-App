@@ -62,6 +62,9 @@ const api = {
     deletePost: async (postId) => {
         return await apiInstance.delete(`${ROUTES.POST}/${postId}`)
     },
+    getSavedPost: async (userId) => {
+        return await apiInstance.get(`${ROUTES.POST}${ROUTES.SAVE}/${userId}`)
+    }
 }
 
 export default api

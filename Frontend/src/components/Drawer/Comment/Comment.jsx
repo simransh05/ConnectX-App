@@ -51,7 +51,7 @@ function Comment({ open, onClose, onSuccess, post }) {
         }
     }
 
-    console.log(post);
+    // console.log(post);
     return (
         <Drawer open={open} onClose={onClose} anchor='bottom' className={style.commentDrawer}
             PaperProps={{

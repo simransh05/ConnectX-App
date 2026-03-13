@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema({
     },
     savedPost: [{
         type: mongoose.Schema.Types.ObjectId,
-        req: 'Post'
+        ref: 'Post'
     }],
     socialLinks: [
         {

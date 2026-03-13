@@ -3,7 +3,8 @@
 
 .postContainer {
     @include flex-wrap;
-    @include flex-center
+    margin: 0 auto;
+    // @include flex-center
 }
 
 .postUserInfo {
@@ -85,6 +86,7 @@
     height: 300px;
     width: 270px;
     border: $border-black;
-    margin: $padding-md;
+    // margin: $padding-md;
+    margin: $padding-md auto;
     border-radius: $padding-md;
 }

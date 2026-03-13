@@ -11,3 +11,16 @@
     color: white;
     border-radius: $circle;
 }
+
+.imageSidebar {
+    border-radius: $circle;
+    margin: 0 auto;
+}
+
+.avatarSidebar {
+    margin: 0 auto;
+    @include flex-center;
+    background: orange;
+    color: white;
+    border-radius: $circle;
+}

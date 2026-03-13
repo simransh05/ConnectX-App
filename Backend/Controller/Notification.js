@@ -33,12 +33,12 @@ module.exports.postNotification = async (sender, receiver, type, postId) => {
 
 module.exports.deleteNotify = async (req, res) => {
     const { userId } = req.params;
-    console.log(userId);
+    // console.log(userId);
     try {
         await Notification.deleteMany({
             receiver: userId
         })
-        console.log('here 41')
+        // console.log('here 41')
         return res.status(200).json({ message: 'Success' })
     } catch (err) {
         return res.status(500).json({ message: err.message })

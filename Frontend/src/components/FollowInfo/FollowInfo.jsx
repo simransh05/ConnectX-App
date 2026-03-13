@@ -5,12 +5,12 @@ import style from './FollowInfo.module.scss'
 
 function FollowInfo({ userId }) {
     const { detail } = useFollowDetail(userId);
-    console.log(detail);
+    // console.log(detail);
     const [data, setData] = useState(null);
     const [type, setType] = useState(null);
     const [followDrawer, setFollowDrawer] = useState(false);
     const handleClick = (value) => {
-        console.log(detail?.[value])
+        // console.log(detail?.[value])
         setFollowDrawer(true);
         setData(detail?.[value])
         setType(value)

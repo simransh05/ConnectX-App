@@ -32,8 +32,9 @@ module.exports.formatPost = (post) => {
         likeCount: post.likeCount,
         commentCount: post.commentCount,
         createdAt: post.createdAt,
+        fileType: post.fileType,
         photoVideo: post.photoVideo
-            ? `data:${post.photoVideoType};base64,${post.photoVideo.toString("base64")}`
+            ? `data:${post.fileType};base64,${post.photoVideo.toString("base64")}`
             : null
     }
 }
@@ -67,7 +68,7 @@ module.exports.formatChat = (user) => {
 
 module.exports.formatFollow = (data) => {
     const user = data?.following?.name ? data?.following : data?.follower;
-    console.log('user', user)
+    // console.log('user', user)
     return {
         _id: data._id,
         name: user?.name,
