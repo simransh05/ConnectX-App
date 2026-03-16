@@ -25,7 +25,7 @@ function OthersProfile() {
     const { currentUser } = useContext(CurrentUserContext);
     // console.log(detail)
     const userInfo = allUsers?.find(u => u._id === userId);
-    console.log(userInfo , userId)
+    // console.log(userInfo , userId)
 
     const { posts } = useIndividualPosts(userId)
     // console.log(posts);
@@ -33,7 +33,7 @@ function OthersProfile() {
 
     const handleUser = () => {
         setSelectedUser(userInfo);
-        console.log(`${ROUTES.MESSAGES}/${userInfo._id}`)
+        // console.log(`${ROUTES.MESSAGES}/${userInfo._id}`)
         // set select user is this user and navigate to chat page
         navigate(`${ROUTES.MESSAGES}/${userInfo._id}`)
     }
@@ -52,13 +52,13 @@ function OthersProfile() {
         if (!detail) return;
         // console.log(detail.follower);
         const alreadyFollow = detail.follower.some(f => f.userId === currentUser?._id)
-        console.log(alreadyFollow, currentUser?._id)
+        // console.log(alreadyFollow, currentUser?._id)
         if (alreadyFollow) {
             setIsFollow(true);
         }
     }, [detail])
 
-    console.log(isFollow)
+    // console.log(isFollow)
 
     return (
         <>

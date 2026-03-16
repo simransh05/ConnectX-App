@@ -44,3 +44,18 @@ module.exports.deleteNotify = async (req, res) => {
         return res.status(500).json({ message: err.message })
     }
 }
+
+module.exports.deleteMessage = async (sender, receiver, type) => {
+    try {
+        if (type != "message") {
+            return;
+        }
+        await Notification.deleteOne({
+            sender,
+            receiver
+        })
+        return { status: 200 };
+    } catch (err) {
+        console.error(err.message)
+    }
+}

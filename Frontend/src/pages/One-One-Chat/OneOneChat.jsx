@@ -63,6 +63,7 @@ function OneOneChat() {
         setChat(prev => [...prev, { sender: currentUser?._id, receiver: selectedUser?._id, message }])
       }
     });
+    socket.emit('send-notify', { sender: currentUser?._id, receiver: selectedUser?._id, type: "message" })
     setMessage("");
   }
   const handleMenuClick = (event) => {

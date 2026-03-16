@@ -14,6 +14,7 @@ module.exports = (io) => {
             // console.log('send', sender, receiver, msg)
             // console.log('receive', receiverId);
             const res = await Message.postMessage(sender, receiver, msg);
+            await Notification.deleteMessage({ sender: receiver, receiver: sender, type: "message" })
             // console.log('status', res?.status, res);
             if (res.status === 200) {
                 callback({ status: 200 })
@@ -36,11 +37,14 @@ module.exports = (io) => {
                 // postid and data add like comment
             } else if (type === 'comment') {
                 await Notification.postNotification(sender, receiver, type, postId);
-            } else if (type === 'message' && !receiverId) {
+            } else if (type === 'message') {
                 // if receiver is not present add in notification or if not seen type 
                 await Notification.postNotification(sender, receiver, type);
             }
-            callback({ status: 200 }) // for making follow to already follow
+            if (callback) {
+                callback({ status: 200 }) // for making follow to already follow
+            }
+
             io.to(receiverId).emit('receiver-notify', { sender, receiver, type, postId: postId || null })
         })
 

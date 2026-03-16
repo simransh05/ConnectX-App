@@ -6,6 +6,7 @@ import UserAvatar from '../userAvatar/UserAvatar';
 import { useState } from 'react';
 import Comment from '../Drawer/Comment/Comment';
 import api from '../../utils/api';
+import { FaPlay } from "react-icons/fa";
 import { CiBookmark } from "react-icons/ci";
 import { FaBookmark } from "react-icons/fa";
 import socket from '../../Socket/socket';
@@ -21,9 +22,11 @@ function PostShow({ posts, isProfile }) {
     const [post, setPost] = useState(null);
     const [liked, setLiked] = useState(new Set());
     const [saved, setSaved] = useState(new Set());
+    const [videoPlay, setVideoPlay] = useState(null);
     console.log(currentUser)
     useEffect(() => {
         if (!posts) return;
+        console.log(posts);
         setPost(posts);
         const likedSet = new Set(
             posts?.filter(p => p.likes?.includes(currentUser?._id))
@@ -34,8 +37,17 @@ function PostShow({ posts, isProfile }) {
             posts?.filter(p => currentUser?.savedPost?.includes(p?._id))
                 .map(p => p._id)
         )
+        console.log(savedSet, likedSet, currentUser)
+        const arr = [];
+
+        posts.forEach(p => {
+            if (p?.fileType?.includes("video")) {
+                arr.push({ id: p._id, isPlayed: false });
+            }
+        });
+        console.log(arr)
+        setVideoPlay(arr);
         setSaved(savedSet);
-        // console.log(savedSet, likedSet, currentUser)
         setLiked(likedSet);
     }, [posts, currentUser])
 
@@ -117,43 +129,58 @@ function PostShow({ posts, isProfile }) {
         }
     }
 
+    const handleVideo = (id) => {
+        console.log(videoPlay, id)
+        setVideoPlay(prev => [...prev, { id, isPlayed: true }])
+    }
+
     console.log(posts)
     return (
         <div className={style.postContainer}>
             {post?.length > 0 ?
-                post?.map((p, idx) => (
-                    <div key={idx} className={style.postInd}>
-                        {p?.fileType?.includes("image") && (
-                            <img src={p?.photoVideo} alt="Image" className={style.imagePost} />
-                        )}
-                        {p?.fileType?.includes("video") && (
-                            <video src={p?.photoVideo} alt="Video" className={style.imagePost} controls/>
-                        )}
-                        <div className={style.postUserInfo}>
-                            <UserAvatar
-                                user={p.userId}
-                                size={30}
-                            />
-                            <div> {p?.userId?.name}</div>
+                post?.map((p, idx) => {
+                    const vid = videoPlay?.find(v => p._id === v.id)
+                    console.log(vid)
+                    return (
+                        <div key={idx} className={style.postInd}>
+                            {p?.fileType?.includes("image") && (
+                                <img src={p?.photoVideo} alt="Image" className={style.imagePost} />
+                            )}
+                            {p?.fileType?.includes("video") && (
+                                vid && !vid.isPlayed ?
+                                    <div className={style.videoContainer} onClick={() => handleVideo(p._id)}>
+                                        <FaPlay className={style.playBtn} />
+                                        <video src={p?.photoVideo} alt="Video" className={style.imagePost} />
+                                    </div>
+                                    :
+                                    <video src={p?.photoVideo} alt="Video" className={style.imagePost} controls />
+                            )}
+                            <div className={style.postUserInfo}>
+                                <UserAvatar
+                                    user={p.userId}
+                                    size={30}
+                                />
+                                <div> {p?.userId?.name}</div>
+                            </div>
+                            <div className={style.postCaption}>{p?.caption}</div>
+                            <div className={style.postInfo}>
+                                {liked.has(p._id) ?
+                                    <AiFillLike className={style.likedImage} />
+                                    :
+                                    <AiOutlineLike className={style.likeImage} onClick={() => handleLikeClick(p.userId?._id, p._id)} />
+                                }
+                                <span>{p.likeCount > 0 && p.likeCount}</span>
+                                <FaRegComment className={style.commentImage} onClick={() => handleClick(p)} />
+                                <span>{p.commentCount > 0 && p.commentCount}</span>
+                                {saved?.has(p._id) ? <FaBookmark className={style.alreadySave} /> : <CiBookmark className={style.addSave} onClick={() => handleSave(p._id)} />}
+                            </div>
+                            {isProfile &&
+                                <div className={style.deletePost}>
+                                    <button onClick={() => handleDelete(p._id)} className={style.isProfile}>Delete Post</button>
+                                </div>}
                         </div>
-                        <div className={style.postCaption}>{p?.caption}</div>
-                        <div className={style.postInfo}>
-                            {liked.has(p._id) ?
-                                <AiFillLike className={style.likedImage} />
-                                :
-                                <AiOutlineLike className={style.likeImage} onClick={() => handleLikeClick(p.userId?._id, p._id)} />
-                            }
-                            <span>{p.likeCount > 0 && p.likeCount}</span>
-                            <FaRegComment className={style.commentImage} onClick={() => handleClick(p)} />
-                            <span>{p.commentCount > 0 && p.commentCount}</span>
-                            {saved?.has(p._id) ? <FaBookmark className={style.alreadySave} /> : <CiBookmark className={style.addSave} onClick={() => handleSave(p._id)} />}
-                        </div>
-                        {isProfile &&
-                            <div className={style.deletePost}>
-                                <button onClick={() => handleDelete(p._id)} className={style.isProfile}>Delete Post</button>
-                            </div>}
-                    </div>
-                )) :
+                    )
+                }) :
                 <div className={style.noPost}>No Post Available</div>
             }
             {commentDrawer &&

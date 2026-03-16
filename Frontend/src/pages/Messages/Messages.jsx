@@ -26,21 +26,21 @@ function Messages() {
     const fetchMyChatUsers = async () => {
       if (currentUser) {
         const res = await api.getMessages(currentUser?._id)
-        console.log(res.data);
+        // console.log(res.data);
         setMyChats(res.data);
       }
     }
     fetchMyChatUsers();
   }, [currentUser])
 
-  console.log(userId);
+  // console.log(userId);
 
   const handleClick = (c) => {
     setSelectedUser(c);
     navigate(`${ROUTES.MESSAGES}/${c?._id}`)
   }
 
-  console.log(myChats)
+  // console.log(myChats)
   return (
     <>
       <Navbar />

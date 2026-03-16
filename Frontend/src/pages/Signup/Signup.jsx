@@ -69,10 +69,10 @@ function Signup() {
     }
     try {
       const res = await api.postSignup(data);
-      console.log(res.status);
+      // console.log(res.status);
       navigate(`${ROUTES.LOGIN}`)
     } catch (err) {
-      console.log(err.meesage);
+      console.error(err.meesage);
     }
   }
   const handleGoogle = () => {

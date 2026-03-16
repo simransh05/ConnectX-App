@@ -18,7 +18,7 @@ function Profile() {
   useUserAvailable(`${ROUTES.PROFILE}`)
 
   const { posts, setPosts } = useIndividualPosts(currentUser?._id);
-  console.log(posts);
+  // console.log(posts);
   const handleSuccess = async () => {
     const post = await api.getIndividualPosts(currentUser?._id);
     setPosts(post);
