@@ -46,7 +46,7 @@ function Sidebar() {
     })
     if (result.isConfirmed) {
       const res = await api.logout();
-      console.log(res.data)
+      // console.log(res.data)
       if (res.status === 200) {
         setCurrentUser(null);
         socket.disconnect()

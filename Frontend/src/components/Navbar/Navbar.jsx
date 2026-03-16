@@ -8,6 +8,7 @@ import { userStore } from '../../Zustand/AllUsers'
 import socket from '../../Socket/socket'
 import api from '../../utils/api'
 import { SelectedUserContext } from '../../Context/SelectedUserProvider'
+import { NotificationStore } from '../../Zustand/Notification'
 
 
 function Navbar() {
@@ -17,13 +18,18 @@ function Navbar() {
   const [number, setNumber] = useState(0);
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState(null);
+  const { fetchNotification, notify } = NotificationStore()
   const navigate = useNavigate();
   useEffect(() => {
     if (loading) return;
-    // get the allusers
-    fetchAllUsers(currentUser?._id)
+    if (!notify) {
+      fetchNotification(currentUser?._id)
+    } 
+    setNumber(notify?.length)
 
-  }, [loading])
+  }, [loading , notify])
+
+  console.log(notify)
 
   const handleChange = (e) => {
     const value = e.target.value;
@@ -36,6 +42,7 @@ function Navbar() {
   useEffect(() => {
     socket.on('receiver-notify', ({ sender, receiver, type, postId }) => {
       // number increase 
+      console.log('here')
       setNumber(prev => prev + 1)
     })
 
@@ -48,22 +55,12 @@ function Navbar() {
     }
   }, [])
 
-  useEffect(() => {
-    if (!currentUser) return;
-    const fetchNotification = async () => {
-      const res = await api.getNotification(currentUser?._id)
-      console.log(res.data.length);
-      setNumber(res.data.length);
-    }
-    fetchNotification();
-  }, [currentUser])
-
   const handleClick = (id) => {
     navigate(`${ROUTES.PROFILE}/${id}`)
     setSearch("");
     setSearchResult(null);
   }
-  console.log(allUsers);
+  // console.log(allUsers);
   return (
     <div className={style.navbar}>
       {/* image */}

@@ -15,12 +15,13 @@ function Home() {
   const { currentUser } = useContext(CurrentUserContext);
   useUserAvailable(`${ROUTES.HOME}`); // custom hook
   useEffect(() => {
+    if (!currentUser) return;
     if (allPosts) return;
     fetchAllPosts();
     fetchFollowInfo(currentUser?._id)
   }, [currentUser])
 
-  console.log(allPosts);
+  // console.log(allPosts);
   return (
     <div>
       <Navbar />

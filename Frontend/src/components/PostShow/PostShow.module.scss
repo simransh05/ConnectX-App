@@ -2,9 +2,11 @@
 @use '../../Style/variables' as *;
 
 .postContainer {
-    @include flex-wrap;
-    margin: 0 auto;
-    // @include flex-center
+    // @include flex-wrap;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
 .postUserInfo {
@@ -19,9 +21,24 @@
 
 .imagePost {
     width: 100%;
-    height: 60%;
+    height: auto;
     border-radius: 10px;
     object-fit: contain;
+}
+
+.videoContainer {
+    position: relative;
+}
+
+.playBtn {
+    position: absolute;
+    top: 45%;
+    left: 45%;
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
+    cursor: pointer;
+    color: blue;
 }
 
 .alreadySave {
@@ -41,6 +58,12 @@
     border-radius: $circle;
 }
 
+.postCaption {
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    margin: 5px 0;
+}
+
 .isProfile {
     background-color: red;
     color: white;
@@ -48,7 +71,7 @@
     padding: $padding-md;
     border: none;
     border-radius: $padding-md;
-    margin-top: 5px;
+    margin: 5px 0;
     align-items: center;
 }
 
@@ -83,10 +106,11 @@
 }
 
 .postInd {
-    height: 300px;
-    width: 270px;
+    height: fit-content;
+    width: 400px;
     border: $border-black;
     // margin: $padding-md;
-    margin: $padding-md auto;
+    margin: $padding-md;
     border-radius: $padding-md;
+    padding: $padding-md;
 }

@@ -3,6 +3,7 @@
 
 .image {
     border-radius: $circle;
+    margin-top: $padding-md
 }
 
 .avatar {
@@ -18,8 +19,8 @@
 }
 
 .avatarSidebar {
-    margin: 0 auto;
     @include flex-center;
+    margin: 0 auto;
     background: orange;
     color: white;
     border-radius: $circle;

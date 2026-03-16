@@ -13,6 +13,10 @@ const messageSchema = new mongoose.Schema({
         type: String,
         require: true
     },
+    seenAt: {
+        type: Date,
+        default: Date.now
+    },
     deleteBy: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
