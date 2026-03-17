@@ -49,9 +49,13 @@ function Notification() {
       //   sender, receiver, type, createdAt: Date.now()
       // }])
     })
+    socket.on('message-send', () => {
+      fetchNotification(currentUser._id)
+    })
 
     return () => {
-      socket.off('receiver-notify')
+      socket.off('receiver-notify');
+      socket.off('message-send')
     }
   }, [])
 

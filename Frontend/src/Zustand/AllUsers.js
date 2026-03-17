@@ -3,7 +3,7 @@ import { create } from 'zustand'
 import api from '../utils/api';
 
 export const userStore = create((set) => ({
-    allUsers: [],
+    allUsers: null,
     // loading: true,
 
     fetchAllUsers: async (userId) => {

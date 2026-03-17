@@ -20,8 +20,9 @@ function Profile() {
   const { posts, setPosts } = useIndividualPosts(currentUser?._id);
   // console.log(posts);
   const handleSuccess = async () => {
-    const post = await api.getIndividualPosts(currentUser?._id);
-    setPosts(post);
+    const res = await api.getIndividualPosts(currentUser?._id);
+    console.log(res.data)
+    setPosts(res.data);
   }
 
 
@@ -40,7 +41,7 @@ function Profile() {
             <button onClick={() => setOpenPost(true)}>New Post</button>
             {openPost &&
               <Post
-                open={() => setOpenPost(true)}
+                open={openPost}
                 onClose={() => setOpenPost(false)}
                 onSuccess={handleSuccess}
               />}

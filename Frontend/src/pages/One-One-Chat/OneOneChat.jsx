@@ -10,18 +10,26 @@ import { CiMenuKebab } from "react-icons/ci";
 import { Menu, MenuItem } from '@mui/material';
 import Swal from 'sweetalert2';
 import { useParams } from 'react-router-dom';
+import { userStore } from '../../Zustand/AllUsers';
+import { AllOut } from '@mui/icons-material';
 
 function OneOneChat() {
   const { userId } = useParams()
+  const { allUsers } = userStore()
   const [chats, setChat] = useState(null);
   const { currentUser } = useContext(CurrentUserContext);
-  const { selectedUser } = useContext(SelectedUserContext);
+  const { selectedUser, setSelectedUser } = useContext(SelectedUserContext);
   const [message, setMessage] = useState("");
   const scroll = useRef(null);
   const [anchorEl, setAnchorEl] = useState(null);
   // get chat of that person
   useEffect(() => {
     const fetchChat = async () => {
+      if (userId) {
+        const select = allUsers?.find(u => u._id === userId)
+        console.log(allUsers, select)
+        setSelectedUser(select)
+      }
       if (selectedUser?._id) {
         const res = await api.getIndividualMessage(currentUser?._id, selectedUser?._id)
         // console.log(res.data)
@@ -29,7 +37,7 @@ function OneOneChat() {
       }
     }
     fetchChat()
-  }, [selectedUser]);
+  }, [userId, allUsers, selectedUser]);
 
   useEffect(() => {
     scroll.current?.scrollIntoView({ behavior: "smooth" });
@@ -38,6 +46,7 @@ function OneOneChat() {
   // console.log(chats)
 
   useEffect(() => {
+    if (!selectedUser) return;
     socket.on('receive', ({ sender, reciever, msg }) => {
       // console.log(sender, reciever, msg)
       setChat(prev => [...prev, { sender, reciever, message: msg }])
@@ -85,7 +94,7 @@ function OneOneChat() {
       cancelButtonText: 'No'
     })
     if (result.isConfirmed) {
-      const res = await api.deleteChat(currentUser?._id, selectedUser?._id);
+      const res = await api.deleteChat(currentUser?._id, userId);
       if (res.status === 200) {
         setChat(null);
       }
@@ -98,7 +107,7 @@ function OneOneChat() {
       {/* right side with whom we are chatting onclick */}
       {/* map the chats with them  if currentUser chat them on right else left (scss) */}
       {/* <div className={style["chat-section"]}> */}
-      {selectedUser ? (
+      {userId ? (
         <>
           <div className={style["chat-header"]}>
             <UserAvatar
