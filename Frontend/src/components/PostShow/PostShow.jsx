@@ -23,10 +23,10 @@ function PostShow({ posts, isProfile }) {
     const [liked, setLiked] = useState(new Set());
     const [saved, setSaved] = useState(new Set());
     const [videoPlay, setVideoPlay] = useState(null);
-    console.log(currentUser)
+    // console.log(currentUser)
     useEffect(() => {
         if (!posts) return;
-        console.log(posts);
+        // console.log(posts);
         setPost(posts);
         const likedSet = new Set(
             posts?.filter(p => p.likes?.includes(currentUser?._id))
@@ -37,7 +37,7 @@ function PostShow({ posts, isProfile }) {
             posts?.filter(p => currentUser?.savedPost?.includes(p?._id))
                 .map(p => p._id)
         )
-        console.log(savedSet, likedSet, currentUser)
+        // console.log(savedSet, likedSet, currentUser)
         const arr = [];
 
         posts.forEach(p => {
@@ -45,7 +45,7 @@ function PostShow({ posts, isProfile }) {
                 arr.push({ id: p._id, isPlayed: false });
             }
         });
-        console.log(arr)
+        // console.log(arr)
         setVideoPlay(arr);
         setSaved(savedSet);
         setLiked(likedSet);
@@ -130,32 +130,41 @@ function PostShow({ posts, isProfile }) {
     }
 
     const handleVideo = (id) => {
-        console.log(videoPlay, id)
-        setVideoPlay(prev => [...prev, { id, isPlayed: true }])
+        // console.log(videoPlay, id)
+        setVideoPlay(prev => prev.map(p => {
+            p?.id === id
+                ? { ...p, isPlayed: true }
+                : p
+        }))
     }
 
-    console.log(posts)
+    const handleUser = (userId) => {
+        if (userId === currentUser?._id) return navigate(`${ROUTES.PROFILE}`)
+        navigate(`${ROUTES.PROFILE}/${userId}`)
+    }
+
+    // console.log(posts)
     return (
         <div className={style.postContainer}>
             {post?.length > 0 ?
                 post?.map((p, idx) => {
-                    const vid = videoPlay?.find(v => p._id === v.id)
-                    console.log(vid)
+                    const vid = videoPlay?.find(v => v?.id === p._id)
+                    // console.log(vid, p._id)
                     return (
-                        <div key={idx} className={style.postInd}>
+                        <div key={p._id} className={style.postInd}>
                             {p?.fileType?.includes("image") && (
                                 <img src={p?.photoVideo} alt="Image" className={style.imagePost} />
                             )}
                             {p?.fileType?.includes("video") && (
                                 vid && !vid.isPlayed ?
-                                    <div className={style.videoContainer} onClick={() => handleVideo(p._id)}>
+                                    <div className={style.videoContainer}>
                                         <FaPlay className={style.playBtn} />
-                                        <video src={p?.photoVideo} alt="Video" className={style.imagePost} />
+                                        <video src={p?.photoVideo} alt="Video" className={style.imagePost} onClick={() => handleVideo(p._id)} />
                                     </div>
                                     :
                                     <video src={p?.photoVideo} alt="Video" className={style.imagePost} controls />
                             )}
-                            <div className={style.postUserInfo}>
+                            <div className={style.postUserInfo} onClick={() => handleUser(p.userId._id)}>
                                 <UserAvatar
                                     user={p.userId}
                                     size={30}

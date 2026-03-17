@@ -2,34 +2,34 @@
 @use '../../Style/mixins' as *;
 
 .navbar {
-    @include flex-justify;
-    padding-right: $padding-md;
-    // margin-bottom: $spacing;
-    border-bottom: $border-black;
-    position: sticky;
-    top: 0;
-    background-color: white;
-    z-index: 100;
-    width: 98dvw;
+  @include flex-justify;
+  padding-right: $padding-md;
+  // margin-bottom: $spacing;
+  border-bottom: $border-black;
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 100;
+  width: 98dvw;
 
-    .linkInfo {
-        @include links;
+  .linkInfo {
+    @include links;
 
-        &:hover {
-            color: $primary-color;
-        }
+    &:hover {
+      color: $primary-color;
     }
+  }
 }
 
 .inputBox {
-    width: 100%;
-    height: 30px;
-    border-radius: 15px;
-    border: 1px solid gray;
-    padding-left: $padding-md;
+  width: 100%;
+  height: 30px;
+  border-radius: 15px;
+  border: 1px solid gray;
+  padding-left: $padding-md;
 }
 
-.notifyLink { 
+.notifyLink {
   position: relative;
 }
 
@@ -47,6 +47,10 @@
 .searchUser {
   position: relative;
   width: 20%;
+}
+
+.navIcon {
+  display: none;
 }
 
 .searchContainer {
@@ -79,3 +83,18 @@
   text-align: center;
 }
 
+@media (min-width : 300px) and (max-width : 768px) {
+  .searchUser {
+    width: 40%;
+  }
+
+  .navIcon {
+    display: inline;
+    height: 30px;
+    width: 30px;
+  }
+
+  .textMenu {
+    display: none;
+  }
+}

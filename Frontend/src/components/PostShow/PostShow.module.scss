@@ -114,3 +114,9 @@
     border-radius: $padding-md;
     padding: $padding-md;
 }
+
+@media (max-width : 480px) {
+    .postContainer {
+        order: 3;
+    }
+}

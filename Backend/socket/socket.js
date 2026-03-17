@@ -14,11 +14,14 @@ module.exports = (io) => {
             // console.log('send', sender, receiver, msg)
             // console.log('receive', receiverId);
             const res = await Message.postMessage(sender, receiver, msg);
-            await Notification.deleteMessage({ sender: receiver, receiver: sender, type: "message" })
+            const r = await Notification.deleteMessage(receiver, sender, "message")
+            console.log('socket', r)
             // console.log('status', res?.status, res);
             if (res.status === 200) {
                 callback({ status: 200 })
             }
+            const senderId = userMap.get(sender);
+            io.to(senderId).emit('message-send', { receiver, type: "message" })
             const receiverId = userMap.get(receiver);
             io.to(receiverId).emit('receive', { sender, receiver, msg })
         })

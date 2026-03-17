@@ -53,3 +53,18 @@
 .postSide {
     width: 80%;
 }
+
+@media (max-width : 480px) {
+    .otherContainer {
+        @include flex-column;
+    }
+    .followInfo {
+        order: 1;
+    }
+    .otherSidebar {
+        order: 2;
+    }
+    .postInfo {
+        order: 3;
+    }
+}

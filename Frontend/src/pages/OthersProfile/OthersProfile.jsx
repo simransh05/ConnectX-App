@@ -81,12 +81,12 @@ function OthersProfile() {
                             userId={userId}
                         />
                     </div>
+                    <div className={style.postInfo}>
+                        <PostShow
+                            posts={posts}
+                        />
+                    </div>
 
-
-
-                    <PostShow
-                        posts={posts}
-                    />
                 </div>
 
 

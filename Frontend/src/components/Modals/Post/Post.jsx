@@ -15,7 +15,7 @@ function Post({ open, onClose, onSuccess }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            if (!preview || !caption) {
+            if (!preview && !caption) {
                 return;
             }
             const formData = new FormData();
@@ -36,21 +36,15 @@ function Post({ open, onClose, onSuccess }) {
                     showCancelButton: false,
                     showConfirmButton: false
                 })
-                onClose();
                 onSuccess();
+                onClose();
+                console.log('here')
             }
         }
         catch (err) {
             console.error(err)
         }
         // = data have all things which user add + id user
-    }
-
-    const handleEnter = (e) => {
-        // console.log(e.key)
-        if (e.key === 'Enter') {
-            handleSubmit();
-        }
     }
 
     const handleFile = (e) => {
@@ -62,7 +56,7 @@ function Post({ open, onClose, onSuccess }) {
         if (!file) return;
         setFile(file)
         setPreview(URL.createObjectURL(file));
-        console.log(file.type)
+        // console.log(file.type)
         setFileType(file.type);
     };
     return (
@@ -105,7 +99,6 @@ function Post({ open, onClose, onSuccess }) {
                         onChange={(e) => setCaption(e.target.value)}
                         className={style.captionInput}
                         fullWidth
-                        onKeyDown={handleEnter}
                     />
                 </DialogContent>
                 <DialogActions sx={{ display: 'flex', justifyContent: 'center' }}>

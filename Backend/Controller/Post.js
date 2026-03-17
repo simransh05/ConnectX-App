@@ -7,10 +7,11 @@ const { formatPost } = require("./Users/format");
 module.exports.getIndividualPosts = async (req, res) => {
     const { userId } = req.params;
     try {
-        const posts = await Post.find({ userId }).populate('userId');
+        let posts = await Post.find({ userId }).populate('userId');
         if (!posts) {
             return res.status(200).json([])
         }
+        posts = posts.reverse();
         // console.log(posts);
         return res.status(200).json(posts.map(formatPost))
     } catch (err) {
@@ -20,13 +21,16 @@ module.exports.getIndividualPosts = async (req, res) => {
 
 module.exports.getAllPosts = async (req, res) => {
     try {
-        const posts = await Post.find().populate('userId');
-        // console.log('posts 34', posts)
+        // console.log('here 23')
+        let posts = await Post.find().populate('userId');
+        // console.log('posts 25', posts)
         if (!posts) {
             return res.status(200).json([])
         }
+        posts = posts.reverse();
         return res.status(200).json(posts.map(formatPost))
     } catch (err) {
+        console.log(err)
         return res.status(500).json({ message: err.message })
     }
 }
@@ -57,7 +61,7 @@ module.exports.deletePost = async (req, res) => {
 
 module.exports.postUploadPost = async (req, res) => {
     const { caption, userId, fileType } = req.body;
-    console.log('post upload', caption, userId, fileType)
+    // console.log('post upload', caption, userId, fileType)
     try {
         const allData = {
             caption,
@@ -105,7 +109,7 @@ module.exports.getSavedPost = async (req, res) => {
             }
         });
         const posts = user.savedPost;
-        console.log('populated current user posts', posts);
+        // console.log('populated current user posts', posts);
         return res.status(200).json(posts.map(formatPost));
     } catch (err) {
         return res.status(500).json({ message: err.message })

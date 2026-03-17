@@ -7,6 +7,9 @@ import UserAvatar from '../userAvatar/UserAvatar'
 import { userStore } from '../../Zustand/AllUsers'
 import socket from '../../Socket/socket'
 import api from '../../utils/api'
+import { IoIosHome, IoIosNotifications, } from "react-icons/io";
+import { IoChatbubble } from "react-icons/io5";
+import { FaInfoCircle } from "react-icons/fa";
 import { SelectedUserContext } from '../../Context/SelectedUserProvider'
 import { NotificationStore } from '../../Zustand/Notification'
 
@@ -24,12 +27,15 @@ function Navbar() {
     if (loading) return;
     if (!notify) {
       fetchNotification(currentUser?._id)
-    } 
+    }
+    if (!allUsers) {
+      fetchAllUsers(currentUser?._id)
+    }
     setNumber(notify?.length)
 
-  }, [loading , notify])
+  }, [loading, notify])
 
-  console.log(notify)
+  console.log(currentUser)
 
   const handleChange = (e) => {
     const value = e.target.value;
@@ -42,8 +48,20 @@ function Navbar() {
   useEffect(() => {
     socket.on('receiver-notify', ({ sender, receiver, type, postId }) => {
       // number increase 
+      const available = notify?.some(n => n.userId === receiver && n.type === type)
       console.log('here')
-      setNumber(prev => prev + 1)
+      if (!available) {
+        setNumber(prev => prev + 1)
+      }
+
+    })
+    socket.on('message-send', ({ receiver, type }) => {
+      const available = notify?.some(n => n.userId === receiver && n.type === type)
+      console.log(available, receiver)
+      fetchNotification(currentUser?._id)
+      if (available) {
+        setNumber(prev => prev - 1);
+      }
     })
 
     socket.on('deleted', () => {
@@ -99,14 +117,26 @@ function Navbar() {
 
       {/* routes */}
 
-      <Link to={ROUTES.HOME} className={style.linkInfo}>Home</Link>
+      <Link to={ROUTES.HOME} className={style.linkInfo}>
+        <IoIosHome className={style.navIcon} />
+        <span className={style.textMenu}>Home</span>
+      </Link>
       <div className={style.notifyLink}>
-        <Link to={ROUTES.NOTIFICATION} className={style.linkInfo}>Notifications</Link>
+        <Link to={ROUTES.NOTIFICATION} className={style.linkInfo}>
+          <IoIosNotifications className={style.navIcon} />
+          <span className={style.textMenu}>Notification</span>
+        </Link>
         {number > 0 && <div className={style.numNotify}>{number}</div>}
       </div>
 
-      <Link to={ROUTES.MESSAGES} className={style.linkInfo} onClick={() => setSelectedUser(null)}>Messages</Link>
-      <Link to={ROUTES.ABOUT} className={style.linkInfo}>About</Link>
+      <Link to={ROUTES.MESSAGES} className={style.linkInfo} onClick={() => setSelectedUser(null)}>
+        <IoChatbubble className={style.navIcon} />
+        <span className={style.textMenu}>Messages</span>
+      </Link>
+      <Link to={ROUTES.ABOUT} className={style.linkInfo}>
+        <FaInfoCircle className={style.navIcon} />
+        <span className={style.textMenu}>About</span>
+      </Link>
       <Link to={ROUTES.PROFILE} className={style.linkInfo}>
         <UserAvatar
           user={currentUser}

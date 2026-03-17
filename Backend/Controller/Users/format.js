@@ -7,6 +7,7 @@ module.exports.formatUser = (user) => {
         email: user.email,
         socialLinks: user.socialLinks,
         joinedAt: user.joinedAt,
+        googleId: user?.googleId,
         bio: user.bio,
         savedPost: user.savedPost,
         location: user.location,
