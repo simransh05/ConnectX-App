@@ -1,15 +1,17 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material'
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import React, { useContext, useState } from 'react'
 import api from '../../../utils/api';
 import style from './Post.module.scss'
 import Swal from 'sweetalert2';
 import { CurrentUserContext } from '../../../Context/currentUserProvider';
+import socket from '../../../Socket/socket';
 
 function Post({ open, onClose, onSuccess }) {
     const [preview, setPreview] = useState(null);
     const [fileType, setFileType] = useState(null);
     const [file, setFile] = useState(null);
     const [caption, setCaption] = useState('');
+    const [postType, setPostType] = useState("");
     const { currentUser } = useContext(CurrentUserContext);
     // on submit form get all the data with who send this post user id 
     const handleSubmit = async (e) => {
@@ -21,7 +23,10 @@ function Post({ open, onClose, onSuccess }) {
             const formData = new FormData();
             formData.append('caption', caption);
             formData.append('userId', currentUser?._id)
+            formData.append('postType', postType || "public")
+
             formData.append('fileType', fileType)
+            console.log(formData)
             if (preview) {
                 formData.append('photoVideo', file)
             }
@@ -36,6 +41,7 @@ function Post({ open, onClose, onSuccess }) {
                     showCancelButton: false,
                     showConfirmButton: false
                 })
+                socket.emit('send-notify', { sender: currentUser?._id, type: 'post' })
                 onSuccess();
                 onClose();
                 console.log('here')
@@ -45,6 +51,10 @@ function Post({ open, onClose, onSuccess }) {
             console.error(err)
         }
         // = data have all things which user add + id user
+    }
+
+    const handleChange = (e) => {
+        setPostType(e.target.value)
     }
 
     const handleFile = (e) => {
@@ -100,6 +110,20 @@ function Post({ open, onClose, onSuccess }) {
                         className={style.captionInput}
                         fullWidth
                     />
+                    <FormControl fullWidth sx={{ marginTop: '10px' }}>
+                        <InputLabel id="postType">Post Type</InputLabel>
+
+                        <Select
+                            value={postType}
+                            onChange={handleChange}
+                            label="Post Type"
+                            labelId="postType"
+                        >
+                            <MenuItem value="public">Public</MenuItem>
+                            <MenuItem value="private">Private</MenuItem>
+                        </Select>
+
+                    </FormControl>
                 </DialogContent>
                 <DialogActions sx={{ display: 'flex', justifyContent: 'center' }}>
                     <Button onClick={onClose} sx={{ textTransform: 'none', fontSize: '16px' }}>Cancel</Button>

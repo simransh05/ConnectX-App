@@ -36,6 +36,8 @@ function Notification() {
       case "message":
         return `${n.name} sent you a message`;
 
+      case "post":
+        return `${n.name} has a new post`
       default:
         return "New notification";
     }

@@ -5,13 +5,12 @@ const Notification = require('../models/notification')
 const { formatPost } = require("./Users/format");
 
 module.exports.getIndividualPosts = async (req, res) => {
-    const { userId } = req.params;
+    const { userId, skip } = req.params;
     try {
-        let posts = await Post.find({ userId }).populate('userId');
+        let posts = await Post.find({ userId }).sort({ createdAt: -1 }).populate('userId').skip(skip).limit(5);
         if (!posts) {
             return res.status(200).json([])
         }
-        posts = posts.reverse();
         // console.log(posts);
         return res.status(200).json(posts.map(formatPost))
     } catch (err) {
@@ -60,13 +59,14 @@ module.exports.deletePost = async (req, res) => {
 }
 
 module.exports.postUploadPost = async (req, res) => {
-    const { caption, userId, fileType } = req.body;
-    // console.log('post upload', caption, userId, fileType)
+    const { caption, userId, fileType, postType } = req.body;
+    console.log('post upload', caption, userId, fileType, postType)
     try {
         const allData = {
             caption,
             userId,
-            fileType
+            fileType,
+            postType
         }
         if (req.file) {
             allData.photoVideo = req.file.buffer;

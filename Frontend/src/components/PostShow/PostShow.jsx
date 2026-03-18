@@ -1,5 +1,6 @@
 import React, { useContext, useEffect } from 'react'
 import style from './PostShow.module.scss'
+import { useNavigate } from 'react-router-dom'
 import { AiOutlineLike } from "react-icons/ai";
 import { FaRegComment } from "react-icons/fa6";
 import UserAvatar from '../userAvatar/UserAvatar';
@@ -17,6 +18,7 @@ import { allPostStore } from '../../Zustand/AllPosts';
 function PostShow({ posts, isProfile }) {
     const [commentDrawer, setCommentDawer] = useState(false);
     const { fetchAllPosts } = allPostStore()
+    const navigate = useNavigate()
     const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
     const [postid, setpostId] = useState(null);
     const [post, setPost] = useState(null);

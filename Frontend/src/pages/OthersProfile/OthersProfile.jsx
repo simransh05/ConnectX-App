@@ -14,6 +14,8 @@ import socket from '../../Socket/socket';
 import { CurrentUserContext } from '../../Context/currentUserProvider';
 import { useState } from 'react';
 import FollowInfo from '../../components/FollowInfo/FollowInfo';
+import { CiMenuBurger } from 'react-icons/ci';
+import { Drawer } from '@mui/material';
 
 function OthersProfile() {
     const { userId } = useParams();
@@ -23,6 +25,7 @@ function OthersProfile() {
     const { detail } = useFollowDetail(userId)
     const { setSelectedUser } = useContext(SelectedUserContext);
     const { currentUser } = useContext(CurrentUserContext);
+    const [sideMenu, setSideMenu] = useState(false);
     // console.log(detail)
     const userInfo = allUsers?.find(u => u._id === userId);
     // console.log(userInfo , userId)
@@ -58,6 +61,9 @@ function OthersProfile() {
         }
     }, [detail])
 
+    const isMobile = window.innerWidth <= 768;
+    console.log(isMobile)
+
     // console.log(isFollow)
 
     return (
@@ -65,11 +71,33 @@ function OthersProfile() {
             <Navbar />
             <div className={style.otherContainer}>
                 {/* sidebar */}
-                <div className={style.otherSidebar}>
+                <CiMenuBurger
+                    onClick={() => setSideMenu(true)}
+                    className={style.mobileMenu} />
+                {isMobile ? <Drawer className={style.otherDrawer} PaperProps={{
+                    sx: {
+                        width: '250px'
+                    }
+                }}>
                     <UserInfo
                         user={userInfo}
+                        isMobile={isMobile}
+                        isOther={true}
+                        open={sideMenu}
+                        onClose={() => setSideMenu(false)}
                     />
-                </div>
+                </Drawer>
+                    :
+                    <div className={style.otherSidebar}>
+                        <UserInfo
+                            user={userInfo}
+                            isMobile={isMobile}
+                            isOther={true}
+                            open={sideMenu}
+                            onClose={() => setSideMenu(false)}
+                        />
+                    </div>}
+
                 {/* posts side */}
                 <div className={style.postSide}>
                     <div className={style.followInfo}>

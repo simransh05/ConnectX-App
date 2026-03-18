@@ -11,10 +11,12 @@ import { CurrentUserContext } from '../../Context/currentUserProvider';
 import useIndividualPosts from '../../utils/helper/IndividualPosts';
 import PostShow from '../../components/PostShow/PostShow';
 import FollowInfo from '../../components/FollowInfo/FollowInfo';
+import { CiMenuBurger } from "react-icons/ci";
 
 function Profile() {
   const [openPost, setOpenPost] = useState(false);
   const { currentUser } = useContext(CurrentUserContext);
+  const [sideMenu, setSideMenu] = useState(false);
   useUserAvailable(`${ROUTES.PROFILE}`)
 
   const { posts, setPosts } = useIndividualPosts(currentUser?._id);
@@ -25,12 +27,22 @@ function Profile() {
     setPosts(res.data);
   }
 
+  const isMobile = window.innerWidth <= 768;
+  console.log(isMobile)
+
 
   return (
     <>
       <Navbar />
       <div className={style['profile-container']}>
-        <Sidebar />
+        <CiMenuBurger
+          onClick={() => setSideMenu(true)} 
+          className= {style.mobileMenu}/>
+        <Sidebar
+          isDrawer={isMobile}
+          open={sideMenu}
+          onClose={() => setSideMenu(false)}
+        />
         {/* right side */}
         {/* followers , follwing , new post  */}
         <div className={style.right}>
