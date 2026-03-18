@@ -18,18 +18,27 @@ module.exports.getNotification = async (req, res) => {
 module.exports.postNotification = async (sender, receiver, type, postId) => {
     // idea to add this for the currentuser is the sender and the reciever is who's post or whom 
     try {
-        const notify = await Notification.updateOne(
-            {
+        let notify;
+        if (type === 'post') {
+            notify = await Notification.create(
                 sender,
                 receiver,
                 type,
-                postId: postId || null
-            },
-            {
-                createdAt: Date.now()
-            },
-            { upsert: true, new: true }
-        )
+            )
+        } else {
+            notify = await Notification.updateOne(
+                {
+                    sender,
+                    receiver,
+                    type,
+                    postId: postId || null
+                },
+                {
+                    createdAt: Date.now()
+                },
+                { upsert: true, new: true }
+            )
+        }
 
         return { notify, status: 200 };
     } catch (err) {

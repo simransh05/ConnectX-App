@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { CurrentUserContext } from '../../Context/currentUserProvider'
 import UserAvatar from '../userAvatar/UserAvatar';
-import { Avatar, Divider } from '@mui/material';
+import { Avatar, Divider, Drawer } from '@mui/material';
 import { MdModeEdit } from "react-icons/md";
 import Password from '../Modals/Password/Password';
 import Swal from 'sweetalert2'
@@ -15,7 +15,7 @@ import api from '../../utils/api';
 import style from './Sidebar.module.scss'
 import UserInfo from '../UserInfo/UserInfo';
 
-function Sidebar() {
+function Sidebar({ isDrawer, open, onClose }) {
   const navigate = useNavigate();
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
   const [isEditing, setIsEditing] = useState(false);
@@ -122,118 +122,241 @@ function Sidebar() {
     setPreview(null);
   }
   return (
-    <div className={style['sidebar-container']}>
-      {isEditing ?
-        (
-          <form onSubmit={handleSubmit} className={style.editSidebar}>
-            <div className={style.profilePicInfo}>
-              {preview ?
-                <Avatar
-                  src={preview}
-                  sx={{ width: 80, height: 8000 }}
-                />
-                :
-                <UserAvatar
-                  user={currentUser}
-                  size={80}
-                  IsSidebar={true}
-                />
-              }
-            </div>
-
-            <label className={style.uploadBtn}>
-              Change Profile Picture
-              <input
-                type="file"
-                accept="image/*"
-                hidden
-                onChange={handleFileChange}
-              />
-            </label>
-
-            <div className={style.nameInfo}>
-              <label htmlFor='name'>Name: </label>
-              <input type="text" name='name' onChange={handleChange} value={formData?.name} />
-            </div>
-
-            <div>Email: {formData.email}</div>
-            <div className={style.bioInfo}>
-              <label htmlFor='bio'>Bio: </label>
-              <input type="text" name='bio' onChange={handleChange} value={formData?.bio} />
-            </div>
-            <div className={style.locationInfo}>
-              <label htmlFor='location'>Location: </label>
-              <input type="text" name='location' onChange={handleChange} value={formData?.location} />
-            </div>
-            <div className={style.socialInfo}>
-              Social Links:
-            </div>
-            {formData?.socialLinks.map((s, index) => (
-              <div key={index} className={style.indSocial}>
-                <div className={style.inputSocial}>
-                  <input
-                    value={s.platform}
-                    name='platform'
-                    onChange={(e) =>
-                      handleSocialChange(index, "platform", e.target.value)
-                    }
-                  />
-                  <input
-                    value={s.url}
-                    name='url'
-                    onChange={(e) =>
-                      handleSocialChange(index, "url", e.target.value)
-                    }
-                  />
-                </div>
-                <button type="button" onClick={() => removeSocial(index)} className={style.removeSocial}>
-                  Remove
-                </button>
-              </div>
-            ))}
-
-            <button type="button" onClick={handleAdd} className={style.addSocial}>
-              Add Social Link
-            </button>
-            <div className={style.btnUpdate}>
-              <button type='button' onClick={handleCancel} className={style.cancelProfile}>Cancel</button>
-              <button type='submit' className={style.updateProfile}>Update</button>
-            </div>
-
-          </form>
-        )
-        :
-        <div className={style.sidebar}>
-          <UserInfo
-            user={currentUser}
-          />
-          <div className={style.edit} onClick={() => setIsEditing(true)}>
-            <MdModeEdit /> Edit Profile
-          </div>
-
-          {!currentUser?.googleId &&
-            <div className={style.passwordChange} onClick={() => setPassword(true)} >
-              <MdOutlineWifiPassword /> Change Password
-            </div>
-          }
-
-          <div className={style.savedPostBtn} onClick={() => navigate(`${ROUTES.SAVEDPOST}`)}>
-            <FaBookmark /> Saved Posts
-          </div>
-          <div onClick={handleLogout} className={style.logout}>
-            <FaPowerOff /> Logout
-          </div>
-        </div>
-      }
+    <>
       {
-        password &&
-        <Password
-          open={() => setPassword(true)}
-          onClose={() => setPassword(false)}
-        />
-      }
+        isDrawer ?
 
-    </div >
+          <Drawer className={style['sidebar-drawer']} PaperProps={{
+            sx: { width: '250px' }
+          }} open={open} onClose={onClose}>
+            {
+              isEditing ?
+                (
+                  <form onSubmit={handleSubmit} className={style.editSidebar} >
+                    <div className={style.profilePicInfo}>
+                      {preview ?
+                        <Avatar
+                          src={preview}
+                          sx={{ width: 80, height: 8000 }}
+                        />
+                        :
+                        <UserAvatar
+                          user={currentUser}
+                          size={80}
+                          IsSidebar={true}
+                        />
+                      }
+                    </div>
+
+                    <label className={style.uploadBtn}>
+                      Change Profile Picture
+                      <input
+                        type="file"
+                        accept="image/*"
+                        hidden
+                        onChange={handleFileChange}
+                      />
+                    </label>
+
+                    <div className={style.nameInfo}>
+                      <label htmlFor='name'>Name: </label>
+                      <input type="text" name='name' onChange={handleChange} value={formData?.name} />
+                    </div>
+
+                    <div>Email: {formData.email}</div>
+                    <div className={style.bioInfo}>
+                      <label htmlFor='bio'>Bio: </label>
+                      <input type="text" name='bio' onChange={handleChange} value={formData?.bio} />
+                    </div>
+                    <div className={style.locationInfo}>
+                      <label htmlFor='location'>Location: </label>
+                      <input type="text" name='location' onChange={handleChange} value={formData?.location} />
+                    </div>
+                    <div className={style.socialInfo}>
+                      Social Links:
+                    </div>
+                    {formData?.socialLinks.map((s, index) => (
+                      <div key={index} className={style.indSocial}>
+                        <div className={style.inputSocial}>
+                          <input
+                            value={s.platform}
+                            name='platform'
+                            onChange={(e) =>
+                              handleSocialChange(index, "platform", e.target.value)
+                            }
+                          />
+                          <input
+                            value={s.url}
+                            name='url'
+                            onChange={(e) =>
+                              handleSocialChange(index, "url", e.target.value)
+                            }
+                          />
+                        </div>
+                        <button type="button" onClick={() => removeSocial(index)} className={style.removeSocial}>
+                          Remove
+                        </button>
+                      </div>
+                    ))
+                    }
+
+                    < button type="button" onClick={handleAdd} className={style.addSocial} >
+                      Add Social Link
+                    </button >
+                    <div className={style.btnUpdate}>
+                      <button type='button' onClick={handleCancel} className={style.cancelProfile}>Cancel</button>
+                      <button type='submit' className={style.updateProfile}>Update</button>
+                    </div>
+
+                  </form >
+                )
+                :
+                <div className={style.sidebar}>
+                  <UserInfo
+                    user={currentUser}
+                  />
+                  <div className={style.edit} onClick={() => setIsEditing(true)}>
+                    <MdModeEdit /> Edit Profile
+                  </div>
+
+                  {!currentUser?.googleId &&
+                    <div className={style.passwordChange} onClick={() => setPassword(true)} >
+                      <MdOutlineWifiPassword /> Change Password
+                    </div>
+                  }
+
+                  <div className={style.savedPostBtn} onClick={() => navigate(`${ROUTES.SAVEDPOST}`)}>
+                    <FaBookmark /> Saved Posts
+                  </div>
+                  <div onClick={handleLogout} className={style.logout}>
+                    <FaPowerOff /> Logout
+                  </div>
+                </div>
+            }
+            {
+              password &&
+              <Password
+                open={() => setPassword(true)}
+                onClose={() => setPassword(false)}
+              />
+            }
+
+          </Drawer >
+          :
+          <div className={style['sidebar-container']}>
+            {isEditing ?
+              (
+                <form onSubmit={handleSubmit} className={style.editSidebar}>
+                  <div className={style.profilePicInfo}>
+                    {preview ?
+                      <Avatar
+                        src={preview}
+                        sx={{ width: 80, height: 8000 }}
+                      />
+                      :
+                      <UserAvatar
+                        user={currentUser}
+                        size={80}
+                        IsSidebar={true}
+                      />
+                    }
+                  </div>
+
+                  <label className={style.uploadBtn}>
+                    Change Profile Picture
+                    <input
+                      type="file"
+                      accept="image/*"
+                      hidden
+                      onChange={handleFileChange}
+                    />
+                  </label>
+
+                  <div className={style.nameInfo}>
+                    <label htmlFor='name'>Name: </label>
+                    <input type="text" name='name' onChange={handleChange} value={formData?.name} />
+                  </div>
+
+                  <div>Email: {formData.email}</div>
+                  <div className={style.bioInfo}>
+                    <label htmlFor='bio'>Bio: </label>
+                    <input type="text" name='bio' onChange={handleChange} value={formData?.bio} />
+                  </div>
+                  <div className={style.locationInfo}>
+                    <label htmlFor='location'>Location: </label>
+                    <input type="text" name='location' onChange={handleChange} value={formData?.location} />
+                  </div>
+                  <div className={style.socialInfo}>
+                    Social Links:
+                  </div>
+                  {formData?.socialLinks.map((s, index) => (
+                    <div key={index} className={style.indSocial}>
+                      <div className={style.inputSocial}>
+                        <input
+                          value={s.platform}
+                          name='platform'
+                          onChange={(e) =>
+                            handleSocialChange(index, "platform", e.target.value)
+                          }
+                        />
+                        <input
+                          value={s.url}
+                          name='url'
+                          onChange={(e) =>
+                            handleSocialChange(index, "url", e.target.value)
+                          }
+                        />
+                      </div>
+                      <button type="button" onClick={() => removeSocial(index)} className={style.removeSocial}>
+                        Remove
+                      </button>
+                    </div>
+                  ))}
+
+                  <button type="button" onClick={handleAdd} className={style.addSocial}>
+                    Add Social Link
+                  </button>
+                  <div className={style.btnUpdate}>
+                    <button type='button' onClick={handleCancel} className={style.cancelProfile}>Cancel</button>
+                    <button type='submit' className={style.updateProfile}>Update</button>
+                  </div>
+
+                </form>
+              )
+              :
+              <div className={style.sidebar}>
+                <UserInfo
+                  user={currentUser}
+                />
+                <div className={style.edit} onClick={() => setIsEditing(true)}>
+                  <MdModeEdit /> Edit Profile
+                </div>
+
+                {!currentUser?.googleId &&
+                  <div className={style.passwordChange} onClick={() => setPassword(true)} >
+                    <MdOutlineWifiPassword /> Change Password
+                  </div>
+                }
+
+                <div className={style.savedPostBtn} onClick={() => navigate(`${ROUTES.SAVEDPOST}`)}>
+                  <FaBookmark /> Saved Posts
+                </div>
+                <div onClick={handleLogout} className={style.logout}>
+                  <FaPowerOff /> Logout
+                </div>
+              </div>
+            }
+            {
+              password &&
+              <Password
+                open={() => setPassword(true)}
+                onClose={() => setPassword(false)}
+              />
+            }
+
+          </div >
+      }
+    </>
   )
 }
 

@@ -39,3 +39,17 @@ module.exports.postFollow = async (sender, receiver) => { // one doc like add fo
         console.error(err.message)
     }
 }
+
+module.exports.getFollower = async (userId) => {
+    try {
+        let follower = await Follow.find({ follower: userId });
+        
+        follower = follower.map(f => {
+            return f.following
+        })
+        console.log('get follower', follower);
+        return follower
+    } catch (err) {
+        console.error(err.message)
+    }
+}

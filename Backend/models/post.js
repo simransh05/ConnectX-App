@@ -14,6 +14,11 @@ const postSchema = new mongoose.Schema({
     caption: {
         type: String
     },
+    postType: {
+        type: String,
+        enum: ['public', 'private'],
+        default: 'public'
+    },
     likes: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'

@@ -5,6 +5,10 @@
     @include space-flex;
 }
 
+.mobileMenu {
+    display: none;
+}
+
 .right {
     @include flex-column;
     width: 80%;
@@ -19,7 +23,7 @@
     padding: $padding-md 0;
     text-align: center;
 
-    button{
+    button {
         background-color: blue;
         color: white;
         font-size: 15px;
@@ -28,5 +32,15 @@
         border-radius: 10px;
         padding: $padding-md;
         cursor: pointer;
+    }
+}
+
+@media (max-width : 768px) and (min-width: 300px) {
+    .mobileMenu {
+        display: inline;
+        width: 5%;
+    }
+    .right {
+        width: 90%;
     }
 }

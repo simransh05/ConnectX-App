@@ -5,8 +5,13 @@
     @include space-flex;
 }
 
+.mobileMenu {
+    display: none;
+}
+
 .otherSidebar {
     @include flex-column;
+    display: inline;
     width: 20%;
     border: $border-black;
 
@@ -54,17 +59,13 @@
     width: 80%;
 }
 
-@media (max-width : 480px) {
-    .otherContainer {
-        @include flex-column;
+
+@media (max-width : 768px) and (min-width: 300px) {
+    .mobileMenu {
+        display: inline;
+        width: 5%;
     }
-    .followInfo {
-        order: 1;
-    }
-    .otherSidebar {
-        order: 2;
-    }
-    .postInfo {
-        order: 3;
+    .right {
+        width: 90%;
     }
 }

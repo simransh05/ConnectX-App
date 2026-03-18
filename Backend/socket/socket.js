@@ -43,6 +43,17 @@ module.exports = (io) => {
             } else if (type === 'message') {
                 // if receiver is not present add in notification or if not seen type 
                 await Notification.postNotification(sender, receiver, type);
+            } else if (type === 'post') {
+                const followers = await Follow.getFollower(sender);
+                console.log(followers);
+                for (let f of followers) {
+                    console.log('f' , f)
+                    await Notification.postNotification(sender, f, type);
+                    const followerId = userMap.get(f);
+                    io.to(followerId).emit('receiver-notify', { sender, receiver: f, type })
+                }
+                return;
+                // get the list of followers
             }
             if (callback) {
                 callback({ status: 200 }) // for making follow to already follow

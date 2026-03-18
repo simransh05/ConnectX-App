@@ -57,7 +57,7 @@ router.get('/post/save/:userId', post.getSavedPost);
 
 router.get('/logout', users.getLogout);
 
-router.get('/post/individual/:userId', post.getIndividualPosts);
+router.get('/post/individual/:userId/:skip', post.getIndividualPosts);
 
 router.get('/post', post.getAllPosts);
 
