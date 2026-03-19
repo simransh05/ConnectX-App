@@ -25,11 +25,12 @@
 }
 
 .chat-body {
-    height: 70%;
-    border: $border-black;
+    height: 75%;
+    border-left: $border-black ;
+    border-right: $border-black;
     @include flex-column;
     overflow-y: scroll;
-    background-color: rgb(240, 228, 206);
+    background-color: rgb(248, 242, 232);
 }
 
 .sender,
@@ -50,7 +51,7 @@
     margin-left: auto;
     text-align: right;
     margin-right: $padding-md;
-    background-color: rgb(77, 122, 10);
+    background-color: rgb(129, 179, 55);
     color: white;
 }
 
@@ -58,12 +59,12 @@
     margin-right: auto;
     text-align: left;
     margin-left: $padding-md;
-    background-color: rgb(105, 107, 102);
+    background-color: rgb(164, 165, 163);
     color: white;
 }
 
 .chat-footer {
-    height: 15%;
+    height: 10%;
     border: $border-black;
     @include flex-justify;
 
@@ -72,6 +73,8 @@
         width: 80%;
         border-radius: 15px;
         margin-left: $padding-md;
+        border: $border-black;
+        padding: 0 $padding-md ;
 
     }
 
@@ -80,15 +83,21 @@
         height: 80%;
         color: white;
         font-size: 14px;
+        border-radius: $padding-md;
         font-weight: 400;
-        background-color: green;
+        background-color: rgb(36, 228, 36);
         margin: 10px;
         cursor: pointer;
+        border: $border-black;
+
+        &:hover {
+            background-color: green;
+        }
     }
 }
 
 .selectuser {
-    height: 82vh;
+    height: 100%;
     @include flex-center;
     border: $border-black;
 }

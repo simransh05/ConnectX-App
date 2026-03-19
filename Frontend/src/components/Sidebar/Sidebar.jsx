@@ -29,12 +29,16 @@ function Sidebar({ isDrawer, open, onClose }) {
         email: currentUser.email || "",
         bio: currentUser.bio || "",
         location: currentUser.location || "",
-        socialLinks: currentUser.socialLinks || []
+        socialLinks: currentUser.socialLinks || [],
+        fileType: currentUser.fileType || ""
       });
     }
   }, [currentUser]);
 
   const handleLogout = async () => {
+    if (isDrawer) {
+      onClose();
+    }
     const result = await Swal.fire({
       title: "Logout",
       text: 'Are you sure you want to logout',
@@ -59,7 +63,10 @@ function Sidebar({ isDrawer, open, onClose }) {
   const handleFileChange = (e) => {
     const selected = e.target.files[0];
     if (!selected) return;
-
+    setFormData(prev => ({
+      ...prev,
+      fileType: selected.type
+    }));
     setPreview(URL.createObjectURL(selected));
 
     setFormData(prev => ({
@@ -108,10 +115,11 @@ function Sidebar({ isDrawer, open, onClose }) {
 
     if (formData.profilePic) {
       data.append("profilePic", formData.profilePic);
+      data.append("fileType", formData.fileType)
     }
 
     const res = await api.updateProfile(data);
-
+    console.log(res.data)
     if (res.status === 200) {
       setCurrentUser(res.data);
       setIsEditing(false);
@@ -121,6 +129,7 @@ function Sidebar({ isDrawer, open, onClose }) {
     setIsEditing(false);
     setPreview(null);
   }
+  console.log(isDrawer)
   return (
     <>
       {
@@ -137,7 +146,7 @@ function Sidebar({ isDrawer, open, onClose }) {
                       {preview ?
                         <Avatar
                           src={preview}
-                          sx={{ width: 80, height: 8000 }}
+                          sx={{ width: 80, height: 80, margin: '0 auto' }}
                         />
                         :
                         <UserAvatar

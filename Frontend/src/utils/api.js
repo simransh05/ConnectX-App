@@ -17,8 +17,8 @@ const api = {
     getIndividualPosts: async (userId, skip) => {
         return await apiInstance.get(`${ROUTES.POST}${ROUTES.INDIVIDUAL}/${userId}/${skip}`)
     },
-    getAllPosts: async () => {
-        return await apiInstance.get(`${ROUTES.POST}`)
+    getAllPosts: async (skip) => {
+        return await apiInstance.get(`${ROUTES.POST}/${skip}`)
     },
     getNotification: async (userId) => {
         return await apiInstance.get(`${ROUTES.NOTIFICATION}/${userId}`)

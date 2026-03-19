@@ -59,7 +59,7 @@ router.get('/logout', users.getLogout);
 
 router.get('/post/individual/:userId/:skip', post.getIndividualPosts);
 
-router.get('/post', post.getAllPosts);
+router.get('/post/:skip', post.getAllPosts);
 
 router.delete('/post/:postId', post.deletePost)
 

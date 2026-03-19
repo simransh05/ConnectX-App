@@ -11,13 +11,15 @@ function SavedPost() {
     useUserAvailable(`${ROUTES.SAVEDPOST}`);
     const [posts, setPosts] = useState(null);
     useEffect(() => {
+        if (!currentUser) return;
         const fetchPosts = async () => {
-            if (!currentUser) return;
             const res = await api.getSavedPost(currentUser?._id)
             setPosts(res.data);
         }
         fetchPosts()
     }, [currentUser])
+
+    console.log(posts);
     return (
         <>
             <Navbar />

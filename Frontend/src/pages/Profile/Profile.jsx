@@ -12,6 +12,7 @@ import useIndividualPosts from '../../utils/helper/IndividualPosts';
 import PostShow from '../../components/PostShow/PostShow';
 import FollowInfo from '../../components/FollowInfo/FollowInfo';
 import { CiMenuBurger } from "react-icons/ci";
+import { useMediaQuery } from '@mui/material';
 
 function Profile() {
   const [openPost, setOpenPost] = useState(false);
@@ -19,7 +20,7 @@ function Profile() {
   const [sideMenu, setSideMenu] = useState(false);
   useUserAvailable(`${ROUTES.PROFILE}`)
 
-  const { posts, setPosts } = useIndividualPosts(currentUser?._id);
+  const { posts, setPosts, loading } = useIndividualPosts(currentUser?._id);
   // console.log(posts);
   const handleSuccess = async () => {
     const res = await api.getIndividualPosts(currentUser?._id);
@@ -27,8 +28,7 @@ function Profile() {
     setPosts(res.data);
   }
 
-  const isMobile = window.innerWidth <= 768;
-  console.log(isMobile)
+  const isMobile = useMediaQuery("(max-width: 768px)")
 
 
   return (
@@ -36,8 +36,8 @@ function Profile() {
       <Navbar />
       <div className={style['profile-container']}>
         <CiMenuBurger
-          onClick={() => setSideMenu(true)} 
-          className= {style.mobileMenu}/>
+          onClick={() => setSideMenu(true)}
+          className={style.mobileMenu} />
         <Sidebar
           isDrawer={isMobile}
           open={sideMenu}
@@ -61,6 +61,7 @@ function Profile() {
           <PostShow
             posts={posts}
             isProfile={true}
+            loading={loading}
           />
 
           {/* all post of mine */}

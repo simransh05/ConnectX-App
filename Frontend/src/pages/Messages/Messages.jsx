@@ -9,10 +9,12 @@ import style from './Messages.module.scss'
 import { SelectedUserContext } from '../../Context/SelectedUserProvider'
 import UserAvatar from '../../components/userAvatar/UserAvatar'
 import { useNavigate, useParams } from 'react-router-dom'
+import { userStore } from '../../Zustand/AllUsers'
 
 function Messages() {
   const navigate = useNavigate()
   const { userId } = useParams()
+  const { allUsers } = userStore()
   if (userId) {
     useUserAvailable(`${ROUTES.MESSAGES}/${userId}`)
   } else {
@@ -20,7 +22,7 @@ function Messages() {
   }
 
   const { currentUser } = useContext(CurrentUserContext);
-  const { setSelectedUser } = useContext(SelectedUserContext);
+  const { setSelectedUser, setPrevUser, prevUser } = useContext(SelectedUserContext);
   const [myChats, setMyChats] = useState(null);
   useEffect(() => {
     const fetchMyChatUsers = async () => {
@@ -36,6 +38,12 @@ function Messages() {
   // console.log(userId);
 
   const handleClick = (c) => {
+    if (prevUser === null) {
+      setPrevUser(c);
+    } else {
+      const prev = allUsers.find(u => u._id === userId)
+      setPrevUser(prev);
+    }
     setSelectedUser(c);
     navigate(`${ROUTES.MESSAGES}/${c?._id}`)
   }
@@ -45,7 +53,7 @@ function Messages() {
     <>
       <Navbar />
       <div className={style["message-container"]}>
-        <div className={style["left-side"]}>
+        <div className={userId ? style['left-mobile'] : style["left-side"]}>
           {myChats?.length > 0 ?
             myChats.map(c => (
               <div className={style.people} onClick={() => handleClick(c)} key={c?._id}>
@@ -62,7 +70,7 @@ function Messages() {
           {/* list.map then onClick send in the other  */}
         </div>
 
-        <div className={style["right-side"]}>
+        <div className={userId ? style['right-mobile'] : style["right-side"]}>
           <OneOneChat />
         </div>
       </div>

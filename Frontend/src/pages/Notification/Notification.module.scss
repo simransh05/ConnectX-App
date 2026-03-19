@@ -3,6 +3,7 @@
 
 .notifyList {
     @include flex-column;
+    border-collapse: collapse;
 }
 
 .notifyContainer {
@@ -44,4 +45,20 @@
 .noNotify {
     @include flex-center;
     margin-top: 30px;
+}
+
+@media (min-width : 300px) and (max-width : 768px) {
+    .containerNotify {
+        @include flex-column
+    }
+
+    .deleteNotify {
+        order: 1;
+        margin: $padding-md auto;
+        padding: 20px 40px;
+    }
+
+    .notifyList {
+        order: 2;
+    }
 }

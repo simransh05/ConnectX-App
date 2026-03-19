@@ -44,7 +44,7 @@ module.exports.postLogin = async (req, res) => {
             secure: false,
             sameSite: 'lax'
         });
-        return res.status(200).json(user)
+        return res.status(200).json(formatUser(user))
     } catch (err) {
         return res.status(500).json({ message: err.message })
     }
@@ -109,7 +109,7 @@ module.exports.postPassword = async (req, res) => {
 
 module.exports.updateProfile = async (req, res) => {
     // console.log('body', req.body)
-    const { name, bio, location, userId, socialLinks } = req.body;
+    const { name, bio, location, userId, socialLinks, fileType } = req.body;
     try {
         let socialLinks1 = JSON.parse(socialLinks);
         // console.log('social', socialLinks1)
@@ -117,7 +117,8 @@ module.exports.updateProfile = async (req, res) => {
             name,
             bio,
             location,
-            socialLinks: socialLinks1
+            socialLinks: socialLinks1,
+            fileType
         };
         // console.log('update', updateData)
         if (req.file) {

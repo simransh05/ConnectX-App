@@ -7,7 +7,9 @@ const { formatPost } = require("./Users/format");
 module.exports.getIndividualPosts = async (req, res) => {
     const { userId, skip } = req.params;
     try {
-        let posts = await Post.find({ userId }).sort({ createdAt: -1 }).populate('userId').skip(skip).limit(5);
+        console.log('before')
+        let posts = await Post.find({ userId }).sort({ _id: -1 }).skip(skip).limit(5).populate('userId');
+        console.log('after')
         if (!posts) {
             return res.status(200).json([])
         }
@@ -19,9 +21,10 @@ module.exports.getIndividualPosts = async (req, res) => {
 }
 
 module.exports.getAllPosts = async (req, res) => {
+    const { skip } = req.params;
     try {
         // console.log('here 23')
-        let posts = await Post.find().populate('userId');
+        let posts = await Post.find().sort({ _id: -1 }).sort({ _id: -1 }).skip(skip).limit(5).populate('userId');
         // console.log('posts 25', posts)
         if (!posts) {
             return res.status(200).json([])
@@ -71,6 +74,9 @@ module.exports.postUploadPost = async (req, res) => {
         if (req.file) {
             allData.photoVideo = req.file.buffer;
         }
+        if (!allData.photoVideo && !allData.caption) {
+            return res.status(404).json({ message: 'any field required' })
+        }
         // console.log(allData)
         await Post.create(allData)
         return res.status(200).json({ message: 'Successful' })
@@ -90,7 +96,7 @@ module.exports.postLike = async (postId, userId) => {
                 $push: { likes: userId },
                 $inc: { likeCount: 1 }
             },
-            { new: true }
+            { returnDocument: 'after' }
         );
 
         return updated;

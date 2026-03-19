@@ -64,8 +64,13 @@
     .mobileMenu {
         display: inline;
         width: 5%;
+        margin: $padding-md auto;
+        width: 30px;
+        height: 30px;
+        cursor: pointer;
     }
-    .right {
+
+    .postSide {
         width: 90%;
     }
 }

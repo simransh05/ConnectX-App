@@ -15,7 +15,10 @@ import { AiFillLike } from "react-icons/ai";
 import { CurrentUserContext } from '../../Context/currentUserProvider';
 import Swal from 'sweetalert2';
 import { allPostStore } from '../../Zustand/AllPosts';
-function PostShow({ posts, isProfile }) {
+import ROUTES from '../../constant/Route/route';
+import { CircularProgress } from '@mui/material';
+
+function PostShow({ posts, loading, isProfile }) {
     const [commentDrawer, setCommentDawer] = useState(false);
     const { fetchAllPosts } = allPostStore()
     const navigate = useNavigate()
@@ -148,50 +151,58 @@ function PostShow({ posts, isProfile }) {
     // console.log(posts)
     return (
         <div className={style.postContainer}>
-            {post?.length > 0 ?
-                post?.map((p, idx) => {
-                    const vid = videoPlay?.find(v => v?.id === p._id)
-                    // console.log(vid, p._id)
-                    return (
-                        <div key={p._id} className={style.postInd}>
-                            {p?.fileType?.includes("image") && (
-                                <img src={p?.photoVideo} alt="Image" className={style.imagePost} />
-                            )}
-                            {p?.fileType?.includes("video") && (
-                                vid && !vid.isPlayed ?
-                                    <div className={style.videoContainer}>
-                                        <FaPlay className={style.playBtn} />
-                                        <video src={p?.photoVideo} alt="Video" className={style.imagePost} onClick={() => handleVideo(p._id)} />
-                                    </div>
-                                    :
-                                    <video src={p?.photoVideo} alt="Video" className={style.imagePost} controls />
-                            )}
-                            <div className={style.postUserInfo} onClick={() => handleUser(p.userId._id)}>
-                                <UserAvatar
-                                    user={p.userId}
-                                    size={30}
-                                />
-                                <div> {p?.userId?.name}</div>
+            {post?.length > 0 ? (
+                <>
+                    {post?.map((p, idx) => {
+
+                        const vid = videoPlay?.find(v => v?.id === p._id)
+                        // console.log(vid, p._id)
+                        return (
+                            <div key={p._id} className={style.postInd}>
+                                {p?.fileType?.includes("image") && (
+                                    <img src={p?.photoVideo} alt="Image" className={style.imagePost} />
+                                )}
+                                {p?.fileType?.includes("video") && (
+                                    vid && !vid.isPlayed ?
+                                        <div className={style.videoContainer}>
+                                            <FaPlay className={style.playBtn} />
+                                            <video src={p?.photoVideo} alt="Video" className={style.imagePost} onClick={() => handleVideo(p._id)} />
+                                        </div>
+                                        :
+                                        <video src={p?.photoVideo} alt="Video" className={style.imagePost} controls />
+                                )}
+                                <div className={style.postUserInfo} onClick={() => handleUser(p.userId._id)}>
+                                    <UserAvatar
+                                        user={p.userId}
+                                        size={30}
+                                    />
+                                    <div> {p?.userId?.name}</div>
+                                </div>
+                                <div className={style.postCaption}>{p?.caption}</div>
+                                <div className={style.postInfo}>
+                                    {liked.has(p._id) ?
+                                        <AiFillLike className={style.likedImage} />
+                                        :
+                                        <AiOutlineLike className={style.likeImage} onClick={() => handleLikeClick(p.userId?._id, p._id)} />
+                                    }
+                                    <span>{p.likeCount > 0 && p.likeCount}</span>
+                                    <FaRegComment className={style.commentImage} onClick={() => handleClick(p)} />
+                                    <span>{p.commentCount > 0 && p.commentCount}</span>
+                                    {saved?.has(p._id) ? <FaBookmark className={style.alreadySave} /> : <CiBookmark className={style.addSave} onClick={() => handleSave(p._id)} />}
+                                </div>
+                                {isProfile &&
+                                    <div className={style.deletePost}>
+                                        <button onClick={() => handleDelete(p._id)} className={style.isProfile}>Delete Post</button>
+                                    </div>}
                             </div>
-                            <div className={style.postCaption}>{p?.caption}</div>
-                            <div className={style.postInfo}>
-                                {liked.has(p._id) ?
-                                    <AiFillLike className={style.likedImage} />
-                                    :
-                                    <AiOutlineLike className={style.likeImage} onClick={() => handleLikeClick(p.userId?._id, p._id)} />
-                                }
-                                <span>{p.likeCount > 0 && p.likeCount}</span>
-                                <FaRegComment className={style.commentImage} onClick={() => handleClick(p)} />
-                                <span>{p.commentCount > 0 && p.commentCount}</span>
-                                {saved?.has(p._id) ? <FaBookmark className={style.alreadySave} /> : <CiBookmark className={style.addSave} onClick={() => handleSave(p._id)} />}
-                            </div>
-                            {isProfile &&
-                                <div className={style.deletePost}>
-                                    <button onClick={() => handleDelete(p._id)} className={style.isProfile}>Delete Post</button>
-                                </div>}
-                        </div>
-                    )
-                }) :
+                        )
+                    }
+                    )}
+                    {loading && <CircularProgress />}
+                </>
+            )
+                // loading
+                :
                 <div className={style.noPost}>No Post Available</div>
             }
             {commentDrawer &&
