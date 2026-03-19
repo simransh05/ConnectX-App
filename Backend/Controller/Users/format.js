@@ -12,7 +12,7 @@ module.exports.formatUser = (user) => {
         savedPost: user.savedPost,
         location: user.location,
         profilePic: user.profilePic
-            ? `data:${user.profilePicType};base64,${user.profilePic.toString("base64")}`
+            ? `data:${user.fileType};base64,${user.profilePic.toString("base64")}`
             : null
     };
 }
@@ -21,10 +21,10 @@ module.exports.formatPost = (post) => {
     if (!post) return;
     return {
         userId: {
-            _id: post.userId._id,
-            name: post.userId.name,
-            profilePic: post.userId.profilePic
-                ? `data:${post.userId.profilePicType};base64,${post.userId.profilePic.toString("base64")}`
+            _id: post.userId?._id,
+            name: post.userId?.name,
+            profilePic: post.userId?.profilePic
+                ? `data:${post.userId.fileType};base64,${post.userId.profilePic.toString("base64")}`
                 : null
         },
         _id: post._id,
@@ -47,7 +47,7 @@ module.exports.formatComment = (comment) => {
             _id: comment.userId._id,
             name: comment.userId.name,
             profilePic: comment.userId.profilePic
-                ? `data:${comment.userId.profilePicType};base64,${comment.userId.profilePic.toString("base64")}`
+                ? `data:${comment.userId.fileType};base64,${comment.userId.profilePic.toString("base64")}`
                 : null
         },
         postId: comment.postId,
@@ -62,7 +62,7 @@ module.exports.formatChat = (user) => {
         _id: user._id,
         name: user.name,
         profilePic: user.profilePic
-            ? `data:${user.profilePicType};base64,${user.profilePic.toString("base64")}`
+            ? `data:${user.fileType};base64,${user.profilePic.toString("base64")}`
             : null
     }
 }
@@ -75,7 +75,7 @@ module.exports.formatFollow = (data) => {
         name: user?.name,
         userId: user?._id,
         profilePic: user?.profilePic
-            ? `data:${user.profilePicType};base64,${user.profilePic.toString("base64")}`
+            ? `data:${user.fileType};base64,${user.profilePic.toString("base64")}`
             : null
     }
 }
@@ -87,7 +87,7 @@ module.exports.formatNotify = (user) => {
         _id: user._id,
         type: user.type,
         profilePic: user?.sender?.profilePic
-            ? `data:${user.sender.profilePicType};base64,${user.sender.profilePic.toString("base64")}`
+            ? `data:${user.sender.fileType};base64,${user.sender.profilePic.toString("base64")}`
             : null,
         name: user.sender.name,
         userId: user.sender._id,

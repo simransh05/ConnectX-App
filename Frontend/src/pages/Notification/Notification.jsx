@@ -19,8 +19,8 @@ function Notification() {
   const { notify, fetchNotification } = NotificationStore();
 
   useEffect(() => {
-    setNotification(notify)
-  }, [notify])
+    fetchNotification(currentUser?._id)
+  }, [])
 
   const getNotificationText = (n) => {
     switch (n.type) {
@@ -44,6 +44,7 @@ function Notification() {
   };
 
   useEffect(() => {
+    setNotification(notify)
     socket.on('receiver-notify', ({ sender, receiver, type, postId }) => {
       fetchNotification(currentUser?._id);
       // console.log(sender, receiver)
@@ -59,7 +60,7 @@ function Notification() {
       socket.off('receiver-notify');
       socket.off('message-send')
     }
-  }, [])
+  }, [notify])
 
   const handleDelete = async () => {
     const res = await api.deleteNotify(currentUser?._id);
@@ -76,18 +77,23 @@ function Notification() {
       <Navbar />
       {notification?.length > 0 ? (
         <div className={style.containerNotify}>
-          <div className={style.notifyList}>
-            {notification.map((n, idx) => (
-              <div className={style.notify} key={idx}>
-                <UserAvatar
-                  user={n}
-                  size={40}
-                />
-                <div>{getNotificationText(n)}</div>
-                <div>{new Date(n.createdAt).toDateString()} {new Date(n?.createdAt).toTimeString()}</div>
-              </div>
-            ))}
-          </div>
+          <table className={style.notifyList}>
+            <tbody>
+              {notification.map((n, idx) => (
+                <tr className={style.notify} key={idx}>
+                  <td>
+                    <UserAvatar
+                      user={n}
+                      size={40}
+                    />
+                  </td>
+
+                  <td>{getNotificationText(n)}</td>
+                  <td>{new Date(n.createdAt).toDateString()} {new Date(n?.createdAt).toTimeString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
           <button className={style.deleteNotify} onClick={handleDelete}> Delete Notification</button>
         </div>
       ) : (

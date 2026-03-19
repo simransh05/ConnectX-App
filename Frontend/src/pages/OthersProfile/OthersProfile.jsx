@@ -15,7 +15,7 @@ import { CurrentUserContext } from '../../Context/currentUserProvider';
 import { useState } from 'react';
 import FollowInfo from '../../components/FollowInfo/FollowInfo';
 import { CiMenuBurger } from 'react-icons/ci';
-import { Drawer } from '@mui/material';
+import { Drawer, useMediaQuery } from '@mui/material';
 
 function OthersProfile() {
     const { userId } = useParams();
@@ -30,7 +30,7 @@ function OthersProfile() {
     const userInfo = allUsers?.find(u => u._id === userId);
     // console.log(userInfo , userId)
 
-    const { posts } = useIndividualPosts(userId)
+    const { posts, loading } = useIndividualPosts(userId)
     // console.log(posts);
     // get apis for all of them 
 
@@ -61,8 +61,7 @@ function OthersProfile() {
         }
     }, [detail])
 
-    const isMobile = window.innerWidth <= 768;
-    console.log(isMobile)
+    const isMobile = useMediaQuery("(max-width: 768px)")
 
     // console.log(isFollow)
 
@@ -112,6 +111,7 @@ function OthersProfile() {
                     <div className={style.postInfo}>
                         <PostShow
                             posts={posts}
+                            loading={loading}
                         />
                     </div>
 

@@ -36,7 +36,7 @@ module.exports.postNotification = async (sender, receiver, type, postId) => {
                 {
                     createdAt: Date.now()
                 },
-                { upsert: true, new: true }
+                { upsert: true, returnDocument: "after" }
             )
         }
 

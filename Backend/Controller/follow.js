@@ -42,10 +42,10 @@ module.exports.postFollow = async (sender, receiver) => { // one doc like add fo
 
 module.exports.getFollower = async (userId) => {
     try {
-        let follower = await Follow.find({ follower: userId });
-        
+        let follower = await Follow.find({ following: userId });
+
         follower = follower.map(f => {
-            return f.following
+            return f.follower
         })
         console.log('get follower', follower);
         return follower

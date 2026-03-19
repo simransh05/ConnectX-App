@@ -8,25 +8,26 @@ import { allPostStore } from '../../Zustand/AllPosts';
 import { followStore } from '../../Zustand/Follow';
 import { useContext } from 'react';
 import { CurrentUserContext } from '../../Context/currentUserProvider';
+import useIndividualPosts from '../../utils/helper/IndividualPosts';
 
 function Home() {
-  const { allPosts, fetchAllPosts } = allPostStore();
   const { fetchFollowInfo } = followStore();
   const { currentUser } = useContext(CurrentUserContext);
   useUserAvailable(`${ROUTES.HOME}`); // custom hook
   useEffect(() => {
     if (!currentUser) return;
-    if (allPosts) return;
-    fetchAllPosts();
     fetchFollowInfo(currentUser?._id)
   }, [currentUser])
+
+  const { posts, loading } = useIndividualPosts(currentUser?._id, true)
 
   // console.log(allPosts);
   return (
     <div>
       <Navbar />
       <PostShow
-        posts={allPosts}
+        loading={loading}
+        posts={posts}
       />
     </div>
   )

@@ -115,7 +115,7 @@
     padding: $padding-md;
 }
 
-@media (max-width : 480px) {
+@media (min-width : 300px) and (max-width : 768px) {
     .postContainer {
         order: 3;
     }

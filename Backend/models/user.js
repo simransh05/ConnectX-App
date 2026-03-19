@@ -12,6 +12,10 @@ const userSchema = new mongoose.Schema({
         type: Buffer,
         defualt: ""
     },
+    fileType: {
+        type: String,
+        defualt: ""
+    },
     profilePicType: {
         type: String
     },

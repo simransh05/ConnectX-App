@@ -18,12 +18,15 @@ function OneOneChat() {
   const { allUsers } = userStore()
   const [chats, setChat] = useState(null);
   const { currentUser } = useContext(CurrentUserContext);
-  const { selectedUser, setSelectedUser } = useContext(SelectedUserContext);
+  const { selectedUser, setSelectedUser, setPrevUser, prevUser } = useContext(SelectedUserContext);
   const [message, setMessage] = useState("");
   const scroll = useRef(null);
   const [anchorEl, setAnchorEl] = useState(null);
   // get chat of that person
   useEffect(() => {
+    if (prevUser != selectedUser) {
+      setMessage("")
+    }
     const fetchChat = async () => {
       if (userId) {
         const select = allUsers?.find(u => u._id === userId)
