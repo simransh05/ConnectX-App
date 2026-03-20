@@ -6,10 +6,10 @@ module.exports.getFollow = async (req, res) => {
 
     try {
         const following = await Follow.find({ follower: userId })
-            .populate('following', 'name profilePic _id');
+            .populate('following', 'name profilePic _id fileType');
 
         const follower = await Follow.find({ following: userId })
-            .populate('follower', 'name profilePic _id');
+            .populate('follower', 'name profilePic _id fileType');
 
         // console.log("follow", follower)
 

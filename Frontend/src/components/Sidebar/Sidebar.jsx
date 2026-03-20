@@ -136,7 +136,7 @@ function Sidebar({ isDrawer, open, onClose }) {
         isDrawer ?
 
           <Drawer className={style['sidebar-drawer']} PaperProps={{
-            sx: { width: '250px' }
+            sx: { width: '280px' }
           }} open={open} onClose={onClose}>
             {
               isEditing ?

@@ -7,7 +7,10 @@ function UserAvatar({ user, size, IsSidebar }) {
     return (
         <>
             {user?.profilePic ?
-                <img src={`${user.profilePic}`} alt="profile pic" className={IsSidebar ? style.imageSidebar : style.image} width={size} height={size} /> :
+                <div className={IsSidebar ? style.sidebarDiv : style.divContainer}>
+                    <img src={`${user.profilePic}`} alt="profile pic" className={IsSidebar ? style.imageSidebar : style.image} width={size} height={size} />
+                </div>
+                :
                 <div className={style.sidebarDiv}>
                     <div className={IsSidebar ? style.avatarSidebar : style.avatar} style={{ height: size, width: size }}>{getInitial(user?.name)}</div>
                 </div>

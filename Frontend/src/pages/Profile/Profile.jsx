@@ -23,7 +23,7 @@ function Profile() {
   const { posts, setPosts, loading } = useIndividualPosts(currentUser?._id);
   // console.log(posts);
   const handleSuccess = async () => {
-    const res = await api.getIndividualPosts(currentUser?._id);
+    const res = await api.getIndividualPosts(currentUser?._id, 0);
     console.log(res.data)
     setPosts(res.data);
   }

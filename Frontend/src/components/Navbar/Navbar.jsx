@@ -33,9 +33,9 @@ function Navbar() {
     }
     setNumber(notify?.length)
 
-  }, [loading, notify])
+  }, [loading, notify, currentUser])
 
-  console.log(currentUser)
+  // console.log(currentUser)
 
   const handleChange = (e) => {
     const value = e.target.value;
@@ -49,7 +49,7 @@ function Navbar() {
     socket.on('receiver-notify', ({ sender, receiver, type, postId }) => {
       // number increase 
       const available = notify?.some(n => n.userId === receiver && n.type === type)
-      console.log('here')
+      // console.log('here')
       if (!available) {
         setNumber(prev => prev + 1)
       }
@@ -57,7 +57,7 @@ function Navbar() {
     })
     socket.on('message-send', ({ receiver, type }) => {
       const available = notify?.some(n => n.userId === receiver && n.type === type)
-      console.log(available, receiver)
+      // console.log(available, receiver)
       fetchNotification(currentUser?._id)
       if (available) {
         setNumber(prev => prev - 1);
@@ -74,9 +74,9 @@ function Navbar() {
   }, [])
 
   const handleClick = (id) => {
-    navigate(`${ROUTES.PROFILE}/${id}`)
     setSearch("");
     setSearchResult(null);
+    navigate(`${ROUTES.PROFILE}/${id}`)
   }
   // console.log(allUsers);
   return (
@@ -87,6 +87,7 @@ function Navbar() {
       <div className={style.searchUser}>
         <input
           type="text"
+          value={search}
           className={style.inputBox}
           placeholder="Search User..."
           onChange={handleChange}

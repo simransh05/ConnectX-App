@@ -10,7 +10,7 @@ module.exports.getMessages = async (req, res) => {
                 { sender: userId },
                 { receiver: userId }
             ]
-        }).populate('sender receiver', 'name _id profilePic')
+        }).populate('sender receiver', 'name _id profilePic fileType')
             .sort({ sendAt: -1 });
         // console.log('messages 14', messages)
         // const formatted  = messages.map(formatChat);

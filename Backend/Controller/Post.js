@@ -3,12 +3,33 @@ const User = require('../models/user');
 const Comment = require('../models/comment')
 const Notification = require('../models/notification')
 const { formatPost } = require("./Users/format");
+const Follow = require("../models/follow");
+const jwt = require('jsonwebtoken');
 
 module.exports.getIndividualPosts = async (req, res) => {
     const { userId, skip } = req.params;
+    const token = req.cookies.token;
     try {
-        console.log('before')
-        let posts = await Post.find({ userId }).sort({ _id: -1 }).skip(skip).limit(5).populate('userId');
+        const user = jwt.verify(token, process.env.JWT_SECRET);
+        const currentUser = await User.findOne({ email: user.email })
+        console.log(currentUser?._id.toString(), userId)
+        let posts;
+        const isFollow = await Follow.findOne({
+            follower: currentUser?._id,
+            following: userId
+        })
+        if (currentUser?._id.equals(userId) || isFollow) {
+            console.log('me follow', isFollow)
+            posts = await Post.find({ userId }).sort({ _id: -1 }).skip(skip).limit(5).populate('userId');
+        } else {
+            console.log('non follow')
+            posts = await Post.find({
+                $and: [
+                    { userId },
+                    { postType: 'public' }
+                ]
+            }).sort({ _id: -1 }).skip(skip).limit(5).populate('userId');
+        }
         console.log('after')
         if (!posts) {
             return res.status(200).json([])
@@ -22,20 +43,44 @@ module.exports.getIndividualPosts = async (req, res) => {
 
 module.exports.getAllPosts = async (req, res) => {
     const { skip } = req.params;
+    const token = req.cookies.token;
+
     try {
-        // console.log('here 23')
-        let posts = await Post.find().sort({ _id: -1 }).sort({ _id: -1 }).skip(skip).limit(5).populate('userId');
-        // console.log('posts 25', posts)
-        if (!posts) {
-            return res.status(200).json([])
-        }
-        posts = posts.reverse();
-        return res.status(200).json(posts.map(formatPost))
+        const user = jwt.verify(token, process.env.JWT_SECRET);
+
+        const currentUser = await User.findOne({
+            email: user.email
+        });
+
+        const following = await Follow.find({
+            follower: currentUser._id
+        });
+
+        const followingIds = following.map(f => f.following);
+
+        const posts = await Post.find({
+            $or: [
+                { userId: { $in: followingIds } },
+                { userId: currentUser._id },
+                { postType: "public" }
+            ]
+        })
+            .sort({ _id: -1 })
+            .skip(skip)
+            .limit(5)
+            .populate("userId");
+
+        return res.status(200).json(
+            posts.map(formatPost)
+        );
+
     } catch (err) {
-        console.log(err)
-        return res.status(500).json({ message: err.message })
+        console.log(err);
+        return res.status(500).json({
+            message: err.message
+        });
     }
-}
+};
 
 module.exports.deletePost = async (req, res) => {
     const { postId } = req.params;
@@ -63,7 +108,7 @@ module.exports.deletePost = async (req, res) => {
 
 module.exports.postUploadPost = async (req, res) => {
     const { caption, userId, fileType, postType } = req.body;
-    console.log('post upload', caption, userId, fileType, postType)
+    // console.log('post upload', caption, userId, fileType, postType)
     try {
         const allData = {
             caption,

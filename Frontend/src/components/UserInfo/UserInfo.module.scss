@@ -4,7 +4,12 @@
 .sidebarName {
     font-weight: bold;
     text-align: center;
+    margin: $padding-md;
     // font-size: 14px;
+}
+
+.joinedDate {
+    margin: $padding-md;
 }
 
 .profilePicUser {

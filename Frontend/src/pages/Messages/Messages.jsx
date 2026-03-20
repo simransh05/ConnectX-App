@@ -10,6 +10,7 @@ import { SelectedUserContext } from '../../Context/SelectedUserProvider'
 import UserAvatar from '../../components/userAvatar/UserAvatar'
 import { useNavigate, useParams } from 'react-router-dom'
 import { userStore } from '../../Zustand/AllUsers'
+import socket from '../../Socket/socket'
 
 function Messages() {
   const navigate = useNavigate()
@@ -28,7 +29,7 @@ function Messages() {
     const fetchMyChatUsers = async () => {
       if (currentUser) {
         const res = await api.getMessages(currentUser?._id)
-        // console.log(res.data);
+        console.log(res.data);
         setMyChats(res.data);
       }
     }
@@ -48,6 +49,40 @@ function Messages() {
     navigate(`${ROUTES.MESSAGES}/${c?._id}`)
   }
 
+  const updateChatList = (userId) => {
+    setMyChats(prev => {
+      if (!prev) prev = [];
+
+      const otherInfo = allUsers.find(u => u._id === userId);
+      console.log(otherInfo)
+      if (!otherInfo) return prev;
+
+      const filtered = prev.filter(c => c._id !== userId);
+      console.log(filtered)
+
+      return [
+        {
+          _id: otherInfo._id,
+          name: otherInfo.name,
+          profilePic: otherInfo.profilePic,
+        },
+        ...filtered,
+      ];
+    });
+  };
+  useEffect(() => {
+    socket.on('message-send', ({ receiver }) => {
+      updateChatList(receiver)
+    })
+    socket.on('receive', ({ sender }) => {
+      updateChatList(sender)
+    })
+
+    return () => {
+      socket.off('message-send');
+      socket.off('receive');
+    }
+  }, [])
   // console.log(myChats)
   return (
     <>

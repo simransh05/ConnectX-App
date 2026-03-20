@@ -23,7 +23,7 @@ function UserInfo({ user }) {
             ))}
             <Divider />
             {user?.location && <div className={style.sidebarLocation}><CiLocationOn /> {user?.location}</div>}
-            <div>Joined On {new Date(user?.joinedAt).toLocaleDateString("en-US", { month: "long", year: "numeric" })}</div>
+            <div className={style.joinedDate}>Joined On {new Date(user?.joinedAt).toLocaleDateString("en-US", { month: "long", year: "numeric" })}</div>
         </>
     )
 }
