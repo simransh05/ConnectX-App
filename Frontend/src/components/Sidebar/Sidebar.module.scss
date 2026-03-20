@@ -4,7 +4,8 @@
 
 .sidebar-container {
     width: 20%;
-    border: $border-black;
+    border-right: $border-black;
+    border-bottom: $border-black;
     position: sticky;
     top: 0;
     // background-color: lightgrey
@@ -72,6 +73,7 @@
     }
 
     input {
+        width: inherit;
         padding: $padding-md;
         padding-right: 0;
     }
@@ -97,6 +99,12 @@
 
     input:focus {
         width: 85%;
+    }
+}
+
+.nameInfo {
+    input {
+        width: 80%;
     }
 }
 

@@ -73,7 +73,8 @@ function OthersProfile() {
                 <CiMenuBurger
                     onClick={() => setSideMenu(true)}
                     className={style.mobileMenu} />
-                {isMobile ? <Drawer className={style.otherDrawer} PaperProps={{
+                {isMobile ? 
+                <Drawer open={sideMenu} onClose={()=>setSideMenu(false)} className={style.otherDrawer} PaperProps={{
                     sx: {
                         width: '250px'
                     }

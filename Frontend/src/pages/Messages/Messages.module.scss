@@ -8,9 +8,9 @@
 
 .left-mobile,
 .left-side {
+    overflow-y: scroll;
     width: 22%;
     height: 100%;
-    border-right: $border-black;
     padding: 0 $padding-md ;
 }
 
@@ -22,12 +22,14 @@
 
 .noChats {
     @include flex-center;
+    margin-top: $padding-md;
 }
 
 .people {
     display: flex;
     border-bottom: $border-black;
     padding: $padding-md;
+    padding-left: 0;
     cursor: pointer;
 
     div {

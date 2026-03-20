@@ -13,6 +13,11 @@
     border-radius: $circle;
 }
 
+.sidebarDiv {
+    display: flex;
+    align-items: center;
+}
+
 .imageSidebar {
     border-radius: $circle;
     margin: 0 auto;
@@ -20,7 +25,7 @@
 
 .avatarSidebar {
     @include flex-center;
-    margin: 0 auto;
+    margin: $padding-md auto;
     background: orange;
     color: white;
     border-radius: $circle;

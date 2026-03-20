@@ -14,6 +14,7 @@ import { useContext, useState } from 'react'
 import api from '../../utils/api';
 import useUserAvailable from '../../utils/helper/userAvailable';
 import { CurrentUserContext } from '../../Context/currentUserProvider';
+import socket from '../../Socket/socket';
 
 function Login() {
   const navigate = useNavigate()
@@ -28,6 +29,7 @@ function Login() {
       const res = await api.postLogin(data);
       if (res.status === 200) {
         console.log(res.data);
+        socket.connect();
         setCurrentUser(res.data);
         navigate(`${ROUTES.HOME}`)
       }

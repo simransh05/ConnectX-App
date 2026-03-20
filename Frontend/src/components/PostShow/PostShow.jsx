@@ -126,7 +126,7 @@ function PostShow({ posts, loading, isProfile }) {
             const res = await api.deletePost(postId);
             if (res.status === 200) {
                 fetchAllPosts();
-                const res1 = await api.getIndividualPosts(currentUser?._id);
+                const res1 = await api.getIndividualPosts(currentUser?._id, 0);
                 if (res1.status === 200) {
                     setPost(prev => prev?.filter(p => p._id != postId))
                 }

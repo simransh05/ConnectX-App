@@ -26,11 +26,12 @@ function OneOneChat() {
   useEffect(() => {
     if (prevUser != selectedUser) {
       setMessage("")
+      setChat(null);
     }
     const fetchChat = async () => {
       if (userId) {
         const select = allUsers?.find(u => u._id === userId)
-        console.log(allUsers, select)
+        // console.log(allUsers, select)
         setSelectedUser(select)
       }
       if (selectedUser?._id) {

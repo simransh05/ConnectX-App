@@ -64,14 +64,14 @@ function Notification() {
 
   const handleDelete = async () => {
     const res = await api.deleteNotify(currentUser?._id);
-    console.log(res.data, res.status)
+    // console.log(res.data, res.status)
     if (res.status === 200) {
       socket.emit('delete');
       setNotification(null);
     }
   }
 
-  console.log(notification)
+  // console.log(notification)
   return (
     <>
       <Navbar />

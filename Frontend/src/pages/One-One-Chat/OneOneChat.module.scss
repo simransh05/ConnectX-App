@@ -5,6 +5,7 @@
     height: 15%;
     @include flex-justify;
     border: $border-black;
+    border-top: none;
     padding: 0 $padding-md ;
 }
 
@@ -100,4 +101,5 @@
     height: 100%;
     @include flex-center;
     border: $border-black;
+    border-top: none;
 }
