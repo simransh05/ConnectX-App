@@ -58,6 +58,18 @@ function PostShow({ posts, loading, isProfile }) {
 
     // console.log('posts', posts);
     const handleClick = (p) => {
+        if (!currentUser) {
+            Swal.fire({
+                title: 'Not Login',
+                text: 'Need to login first',
+                icon: 'error',
+                showCancelButton: false,
+                showConfirmButton: false,
+                timer: 5000
+            })
+            navigate(ROUTES.LOGIN);
+            return;
+        }
         setCommentDawer(true);
         setpostId(p)
     }
@@ -73,6 +85,18 @@ function PostShow({ posts, loading, isProfile }) {
     }
 
     const handleLikeClick = (receiver, postId) => {
+        if (!currentUser) {
+            Swal.fire({
+                title: 'Not Login',
+                text: 'Need to login first',
+                icon: 'error',
+                showCancelButton: false,
+                showConfirmButton: false,
+                timer: 5000
+            })
+            navigate(ROUTES.LOGIN);
+            return;
+        }
         if (liked.has(postId)) return;
         socket.emit('send-notify', { sender: currentUser?._id, receiver, postId, type: 'like' }, (res) => {
             if (res.status === 200) {
@@ -89,6 +113,19 @@ function PostShow({ posts, loading, isProfile }) {
     }
 
     const handleSave = async (postId) => {
+        if (!currentUser) {
+            Swal.fire({
+                title: 'Not Login',
+                text: 'Need to login first',
+                icon: 'error',
+                showCancelButton: false,
+                showConfirmButton: false,
+                timer: 5000,
+                width:'50%'
+            })
+            navigate(ROUTES.LOGIN);
+            return;
+        }
         // add in set and save api 
         if (saved.has(postId)) return;
         const data = {
@@ -148,7 +185,7 @@ function PostShow({ posts, loading, isProfile }) {
         navigate(`${ROUTES.PROFILE}/${userId}`)
     }
 
-    // console.log(posts)
+    console.log(posts)
     return (
         <div className={style.postContainer}>
             {post?.length > 0 ? (
@@ -176,9 +213,14 @@ function PostShow({ posts, loading, isProfile }) {
                                         user={p.userId}
                                         size={30}
                                     />
-                                    <div> {p?.userId?.name}</div>
+                                    <div>{p?.userId?.name}</div>
                                 </div>
                                 <div className={style.postCaption}>{p?.caption}</div>
+                                <div className={style.postTypeInfo}>
+                                    <div className={style.timeCreated}>{new Date(p?.createdAt).toLocaleString()}</div>
+                                    {isProfile && <div className={style.postType}>{p.postType}</div>}
+                                </div>
+
                                 <div className={style.postInfo}>
                                     {liked.has(p._id) ?
                                         <AiFillLike className={style.likedImage} />

@@ -11,14 +11,13 @@ import { Menu, MenuItem } from '@mui/material';
 import Swal from 'sweetalert2';
 import { useParams } from 'react-router-dom';
 import { userStore } from '../../Zustand/AllUsers';
-import { AllOut } from '@mui/icons-material';
 
 function OneOneChat() {
   const { userId } = useParams()
   const { allUsers } = userStore()
   const [chats, setChat] = useState(null);
   const { currentUser } = useContext(CurrentUserContext);
-  const { selectedUser, setSelectedUser, setPrevUser, prevUser } = useContext(SelectedUserContext);
+  const { selectedUser, setSelectedUser, prevUser } = useContext(SelectedUserContext);
   const [message, setMessage] = useState("");
   const scroll = useRef(null);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -26,7 +25,7 @@ function OneOneChat() {
   useEffect(() => {
     if (prevUser != selectedUser) {
       setMessage("")
-      setChat(null);
+      // setChat(null);
     }
     const fetchChat = async () => {
       if (userId) {
@@ -34,7 +33,7 @@ function OneOneChat() {
         // console.log(allUsers, select)
         setSelectedUser(select)
       }
-      if (selectedUser?._id) {
+      if (selectedUser?._id && prevUser != selectedUser) {
         const res = await api.getIndividualMessage(currentUser?._id, selectedUser?._id)
         // console.log(res.data)
         setChat(res.data);

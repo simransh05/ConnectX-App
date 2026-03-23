@@ -9,7 +9,7 @@ import socket from '../../Socket/socket';
 import { FaBookmark } from "react-icons/fa";
 import { FaPowerOff } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
-import { MdOutlineWifiPassword } from "react-icons/md";
+import { RiLockPasswordLine } from "react-icons/ri";
 import ROUTES from '../../constant/Route/route';
 import api from '../../utils/api';
 import style from './Sidebar.module.scss'
@@ -230,7 +230,7 @@ function Sidebar({ isDrawer, open, onClose }) {
 
                   {!currentUser?.googleId &&
                     <div className={style.passwordChange} onClick={() => setPassword(true)} >
-                      <MdOutlineWifiPassword /> Change Password
+                      <RiLockPasswordLine /> Change Password
                     </div>
                   }
 
@@ -343,7 +343,7 @@ function Sidebar({ isDrawer, open, onClose }) {
 
                 {!currentUser?.googleId &&
                   <div className={style.passwordChange} onClick={() => setPassword(true)} >
-                    <MdOutlineWifiPassword /> Change Password
+                    <RiLockPasswordLine /> Change Password
                   </div>
                 }
 

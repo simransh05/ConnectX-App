@@ -13,7 +13,7 @@ const useUserAvailable = (page) => {
 
     useEffect(() => {
         if (loading) return;
-        if(!currentUser && page === `${ROUTES.SIGNUP}`) return navigate(page);
+        if (!currentUser && page === `${ROUTES.SIGNUP}`) return navigate(page);
         if (!currentUser) navigate(`${ROUTES.LOGIN}`);
         else if (currentUser && page) navigate(page);
         else navigate(`${ROUTES.HOME}`)

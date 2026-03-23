@@ -12,6 +12,7 @@ import { IoChatbubble } from "react-icons/io5";
 import { FaInfoCircle } from "react-icons/fa";
 import { SelectedUserContext } from '../../Context/SelectedUserProvider'
 import { NotificationStore } from '../../Zustand/Notification'
+import { AiOutlineLogin } from 'react-icons/ai'
 
 
 function Navbar() {
@@ -29,7 +30,7 @@ function Navbar() {
       fetchNotification(currentUser?._id)
     }
     if (!allUsers) {
-      fetchAllUsers(currentUser?._id)
+      fetchAllUsers();
     }
     setNumber(notify?.length)
 
@@ -41,7 +42,7 @@ function Navbar() {
     const value = e.target.value;
     setSearch(value)
     const searchHistory = value.toLowerCase();
-    const data = allUsers.filter(u => u.name.toLowerCase().includes(searchHistory))
+    const data = allUsers.filter(u => u.name.toLowerCase().includes(searchHistory) && u._id != currentUser?._id)
     setSearchResult(data)
   }
 
@@ -84,7 +85,7 @@ function Navbar() {
       {/* image */}
       <img src="/ConnectX.png" alt="profile-image" height={80} width={80} />
       {/* search bar (for user) */}
-      <div className={style.searchUser}>
+      {currentUser && <div className={style.searchUser}>
         <input
           type="text"
           value={search}
@@ -113,37 +114,52 @@ function Navbar() {
             )}
           </div>
         )}
-      </div>
+      </div>}
       {/* idea is to when click any of the suggestions then go to that person naviagte(/profile/name) */}
 
       {/* routes */}
 
       <Link to={ROUTES.HOME} className={style.linkInfo}>
-        <IoIosHome className={style.navIcon} />
-        <span className={style.textMenu}>Home</span>
+        <IoIosHome className={currentUser ? style.navIcon : style.nonLoginIcon} />
+        <span className={currentUser ? style.textMenu : style.nonLoginText}>Home</span>
       </Link>
-      <div className={style.notifyLink}>
-        <Link to={ROUTES.NOTIFICATION} className={style.linkInfo}>
-          <IoIosNotifications className={style.navIcon} />
-          <span className={style.textMenu}>Notification</span>
-        </Link>
-        {number > 0 && <div className={style.numNotify}>{number}</div>}
-      </div>
+      {currentUser &&
+        <>
+          <div className={style.notifyLink}>
+            <Link to={ROUTES.NOTIFICATION} className={style.linkInfo}>
+              <IoIosNotifications className={style.navIcon} />
+              <span className={style.textMenu}>Notification</span>
+            </Link>
+            {number > 0 && <div className={style.numNotify}>{number}</div>}
+          </div>
 
-      <Link to={ROUTES.MESSAGES} className={style.linkInfo} onClick={() => setSelectedUser(null)}>
-        <IoChatbubble className={style.navIcon} />
-        <span className={style.textMenu}>Messages</span>
-      </Link>
+          <Link to={ROUTES.MESSAGES} className={style.linkInfo} onClick={() => setSelectedUser(null)}>
+            <IoChatbubble className={style.navIcon} />
+            <span className={style.textMenu}>Messages</span>
+          </Link>
+        </>
+      }
       <Link to={ROUTES.ABOUT} className={style.linkInfo}>
-        <FaInfoCircle className={style.navIcon} />
-        <span className={style.textMenu}>About</span>
+        <FaInfoCircle className={currentUser ? style.navIcon : style.nonLoginIcon} />
+        <span className={currentUser ? style.textMenu : style.nonLoginText}>About</span>
       </Link>
-      <Link to={ROUTES.PROFILE} className={style.linkInfo}>
+      {currentUser && <Link to={ROUTES.PROFILE} className={style.linkInfo}>
         <UserAvatar
           user={currentUser}
           size={70}
         />
-      </Link>
+      </Link>}
+      {!currentUser &&
+        <>
+          <Link to={ROUTES.LOGIN} className={style.linkInfo}>
+            <span className={style.nonLoginText}>Login</span>
+          </Link>
+
+          <Link to={ROUTES.SIGNUP} className={style.linkInfo}>
+            <span className={style.nonLoginText}>SignUp</span>
+          </Link>
+        </>
+      }
       {/* home , messages , notification (notification idea to delete after 7 days or 30 days) 
       while getting notification */}
       {/* avatar (onClick - profile) */}

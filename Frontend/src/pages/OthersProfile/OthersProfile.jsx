@@ -16,13 +16,15 @@ import { useState } from 'react';
 import FollowInfo from '../../components/FollowInfo/FollowInfo';
 import { CiMenuBurger } from 'react-icons/ci';
 import { Drawer, useMediaQuery } from '@mui/material';
+import api from '../../utils/api';
+import Swal from 'sweetalert2';
 
 function OthersProfile() {
     const { userId } = useParams();
     const navigate = useNavigate()
     const [isFollow, setIsFollow] = useState(false);
     const { allUsers } = userStore()
-    const { detail } = useFollowDetail(userId)
+    const { detail, setDetail } = useFollowDetail(userId)
     const { setSelectedUser } = useContext(SelectedUserContext);
     const { currentUser } = useContext(CurrentUserContext);
     const [sideMenu, setSideMenu] = useState(false);
@@ -35,6 +37,18 @@ function OthersProfile() {
     // get apis for all of them 
 
     const handleUser = () => {
+        if (!currentUser) {
+            Swal.fire({
+                title: 'Not Login',
+                text: 'Need to login first',
+                icon: 'error',
+                showCancelButton: false,
+                showConfirmButton: false,
+                timer: 5000
+            })
+            navigate(ROUTES.LOGIN);
+            return;
+        }
         setSelectedUser(userInfo);
         // console.log(`${ROUTES.MESSAGES}/${userInfo._id}`)
         // set select user is this user and navigate to chat page
@@ -42,9 +56,23 @@ function OthersProfile() {
     }
 
     const handleClick = () => {
-        socket.emit('send-notify', { sender: currentUser?._id, receiver: userId, type: "follow" }, (res) => {
+        if (!currentUser) {
+            Swal.fire({
+                title: 'Not Login',
+                text: 'Need to login first',
+                icon: 'error',
+                showCancelButton: false,
+                showConfirmButton: false,
+                timer: 5000
+            })
+            navigate(ROUTES.LOGIN);
+            return;
+        }
+        socket.emit('send-notify', { sender: currentUser?._id, receiver: userId, type: "follow" }, async (res) => {
             if (res.status === 200) {
                 setIsFollow(true);
+                const r = await api.getFollow(userId);
+                setDetail(r.data);
             }
         })
         // socket involve here adding the person in the following of me and follower for him api of that
@@ -55,7 +83,7 @@ function OthersProfile() {
         if (!detail) return;
         // console.log(detail.follower);
         const alreadyFollow = detail.follower.some(f => f.userId === currentUser?._id)
-        // console.log(alreadyFollow, currentUser?._id)
+        console.log(alreadyFollow, detail)
         if (alreadyFollow) {
             setIsFollow(true);
         }
@@ -73,20 +101,20 @@ function OthersProfile() {
                 <CiMenuBurger
                     onClick={() => setSideMenu(true)}
                     className={style.mobileMenu} />
-                {isMobile ? 
-                <Drawer open={sideMenu} onClose={()=>setSideMenu(false)} className={style.otherDrawer} PaperProps={{
-                    sx: {
-                        width: '250px'
-                    }
-                }}>
-                    <UserInfo
-                        user={userInfo}
-                        isMobile={isMobile}
-                        isOther={true}
-                        open={sideMenu}
-                        onClose={() => setSideMenu(false)}
-                    />
-                </Drawer>
+                {isMobile ?
+                    <Drawer open={sideMenu} onClose={() => setSideMenu(false)} className={style.otherDrawer} PaperProps={{
+                        sx: {
+                            width: '250px'
+                        }
+                    }}>
+                        <UserInfo
+                            user={userInfo}
+                            isMobile={isMobile}
+                            isOther={true}
+                            open={sideMenu}
+                            onClose={() => setSideMenu(false)}
+                        />
+                    </Drawer>
                     :
                     <div className={style.otherSidebar}>
                         <UserInfo
@@ -107,6 +135,7 @@ function OthersProfile() {
                             : <button onClick={handleClick} className={style.followBtn}>Follow</button>}
                         <FollowInfo
                             userId={userId}
+                            detail={detail}
                         />
                     </div>
                     <div className={style.postInfo}>

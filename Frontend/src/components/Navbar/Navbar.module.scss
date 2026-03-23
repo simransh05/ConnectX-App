@@ -10,7 +10,8 @@
   top: 0;
   background-color: white;
   z-index: 100;
-  width: 98dvw;
+  width: 96dvw;
+  padding: 0 $padding-md ;
 
   .linkInfo {
     @include links;
@@ -49,7 +50,8 @@
   width: 20%;
 }
 
-.navIcon {
+.navIcon,
+.nonLoginIcon {
   display: none;
 }
 
@@ -86,6 +88,14 @@
 @media (min-width : 300px) and (max-width : 768px) {
   .searchUser {
     width: 30%;
+  }
+
+  .nonLoginText {
+    display: inline;
+  }
+
+  .nonLoginIcon {
+    display: none;
   }
 
   .navIcon {

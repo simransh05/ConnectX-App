@@ -47,7 +47,7 @@ module.exports.getFollower = async (userId) => {
         follower = follower.map(f => {
             return f.follower
         })
-        console.log('get follower', follower);
+        // console.log('get follower', follower);
         return follower
     } catch (err) {
         console.error(err.message)

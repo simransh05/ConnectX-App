@@ -96,7 +96,7 @@ function Password({ open, onClose }) {
         onClose();
         setOldPass("");
         setNewPass("");
-        setConfirm("");
+        setConfirmPass("");
         setShowOldPass(false);
         setShowNewPass(false);
         setShowConfirmPass(false);

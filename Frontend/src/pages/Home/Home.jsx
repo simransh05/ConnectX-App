@@ -13,13 +13,12 @@ import useIndividualPosts from '../../utils/helper/IndividualPosts';
 function Home() {
   const { fetchFollowInfo } = followStore();
   const { currentUser } = useContext(CurrentUserContext);
-  useUserAvailable(`${ROUTES.HOME}`); // custom hook
   useEffect(() => {
     if (!currentUser) return;
     fetchFollowInfo(currentUser?._id)
   }, [currentUser])
 
-  const { posts, loading } = useIndividualPosts(currentUser?._id, true)
+  const { posts, loading } = useIndividualPosts(undefined, true)
 
   // console.log(allPosts);
   return (
