@@ -13,6 +13,7 @@ import PostShow from '../../components/PostShow/PostShow';
 import FollowInfo from '../../components/FollowInfo/FollowInfo';
 import { CiMenuBurger } from "react-icons/ci";
 import { useMediaQuery } from '@mui/material';
+import useFollowDetail from '../../utils/helper/followDetails';
 
 function Profile() {
   const [openPost, setOpenPost] = useState(false);
@@ -27,6 +28,8 @@ function Profile() {
     console.log(res.data)
     setPosts(res.data);
   }
+
+  const { detail } = useFollowDetail(currentUser?._id);
 
   const isMobile = useMediaQuery("(max-width: 768px)")
 
@@ -49,6 +52,7 @@ function Profile() {
           <div className={style["head-profile"]}>
             <FollowInfo
               userId={currentUser?._id}
+              detail={detail}
             />
             <button onClick={() => setOpenPost(true)}>New Post</button>
             {openPost &&

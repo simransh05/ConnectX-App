@@ -13,7 +13,7 @@ const useIndividualPosts = (userId, isHome) => {
 
     // fetch posts
     const fetchPosts = async () => {
-        if (!userId || loading || !hasMore) return;
+        if (loading || !hasMore) return;
 
         try {
             setLoading(true);
@@ -21,6 +21,7 @@ const useIndividualPosts = (userId, isHome) => {
             if (isHome) {
                 res = await api.getAllPosts(skip);
             } else {
+                if (!userId) return;
                 res = await api.getIndividualPosts(userId, skip);
             }
             console.log(res.data, skip)

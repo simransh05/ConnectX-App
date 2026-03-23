@@ -19,7 +19,7 @@ const useFollowDetail = (userId) => {
         fetchFollow();
     }, [userId]);
 
-    return { detail };
+    return { detail, setDetail };
 };
 
 export default useFollowDetail;

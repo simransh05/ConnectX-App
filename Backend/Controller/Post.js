@@ -10,27 +10,36 @@ module.exports.getIndividualPosts = async (req, res) => {
     const { userId, skip } = req.params;
     const token = req.cookies.token;
     try {
-        const user = jwt.verify(token, process.env.JWT_SECRET);
-        const currentUser = await User.findOne({ email: user.email })
-        console.log(currentUser?._id.toString(), userId)
         let posts;
-        const isFollow = await Follow.findOne({
-            follower: currentUser?._id,
-            following: userId
-        })
-        if (currentUser?._id.equals(userId) || isFollow) {
-            console.log('me follow', isFollow)
-            posts = await Post.find({ userId }).sort({ _id: -1 }).skip(skip).limit(5).populate('userId');
-        } else {
-            console.log('non follow')
+        if (!token) {
             posts = await Post.find({
                 $and: [
                     { userId },
                     { postType: 'public' }
                 ]
             }).sort({ _id: -1 }).skip(skip).limit(5).populate('userId');
+        } else {
+            const user = jwt.verify(token, process.env.JWT_SECRET);
+            const currentUser = await User.findOne({ email: user.email })
+            // console.log(currentUser?._id.toString(), userId)
+            const isFollow = await Follow.findOne({
+                follower: currentUser?._id,
+                following: userId
+            })
+            if (currentUser?._id.equals(userId) || isFollow) {
+                // console.log('me follow', isFollow)
+                posts = await Post.find({ userId }).sort({ _id: -1 }).skip(skip).limit(5).populate('userId');
+            } else {
+                // console.log('non follow')
+                posts = await Post.find({
+                    $and: [
+                        { userId },
+                        { postType: 'public' }
+                    ]
+                }).sort({ _id: -1 }).skip(skip).limit(5).populate('userId');
+            }
         }
-        console.log('after')
+        // console.log('after')
         if (!posts) {
             return res.status(200).json([])
         }
@@ -46,6 +55,15 @@ module.exports.getAllPosts = async (req, res) => {
     const token = req.cookies.token;
 
     try {
+        if (!token) {
+            const posts = await Post.find({ postType: 'public' })
+                .sort({ _id: -1 })
+                .skip(skip)
+                .limit(5)
+                .populate("userId")
+            return res.status(200).json(posts.map(formatPost))
+        }
+
         const user = jwt.verify(token, process.env.JWT_SECRET);
 
         const currentUser = await User.findOne({

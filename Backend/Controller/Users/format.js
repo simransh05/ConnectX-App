@@ -34,6 +34,7 @@ module.exports.formatPost = (post) => {
         commentCount: post.commentCount,
         createdAt: post.createdAt,
         fileType: post.fileType,
+        postType: post.postType,
         photoVideo: post.photoVideo
             ? `data:${post.fileType};base64,${post.photoVideo.toString("base64")}`
             : null

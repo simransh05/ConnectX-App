@@ -68,11 +68,8 @@ module.exports.getUser = async (req, res) => {
 }
 
 module.exports.getAllUsers = async (req, res) => {
-    const { userId } = req.params;
     try {
-        const users = await User.find({
-            _id: { $ne: userId }
-        });
+        const users = await User.find();
         if (!users) {
             return res.status(200).json([])
         }

@@ -3,6 +3,9 @@
 
 .otherContainer {
     @include space-flex;
+    height: fit-content;
+    position: sticky;
+    top: 0;
 }
 
 .mobileMenu {

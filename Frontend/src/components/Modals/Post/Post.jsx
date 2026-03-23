@@ -11,7 +11,7 @@ function Post({ open, onClose, onSuccess }) {
     const [fileType, setFileType] = useState(null);
     const [file, setFile] = useState(null);
     const [caption, setCaption] = useState('');
-    const [postType, setPostType] = useState("");
+    const [postType, setPostType] = useState("public");
     const { currentUser } = useContext(CurrentUserContext);
     // on submit form get all the data with who send this post user id 
     const handleSubmit = async (e) => {

@@ -115,6 +115,24 @@
     padding: $padding-md;
 }
 
+.postTypeInfo {
+    @include flex-justify;
+    padding-right: $padding-md ;
+}
+
+.postType {
+    border: $border-black;
+    border-radius: $padding-md;
+    color: white;
+    background-color: brown;
+    padding: $padding-md;
+}
+
+.timeCreated {
+    color: gray;
+    padding-bottom: $padding-md;
+}
+
 @media (min-width : 300px) and (max-width : 768px) {
     .postContainer {
         order: 3;
