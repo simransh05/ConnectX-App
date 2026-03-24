@@ -11,11 +11,14 @@ import UserAvatar from '../../components/userAvatar/UserAvatar'
 import { useNavigate, useParams } from 'react-router-dom'
 import { userStore } from '../../Zustand/AllUsers'
 import socket from '../../Socket/socket'
+import { Divider } from '@mui/material'
 
 function Messages() {
   const navigate = useNavigate()
   const { userId } = useParams()
   const { allUsers } = userStore()
+  const [search, setSearch] = useState('');
+  const [searchResult, setSearchResult] = useState(null);
   if (userId) {
     useUserAvailable(`${ROUTES.MESSAGES}/${userId}`)
   } else {
@@ -39,6 +42,9 @@ function Messages() {
   // console.log(userId);
 
   const handleClick = (c) => {
+    if (search.trim()) {
+      setSearch("")
+    }
     if (prevUser === null) {
       setPrevUser(c);
     } else {
@@ -83,29 +89,79 @@ function Messages() {
       socket.off('receive');
     }
   }, [])
+  const handleChange = (e) => {
+    const { value } = e.target;
+    setSearch(value);
+    const lower = value.toLowerCase();
+    const result = myChats.filter(c => c.name.toLowerCase().includes(lower));
+    setSearchResult(result);
+    // my chat filter
+  }
+
+  const handleGroup = () => {
+    // open drawer
+  }
+
+  console.log(searchResult);
   // console.log(myChats)
   return (
     <>
       <Navbar />
       <div className={style["message-container"]}>
-        <div className={userId ? style['left-mobile'] : style["left-side"]}>
-          {myChats?.length > 0 ?
-            myChats.map(c => (
-              <div className={style.people} onClick={() => handleClick(c)} key={c?._id}>
-                <UserAvatar
-                  user={c}
-                  size={50}
-                />
-                <div>{c?.name}</div>
-              </div>
-            ))
-            :
-            <div className={style.noChats}>No Chats</div>}
-          {/* list of people chat with and sort with latest */}
-          {/* list.map then onClick send in the other  */}
-        </div>
+        <div className={userId ? style["left-mobile"] : style["left-side"]}>
+          <div className={style.inputContainer}>
+            <input
+              type="text"
+              name="search"
+              placeholder="Search"
+              onChange={handleChange}
+              value={search}
+              className={style.searchMessage}
+            />
 
-        <div className={userId ? style['right-mobile'] : style["right-side"]}>
+            {search && (
+              <div className={style.searchContainer}>
+                {searchResult?.length > 0 ? (
+                  searchResult.map((s) => (
+                    <div
+                      className={style.searchIndividual}
+                      key={s._id}
+                      onClick={() => handleClick(s)}
+                    >
+                      <div className={style.userName}>{s.name}</div>
+                    </div>
+                  ))
+                ) : (
+                  <div className={style.noUserAvailable}>
+                    User Not Found
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {myChats?.length > 0 ? (
+            <div className={style.nameContainer}>
+              {myChats.map((c) => (
+                <div
+                  className={style.people}
+                  onClick={() => handleClick(c)}
+                  key={c?._id}
+                >
+                  <UserAvatar user={c} size={50} />
+                  <div>{c?.name}</div>
+                </div>
+              ))}
+
+              <button className={style.createGrp} onClick={handleGroup}>Add Group</button>
+            </div>
+          ) : (
+            <div className={style.noChats}>No Chats</div>
+          )}
+
+        </div>
+ 
+        <div className={userId ? style["right-mobile"] : style["right-side"]}>
           <OneOneChat />
         </div>
       </div>

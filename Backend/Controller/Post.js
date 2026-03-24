@@ -184,3 +184,26 @@ module.exports.getSavedPost = async (req, res) => {
         return res.status(500).json({ message: err.message })
     }
 }
+
+module.exports.deleteSave = async (req, res) => {
+    const { postId } = req.params;
+    const token = req.cookies.token;
+    try {
+        console.log('token' , postId , token)
+        const user = jwt.verify(token, process.env.JWT_SECRET);
+        const currentUser = await User.findOne({
+            email: user.email
+        });
+        console.log('here')
+        await User.findByIdAndUpdate(
+            currentUser?._id,
+            {
+                $pull: { savedPost: postId }
+            }
+        )
+        console.log('here 200')
+        return res.status(200).json({ message: 'Success' })
+    } catch (err) {
+        return res.status(500).json({ message: err.message })
+    }
+}

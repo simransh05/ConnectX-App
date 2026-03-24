@@ -37,6 +37,7 @@ function Follow({ open, onClose, data, type }) {
                         size={70}
                     />
                     <div className={style.username}>{d?.name}</div>
+                    <Divider />
                 </div>
             )) :
                 <div className={style.noFollow}>No {type}</div>

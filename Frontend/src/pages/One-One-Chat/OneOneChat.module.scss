@@ -79,6 +79,17 @@
 
     }
 
+    .buttonSendDisabled {
+        width: 15%;
+        height: 80%;
+        font-size: 14px;
+        border-radius: $padding-md;
+        font-weight: 400;
+        margin: 10px;
+        border: $border-black;
+        cursor: not-allowed;
+    }
+
     .buttonSend {
         width: 15%;
         height: 80%;

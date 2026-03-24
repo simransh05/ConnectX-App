@@ -53,6 +53,8 @@ router.post('/user/update', users.postPassword);
 
 router.post('/post/save', users.savePostUser);
 
+router.delete('/saved-posts/:postId', post.deleteSave)
+
 router.get('/post/save/:userId', post.getSavedPost);
 
 router.get('/logout', users.getLogout);
@@ -76,6 +78,8 @@ router.get('/chats/:userId', message.getMessages);
 router.post('/chats/delete/:userId/:other', message.deleteChat)
 
 router.get('/follow/:userId', follow.getFollow);
+
+router.delete('/comment/:commentId/:postId', comment.deleteComment)
 
 router.post('/post/comment', comment.postComment);
 

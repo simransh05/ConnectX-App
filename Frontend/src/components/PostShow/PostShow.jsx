@@ -97,8 +97,22 @@ function PostShow({ posts, loading, isProfile }) {
             navigate(ROUTES.LOGIN);
             return;
         }
-        if (liked.has(postId)) return;
-        socket.emit('send-notify', { sender: currentUser?._id, receiver, postId, type: 'like' }, (res) => {
+        if (liked.has(postId)) {
+            socket.emit('send-notify', { sender: currentUser?._id, receiver, postId, type: 'like', unLike: true }, (res) => {
+                if (res.status === 200) {
+                    // filter
+                    setLiked(prev => new Set([]))
+                    setPost(prev =>
+                        prev.map(post =>
+                            post._id === postId
+                                ? { ...post, likeCount: post.likeCount + 1 }
+                                : post
+                        )
+                    );
+                }
+            })
+        }
+        socket.emit('send-notify', { sender: currentUser?._id, receiver, postId, type: 'like', unLike: false }, (res) => {
             if (res.status === 200) {
                 setLiked(prev => new Set([...prev, postId]));
                 setPost(prev =>
@@ -121,16 +135,27 @@ function PostShow({ posts, loading, isProfile }) {
                 showCancelButton: false,
                 showConfirmButton: false,
                 timer: 5000,
-                width:'50%'
+                width: '50%'
             })
             navigate(ROUTES.LOGIN);
             return;
         }
+        console.log('here')
         // add in set and save api 
-        if (saved.has(postId)) return;
         const data = {
             postId,
             userId: currentUser?._id
+        }
+        if (saved.has(postId)) {
+            const res = await api.deleteSave(postId);
+            if (res.status === 200) {
+                setSaved(prev => {
+                    const old = new Set(prev);
+                    old.delete(postId);
+                    return old;
+                })
+            }
+            return;
         }
         const res = await api.savePost(data);
         if (res.status === 200) {
@@ -139,16 +164,30 @@ function PostShow({ posts, loading, isProfile }) {
         }
     }
 
-    const handleSuccess = (postId) => {
-        // count increase
-        setPost(prev =>
-            prev.map(post =>
-                post._id === postId
-                    ? { ...post, commentCount: post.commentCount + 1 }
-                    : post
-            )
-        );
+    const handleSuccess = (postId, type) => {
+        if (type === 'delete') {
+            setPost(prev =>
+                prev.map(post =>
+                    post._id === postId
+                        ? { ...post, commentCount: post.commentCount - 1 }
+                        : post
+                )
+            );
+        }
+
+        else if (type === 'add') {
+            setPost(prev =>
+                prev.map(post =>
+                    post._id === postId
+                        ? { ...post, commentCount: post.commentCount + 1 }
+                        : post
+                )
+            );
+        }
     }
+
+    console.log('here', saved)
+
 
     const handleDelete = async (postId) => {
         const result = await Swal.fire({
@@ -230,7 +269,7 @@ function PostShow({ posts, loading, isProfile }) {
                                     <span>{p.likeCount > 0 && p.likeCount}</span>
                                     <FaRegComment className={style.commentImage} onClick={() => handleClick(p)} />
                                     <span>{p.commentCount > 0 && p.commentCount}</span>
-                                    {saved?.has(p._id) ? <FaBookmark className={style.alreadySave} /> : <CiBookmark className={style.addSave} onClick={() => handleSave(p._id)} />}
+                                    {saved?.has(p._id) ? <FaBookmark className={style.alreadySave} onClick={() => handleSave(p._id)} /> : <CiBookmark className={style.addSave} onClick={() => handleSave(p._id)} />}
                                 </div>
                                 {isProfile &&
                                     <div className={style.deletePost}>
@@ -251,7 +290,7 @@ function PostShow({ posts, loading, isProfile }) {
                 <Comment
                     open={() => setCommentDawer(true)}
                     onClose={handleClose}
-                    onSuccess={() => handleSuccess(postid._id)}
+                    onSuccess={(type) => handleSuccess(postid._id, type)}
                     post={postid}
                 />}
         </div>
