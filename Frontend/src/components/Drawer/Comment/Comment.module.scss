@@ -60,6 +60,19 @@
     }
 }
 
+.swal2-container {
+    z-index: 9999 !important;
+}
+
+
+.commentDelete {
+    color: white;
+    background-color: red;
+    border-radius: $padding-md;
+    border: $border-black;
+    align-items: right;
+}
+
 .commentName,
 .commentMessage {
     padding: $padding-md;

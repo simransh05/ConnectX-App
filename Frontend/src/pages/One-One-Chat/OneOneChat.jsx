@@ -145,7 +145,7 @@ function OneOneChat() {
           </div>
           <div className={style["chat-footer"]}>
             <input type="text" name='chat' className={style['input-field']} placeholder='Type a message' onChange={(e) => setMessage(e.target.value)} value={message} onKeyDown={handleEnter} />
-            <button onClick={handleClick} className={style.buttonSend}>Send</button>
+            {message.trim()!="" ? <button onClick={handleClick} className={style.buttonSend}>Send</button> : <button className={style.buttonSendDisabled} disabled>Send</button>}
           </div>
         </>
       ) : (

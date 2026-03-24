@@ -6,6 +6,13 @@
     @include space-flex;
 }
 
+.searchMessage {
+    margin-top: $padding-md;
+    border-radius: $padding-md;
+    padding: $padding-md;
+    border: $border-black;
+}
+
 .left-mobile,
 .left-side {
     overflow-y: scroll;
@@ -25,12 +32,68 @@
     margin-top: $padding-md;
 }
 
+.inputContainer {
+    position: relative;
+}
+
+.searchContainer {
+    background-color: white;
+    color: black;
+    position: absolute;
+    top: 100%;
+    width: 95%;
+    // border: $border-black;
+    border-bottom-left-radius: $padding-md;
+    border-bottom-right-radius: $padding-md;
+    padding: $padding-md;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+    z-index: 9999;
+    padding-right: 0;
+}
+
+.nameContainer {
+    position: relative;
+    height: 90%;
+}
+
+
+.createGrp {
+    position: absolute;
+    bottom: 5%;
+    right: 5%;
+    border-radius: $circle;
+    border: $border-black;
+    padding: $padding-md 0;
+    height: 60px;
+    width: 60px;
+    color: white;
+    background-color: rgb(55, 87, 7);
+}
+
+.userName {
+    margin: $padding-md;
+    cursor: pointer;
+}
+
+.noUserAvailable {
+    position: absolute;
+    top: 100%;
+    width: 100%;
+    border: $border-black;
+    border-bottom-left-radius: $padding-md;
+    border-bottom-right-radius: $padding-md;
+}
+
 .people {
     display: flex;
     border-bottom: $border-black;
     padding: $padding-md;
     padding-left: 0;
     cursor: pointer;
+
+    .people:first-child {
+        border-top: $border-black;
+    }
 
     div {
         margin: auto 0;

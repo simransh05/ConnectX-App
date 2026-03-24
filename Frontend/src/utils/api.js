@@ -64,7 +64,13 @@ const api = {
     },
     getSavedPost: async (userId) => {
         return await apiInstance.get(`${ROUTES.POST}${ROUTES.SAVE}/${userId}`)
-    }
+    },
+    deleteComment : async (commentId, postId) => {
+        return await apiInstance.delete(`${ROUTES.COMMENT}/${commentId}/${postId}`)
+    },
+    deleteSave : async (postId) => {
+        return await apiInstance.delete(`${ROUTES.SAVEDPOST}/${postId}`)
+    },
 }
 
 export default api

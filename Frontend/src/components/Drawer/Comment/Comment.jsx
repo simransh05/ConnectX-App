@@ -8,6 +8,7 @@ import { CurrentUserContext } from '../../../Context/currentUserProvider';
 import { useContext } from 'react';
 import socket from '../../../Socket/socket';
 import UserAvatar from '../../userAvatar/UserAvatar';
+import Swal from 'sweetalert2';
 
 function Comment({ open, onClose, onSuccess, post }) {
     const [commentInput, setCommentInput] = useState("");
@@ -47,11 +48,19 @@ function Comment({ open, onClose, onSuccess, post }) {
             // console.log(res1)
             setCommentData(res1.data);
             setCommentInput("");
-            onSuccess()
+            onSuccess('add')
         }
     }
-
-    // console.log(post);
+    const handleDelete = async (id) => {
+        const res = await api.deleteComment(id, post._id);
+        if (res.status === 200) {
+            // filter
+            const res = await api.getComments(post._id);
+            setCommentData(res.data);
+            onSuccess('delete')
+        }
+    }
+    console.log(commentData);
     return (
         <Drawer open={open} onClose={onClose} anchor='bottom' className={style.commentDrawer}
             PaperProps={{
@@ -77,11 +86,11 @@ function Comment({ open, onClose, onSuccess, post }) {
                                 size={50}
                             />
                             <div className={style.commentName}>{c?.userId?.name}</div>
+                            <button onClick={() => handleDelete(c._id)} className={style.commentDelete}>Delete Comment</button>
                         </div>
                         <div className={style.commentMessage}>
                             <p>{c?.message}</p>
                         </div>
-
                     </div>
                 ))}
             </div>
