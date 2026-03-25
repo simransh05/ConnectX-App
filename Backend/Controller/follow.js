@@ -53,3 +53,16 @@ module.exports.getFollower = async (userId) => {
         console.error(err.message)
     }
 }
+
+module.exports.removeFollow = async (sender, receiver) => {
+    try {
+        await Follow.deleteOne({
+            follower: sender,
+            following: receiver
+        })
+        // console.log('get follower', follower);
+        return { status: 200 }
+    } catch (err) {
+        console.error(err.message)
+    }
+}

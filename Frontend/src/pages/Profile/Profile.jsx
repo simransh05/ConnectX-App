@@ -14,22 +14,34 @@ import FollowInfo from '../../components/FollowInfo/FollowInfo';
 import { CiMenuBurger } from "react-icons/ci";
 import { useMediaQuery } from '@mui/material';
 import useFollowDetail from '../../utils/helper/followDetails';
+import socket from '../../Socket/socket';
 
 function Profile() {
   const [openPost, setOpenPost] = useState(false);
   const { currentUser } = useContext(CurrentUserContext);
   const [sideMenu, setSideMenu] = useState(false);
   useUserAvailable(`${ROUTES.PROFILE}`)
+  const { detail, setDetail } = useFollowDetail(currentUser?._id);
 
   const { posts, setPosts, loading } = useIndividualPosts(currentUser?._id);
   // console.log(posts);
   const handleSuccess = async () => {
     const res = await api.getIndividualPosts(currentUser?._id, 0);
-    console.log(res.data)
+    // console.log(res.data)
     setPosts(res.data);
   }
+  useEffect(() => {
+    socket.on('receiver-notify', async ({ type }) => {
+      if (type === 'follow') {
+        const res = await api.getFollow(currentUser?._id);
+        setDetail(res.data)
+      }
+    })
+    return () => {
+      socket.off('receiver-notify')
+    }
+  }, [])
 
-  const { detail } = useFollowDetail(currentUser?._id);
 
   const isMobile = useMediaQuery("(max-width: 768px)")
 

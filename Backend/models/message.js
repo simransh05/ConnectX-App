@@ -9,10 +9,10 @@ const messageSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
-    group: [{
+    groupId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
-    }],
+    },
     typeOfChat: {
         type: String,
         enum: ['group', 'individual'],

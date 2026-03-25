@@ -12,12 +12,14 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { userStore } from '../../Zustand/AllUsers'
 import socket from '../../Socket/socket'
 import { Divider } from '@mui/material'
+import Group from '../../components/Modals/Group/Group'
 
 function Messages() {
   const navigate = useNavigate()
   const { userId } = useParams()
   const { allUsers } = userStore()
   const [search, setSearch] = useState('');
+  const [groupModal, setGroupModal] = useState(false);
   const [searchResult, setSearchResult] = useState(null);
   if (userId) {
     useUserAvailable(`${ROUTES.MESSAGES}/${userId}`)
@@ -32,7 +34,7 @@ function Messages() {
     const fetchMyChatUsers = async () => {
       if (currentUser) {
         const res = await api.getMessages(currentUser?._id)
-        console.log(res.data);
+        // console.log(res.data);
         setMyChats(res.data);
       }
     }
@@ -60,11 +62,11 @@ function Messages() {
       if (!prev) prev = [];
 
       const otherInfo = allUsers.find(u => u._id === userId);
-      console.log(otherInfo)
+      // console.log(otherInfo)
       if (!otherInfo) return prev;
 
       const filtered = prev.filter(c => c._id !== userId);
-      console.log(filtered)
+      // console.log(filtered)
 
       return [
         {
@@ -102,7 +104,7 @@ function Messages() {
     // open drawer
   }
 
-  console.log(searchResult);
+  // console.log(searchResult);
   // console.log(myChats)
   return (
     <>
@@ -153,14 +155,20 @@ function Messages() {
                 </div>
               ))}
 
-              <button className={style.createGrp} onClick={handleGroup}>Add Group</button>
+              <button className={style.createGrp} onClick={() => setGroupModal(true)}>Create Group</button>
+              {groupModal &&
+                <Group
+                  open={groupModal}
+                  onClose={() => setGroupModal(false)}
+                />
+              }
             </div>
           ) : (
             <div className={style.noChats}>No Chats</div>
           )}
 
         </div>
- 
+
         <div className={userId ? style["right-mobile"] : style["right-side"]}>
           <OneOneChat />
         </div>

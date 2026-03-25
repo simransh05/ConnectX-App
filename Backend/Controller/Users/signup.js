@@ -34,7 +34,7 @@ module.exports.postLogin = async (req, res) => {
             return res.status(404).json({ message: 'Not signup' })
         }
         const hashed = await bcrypt.compare(password, user.password);
-        console.log(hashed);
+        // console.log(hashed);
         if (!hashed) {
             return res.status(402).json({ message: 'Password Incorrect' })
         }

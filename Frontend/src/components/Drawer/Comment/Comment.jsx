@@ -29,29 +29,27 @@ function Comment({ open, onClose, onSuccess, post }) {
         }
     }
 
-    const handleComment = async (e) => {
+    const handleComment = async () => {
         if (!commentInput.trim()) return;
         const data = {
             userId: currentUser?._id,
             comment: commentInput,
             postId: post?._id
         }
-        socket.emit('send-notify', { sender: currentUser?._id, receiver: post.userId._id, type: 'comment', postId: post._id }, (res) => {
-            if (res.status === 200) {
-
-            }
-        })
-        // console.log(data)
-        const res = await api.postComment(data);
-        if (res.status === 200) {
-            const res1 = await api.getComments(post?._id);
+        socket.emit('send-notify', { sender: currentUser?._id, receiver: post.userId._id, type: 'comment', postId: post._id, status: 'add' })
+        const res1 = await api.postComment(data);
+        if (res1.status === 200) {
+            const res2 = await api.getComments(post?._id);
             // console.log(res1)
-            setCommentData(res1.data);
+            setCommentData(res2.data);
             setCommentInput("");
             onSuccess('add')
         }
+        // console.log(data)
+
     }
     const handleDelete = async (id) => {
+        socket.emit('send-notify', { sender: currentUser?._id, receiver: post.userId._id, type: 'comment', postId: post._id, status: 'remove' })
         const res = await api.deleteComment(id, post._id);
         if (res.status === 200) {
             // filter
@@ -60,7 +58,7 @@ function Comment({ open, onClose, onSuccess, post }) {
             onSuccess('delete')
         }
     }
-    console.log(commentData);
+    // console.log(commentData);
     return (
         <Drawer open={open} onClose={onClose} anchor='bottom' className={style.commentDrawer}
             PaperProps={{

@@ -47,12 +47,13 @@ function Navbar() {
   }
 
   useEffect(() => {
-    socket.on('receiver-notify', ({ sender, receiver, type, postId }) => {
+    socket.on('receiver-notify', ({ sender, receiver, type, postId, status }) => {
       // number increase 
-      const available = notify?.some(n => n.userId === receiver && n.type === type)
-      // console.log('here')
-      if (!available) {
+      if (status === 'add') {
         setNumber(prev => prev + 1)
+      }
+      else if (status === 'remove') {
+        setNumber(prev => prev - 1)
       }
 
     })

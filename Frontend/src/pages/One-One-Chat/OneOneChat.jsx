@@ -70,7 +70,7 @@ function OneOneChat() {
     // socket
     socket.emit('send', { sender: currentUser?._id, receiver: selectedUser?._id, msg: message }, (res) => {
       // if user is not online then add in notification
-      console.log(res)
+      // console.log(res)
       if (res.status === 200) {
         setChat(prev => [...prev, { sender: currentUser?._id, receiver: selectedUser?._id, message }])
       }
@@ -132,6 +132,7 @@ function OneOneChat() {
                 open={Boolean(anchorEl)}
                 onClose={handleClose} className={style.deleteBtn}>
                 <MenuItem onClick={handleDelete}>Delete Chat</MenuItem>
+                {/* add leave group option for the chat of group  */}
               </Menu>
             </div>
 

@@ -13,7 +13,8 @@ const notificationSchema = new mongoose.Schema({
     },
     postId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Post"
+        ref: "Post",
+        default: null
     },
     type: {
         type: String,

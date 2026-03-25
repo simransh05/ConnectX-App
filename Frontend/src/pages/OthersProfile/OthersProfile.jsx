@@ -68,13 +68,23 @@ function OthersProfile() {
             navigate(ROUTES.LOGIN);
             return;
         }
-        socket.emit('send-notify', { sender: currentUser?._id, receiver: userId, type: "follow" }, async (res) => {
-            if (res.status === 200) {
-                setIsFollow(true);
-                const r = await api.getFollow(userId);
-                setDetail(r.data);
-            }
-        })
+        if (isFollow) {
+            socket.emit('send-notify', { sender: currentUser?._id, receiver: userId, type: "follow", status: 'remove' }, async (res) => {
+                if (res.status === 200) {
+                    setIsFollow(false);
+                    const r = await api.getFollow(userId);
+                    setDetail(r.data);
+                }
+            })
+        } else {
+            socket.emit('send-notify', { sender: currentUser?._id, receiver: userId, type: "follow", status: 'add' }, async (res) => {
+                if (res.status === 200) {
+                    setIsFollow(true);
+                    const r = await api.getFollow(userId);
+                    setDetail(r.data);
+                }
+            })
+        }
         // socket involve here adding the person in the following of me and follower for him api of that
         // and socket will add the notification to the other person
     }
@@ -83,7 +93,7 @@ function OthersProfile() {
         if (!detail) return;
         // console.log(detail.follower);
         const alreadyFollow = detail.follower.some(f => f.userId === currentUser?._id)
-        console.log(alreadyFollow, detail)
+        // console.log(alreadyFollow, detail)
         if (alreadyFollow) {
             setIsFollow(true);
         }
@@ -131,7 +141,7 @@ function OthersProfile() {
                     <div className={style.followInfo}>
                         <button onClick={handleUser} className={style.messageBtn}>Message</button>
                         {isFollow ?
-                            <button disabled className={style.alreadyFollow}>Following</button>
+                            <button onClick={handleClick} className={style.followBtn}>Unfollow</button>
                             : <button onClick={handleClick} className={style.followBtn}>Follow</button>}
                         <FollowInfo
                             userId={userId}
