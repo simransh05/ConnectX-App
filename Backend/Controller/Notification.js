@@ -60,17 +60,16 @@ module.exports.deleteNotify = async (req, res) => {
     }
 }
 
-module.exports.deleteMessage = async (sender, receiver, type) => {
+module.exports.deleteSocketNotify = async (sender, receiver, type, postId) => {
     // console.log('post', sender, receiver, type)
     try {
         // console.log('post', sender, receiver, type)
-        if (type != "message") {
-            return;
-        }
+
         await Notification.deleteOne({
             sender,
             receiver,
-            type
+            type,
+            postId: postId || null
         })
         return { status: 200 };
     } catch (err) {

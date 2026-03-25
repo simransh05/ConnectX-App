@@ -45,7 +45,7 @@ function Notification() {
 
   useEffect(() => {
     setNotification(notify)
-    socket.on('receiver-notify', ({ sender, receiver, type, postId }) => {
+    socket.on('receiver-notify', () => {
       fetchNotification(currentUser?._id);
       // console.log(sender, receiver)
       // setNotification(prev => [...prev, {

@@ -6,7 +6,7 @@ export const allPostStore = create((set) => ({
 
     fetchAllPosts: async () => {
         const res = await api.getAllPosts();
-        console.log(res);
+        // console.log(res);
         set({ allPosts: res.data })
     }
 }))

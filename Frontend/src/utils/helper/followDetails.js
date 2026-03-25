@@ -12,7 +12,7 @@ const useFollowDetail = (userId) => {
                 const res = await api.getFollow(userId);
                 setDetail(res.data);
             } catch (err) {
-                console.log(err)
+                console.error(err)
             }
         };
 

@@ -98,10 +98,28 @@ function PostShow({ posts, loading, isProfile }) {
             return;
         }
         if (liked.has(postId)) {
-            socket.emit('send-notify', { sender: currentUser?._id, receiver, postId, type: 'like', unLike: true }, (res) => {
+            socket.emit('send-notify', { sender: currentUser?._id, receiver, postId, type: 'like', status: 'remove' }, (res) => {
                 if (res.status === 200) {
                     // filter
-                    setLiked(prev => new Set([]))
+                    setLiked(prev => {
+                        const old = new Set(prev);
+                        old.delete(postId);
+                        return old;
+                    })
+                    setPost(prev =>
+                        prev.map(post =>
+                            post._id === postId
+                                ? { ...post, likeCount: post.likeCount - 1 }
+                                : post
+                        )
+                    );
+                }
+            })
+            return;
+        } else {
+            socket.emit('send-notify', { sender: currentUser?._id, receiver, postId, type: 'like', status: 'add' }, (res) => {
+                if (res.status === 200) {
+                    setLiked(prev => new Set([...prev, postId]));
                     setPost(prev =>
                         prev.map(post =>
                             post._id === postId
@@ -112,18 +130,6 @@ function PostShow({ posts, loading, isProfile }) {
                 }
             })
         }
-        socket.emit('send-notify', { sender: currentUser?._id, receiver, postId, type: 'like', unLike: false }, (res) => {
-            if (res.status === 200) {
-                setLiked(prev => new Set([...prev, postId]));
-                setPost(prev =>
-                    prev.map(post =>
-                        post._id === postId
-                            ? { ...post, likeCount: post.likeCount + 1 }
-                            : post
-                    )
-                );
-            }
-        })
     }
 
     const handleSave = async (postId) => {
@@ -140,7 +146,6 @@ function PostShow({ posts, loading, isProfile }) {
             navigate(ROUTES.LOGIN);
             return;
         }
-        console.log('here')
         // add in set and save api 
         const data = {
             postId,
@@ -186,8 +191,6 @@ function PostShow({ posts, loading, isProfile }) {
         }
     }
 
-    console.log('here', saved)
-
 
     const handleDelete = async (postId) => {
         const result = await Swal.fire({
@@ -199,6 +202,7 @@ function PostShow({ posts, loading, isProfile }) {
             cancelButtonText: 'No'
         })
         if (result.isConfirmed) {
+            socket.emit('send-notify', { sender: currentUser?._id, type: 'post', postId, status: 'remove' })
             const res = await api.deletePost(postId);
             if (res.status === 200) {
                 fetchAllPosts();
@@ -224,7 +228,7 @@ function PostShow({ posts, loading, isProfile }) {
         navigate(`${ROUTES.PROFILE}/${userId}`)
     }
 
-    console.log(posts)
+    // console.log(posts)
     return (
         <div className={style.postContainer}>
             {post?.length > 0 ? (
@@ -262,7 +266,7 @@ function PostShow({ posts, loading, isProfile }) {
 
                                 <div className={style.postInfo}>
                                     {liked.has(p._id) ?
-                                        <AiFillLike className={style.likedImage} />
+                                        <AiFillLike className={style.likedImage} onClick={() => handleLikeClick(p.userId?._id, p._id)} />
                                         :
                                         <AiOutlineLike className={style.likeImage} onClick={() => handleLikeClick(p.userId?._id, p._id)} />
                                     }

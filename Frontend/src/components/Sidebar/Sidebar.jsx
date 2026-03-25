@@ -119,7 +119,7 @@ function Sidebar({ isDrawer, open, onClose }) {
     }
 
     const res = await api.updateProfile(data);
-    console.log(res.data)
+    // console.log(res.data)
     if (res.status === 200) {
       setCurrentUser(res.data);
       setIsEditing(false);
@@ -129,7 +129,7 @@ function Sidebar({ isDrawer, open, onClose }) {
     setIsEditing(false);
     setPreview(null);
   }
-  console.log(isDrawer)
+  // console.log(isDrawer)
   return (
     <>
       {

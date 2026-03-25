@@ -31,7 +31,7 @@
     border-right: $border-black;
     @include flex-column;
     overflow-y: scroll;
-    background-color: rgb(248, 242, 232);
+    background-color: #f0f2f5;
 }
 
 .sender,
@@ -52,7 +52,7 @@
     margin-left: auto;
     text-align: right;
     margin-right: $padding-md;
-    background-color: rgb(129, 179, 55);
+    background: #0084ff;
     color: white;
 }
 
@@ -60,8 +60,8 @@
     margin-right: auto;
     text-align: left;
     margin-left: $padding-md;
-    background-color: rgb(164, 165, 163);
-    color: white;
+    background: #e4e6eb;
+    color: black;
 }
 
 .chat-footer {
@@ -97,13 +97,13 @@
         font-size: 14px;
         border-radius: $padding-md;
         font-weight: 400;
-        background-color: rgb(36, 228, 36);
+        background-color: #0084ff;
         margin: 10px;
         cursor: pointer;
         border: $border-black;
 
         &:hover {
-            background-color: green;
+            background-color: #006edc;
         }
     }
 }

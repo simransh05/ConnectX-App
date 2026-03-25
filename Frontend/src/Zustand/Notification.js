@@ -7,7 +7,7 @@ export const NotificationStore = create((set) => ({
     fetchNotification: async (userId) => {
         if (!userId) return;
         const res = await api.getNotification(userId);
-        console.log(res);
+        // console.log(res);
         set({ notify: res.data })
     }
 }))

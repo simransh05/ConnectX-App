@@ -9,7 +9,7 @@ const useIndividualPosts = (userId, isHome) => {
     const [hasMore, setHasMore] = useState(true);
     const limit = 5;
 
-    console.log(userId)
+    // console.log(userId)
 
     // fetch posts
     const fetchPosts = async () => {
@@ -24,7 +24,7 @@ const useIndividualPosts = (userId, isHome) => {
                 if (!userId) return;
                 res = await api.getIndividualPosts(userId, skip);
             }
-            console.log(res.data, skip)
+            // console.log(res.data, skip)
             if (res.data.length < limit) {
                 setHasMore(false)
             }
@@ -40,7 +40,7 @@ const useIndividualPosts = (userId, isHome) => {
             })
 
         } catch (err) {
-            console.log(err);
+            console.error(err);
         } finally {
             setLoading(false);
         }

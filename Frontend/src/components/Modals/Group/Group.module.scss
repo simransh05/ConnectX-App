@@ -1,0 +1,16 @@
+@use '../../../Style/variables' as *;
+@use '../../../Style/mixins' as *;
+
+.groupInd {
+    @include flex-justify;
+    margin: $padding-md ;
+}
+
+.userInfoGroup {
+    display: flex;
+}
+
+.usernameGroup {
+    margin: $padding-md 0;
+    margin-left: $padding-md;
+}

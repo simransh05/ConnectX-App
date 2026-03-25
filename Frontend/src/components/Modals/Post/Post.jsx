@@ -26,7 +26,7 @@ function Post({ open, onClose, onSuccess }) {
             formData.append('postType', postType || "public")
 
             formData.append('fileType', fileType)
-            console.log(formData)
+            // console.log(formData)
             if (preview) {
                 formData.append('photoVideo', file)
             }
@@ -41,10 +41,9 @@ function Post({ open, onClose, onSuccess }) {
                     showCancelButton: false,
                     showConfirmButton: false
                 })
-                socket.emit('send-notify', { sender: currentUser?._id, type: 'post' })
+                socket.emit('send-notify', { sender: currentUser?._id, type: 'post', status: 'add' })
                 onSuccess();
                 onClose();
-                console.log('here')
             }
         }
         catch (err) {
