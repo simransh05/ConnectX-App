@@ -57,15 +57,22 @@ function Messages() {
     navigate(`${ROUTES.MESSAGES}/${c?._id}`)
   }
 
-  const updateChatList = (userId) => {
+  const updateChatList = (userId, isGroup) => {
     setMyChats(prev => {
       if (!prev) prev = [];
+      if (isGroup) {
+        const filtered = prev.filter(c => c._id !== chatData._id);
 
-      const otherInfo = allUsers.find(u => u._id === userId);
+        return [
+          chatData,
+          ...filtered
+        ];
+      }
+      const otherInfo = allUsers?.find(u => u._id === userId);
       // console.log(otherInfo)
       if (!otherInfo) return prev;
 
-      const filtered = prev.filter(c => c._id !== userId);
+      const filtered = prev?.filter(c => c._id !== userId);
       // console.log(filtered)
 
       return [
@@ -85,10 +92,15 @@ function Messages() {
     socket.on('receive', ({ sender }) => {
       updateChatList(sender)
     })
+    socket.on('receive-notify', (data) => {
+      if (data.type === 'group' && data.status === 'add')
+        updateChatList(data.groupId, true)
+    })
 
     return () => {
       socket.off('message-send');
       socket.off('receive');
+      socket.off('receiver-notify')
     }
   }, [])
   const handleChange = (e) => {
@@ -100,12 +112,23 @@ function Messages() {
     // my chat filter
   }
 
-  const handleGroup = () => {
-    // open drawer
+  const handleSuccess = (data) => {
+    socket.emit("send-notify", {
+      sender: data.admin,
+      receiver: data.members,
+      groupId: data._id,
+      groupName: data.groupName,
+      type: "group",
+      status: "add"
+    });
+    // data have group amdin member list and then name of group 
+    // socket send message to all that this admin created a group 
+    // navigate to the chat of the groupId
+    navigate(`/chats/${data._id}`);
   }
 
   // console.log(searchResult);
-  // console.log(myChats)
+  console.log(myChats)
   return (
     <>
       <Navbar />
@@ -160,6 +183,7 @@ function Messages() {
                 <Group
                   open={groupModal}
                   onClose={() => setGroupModal(false)}
+                  onSuccess={(data) => handleSuccess(data)}
                 />
               }
             </div>

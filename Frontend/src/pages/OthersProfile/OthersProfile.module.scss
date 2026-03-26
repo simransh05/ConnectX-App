@@ -60,6 +60,14 @@
     padding: $padding-md;
 }
 
+.unFollowBtn {
+    border: none;
+    background-color: lightgreen;
+    border-radius: $padding-md;
+    color: white;
+    padding: $padding-md;
+}
+
 .postSide {
     width: 80%;
 }

@@ -93,11 +93,13 @@ function OthersProfile() {
         if (!detail) return;
         // console.log(detail.follower);
         const alreadyFollow = detail.follower.some(f => f.userId === currentUser?._id)
-        // console.log(alreadyFollow, detail)
+        console.log(alreadyFollow, detail)
         if (alreadyFollow) {
             setIsFollow(true);
+        }else {
+            setIsFollow(false)
         }
-    }, [detail])
+    }, [detail, userId])
 
     const isMobile = useMediaQuery("(max-width: 768px)")
 
@@ -141,7 +143,7 @@ function OthersProfile() {
                     <div className={style.followInfo}>
                         <button onClick={handleUser} className={style.messageBtn}>Message</button>
                         {isFollow ?
-                            <button onClick={handleClick} className={style.followBtn}>Unfollow</button>
+                            <button onClick={handleClick} className={style.unFollowBtn}>Unfollow</button>
                             : <button onClick={handleClick} className={style.followBtn}>Follow</button>}
                         <FollowInfo
                             userId={userId}
