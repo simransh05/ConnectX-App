@@ -65,11 +65,14 @@ const api = {
     getSavedPost: async (userId) => {
         return await apiInstance.get(`${ROUTES.POST}${ROUTES.SAVE}/${userId}`)
     },
-    deleteComment : async (commentId, postId) => {
+    deleteComment: async (commentId, postId) => {
         return await apiInstance.delete(`${ROUTES.COMMENT}/${commentId}/${postId}`)
     },
-    deleteSave : async (postId) => {
+    deleteSave: async (postId) => {
         return await apiInstance.delete(`${ROUTES.SAVEDPOST}/${postId}`)
+    },
+    postGroup: async (data) => {
+        return await apiInstance.post(`${ROUTES.GROUP}${ROUTES.POST}`, data)
     },
 }
 

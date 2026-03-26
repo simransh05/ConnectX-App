@@ -11,12 +11,14 @@ import style from './Notification.module.scss'
 import UserAvatar from '../../components/userAvatar/UserAvatar'
 import socket from '../../Socket/socket'
 import { NotificationStore } from '../../Zustand/Notification'
+import { useNavigate } from 'react-router-dom'
 
 function Notification() {
   useUserAvailable(`${ROUTES.NOTIFICATION}`);
   const { currentUser } = useContext(CurrentUserContext);
   const [notification, setNotification] = useState(null);
   const { notify, fetchNotification } = NotificationStore();
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchNotification(currentUser?._id)
@@ -71,7 +73,7 @@ function Notification() {
     }
   }
 
-  // console.log(notification)
+  console.log(notification)
   return (
     <>
       <Navbar />
@@ -87,8 +89,12 @@ function Notification() {
                       size={40}
                     />
                   </td>
-
                   <td>{getNotificationText(n)}</td>
+                  {n.type === 'follow' &&
+                    <td>
+                      <button className={style.profileView} onClick={() => navigate(`${ROUTES.PROFILE}/${n.userId}`)}>View Profile</button>
+                    </td>
+                  }
                   <td>{new Date(n.createdAt).toDateString()} {new Date(n?.createdAt).toTimeString()}</td>
                 </tr>
               ))}

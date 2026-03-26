@@ -46,7 +46,7 @@ function OneOneChat() {
     scroll.current?.scrollIntoView({ behavior: "smooth" });
   }, [chats])
 
-  // console.log(chats)
+  console.log(chats)
 
   useEffect(() => {
     if (!selectedUser) return;

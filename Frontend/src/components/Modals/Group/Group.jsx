@@ -5,7 +5,7 @@ import api from '../../../utils/api';
 import UserAvatar from '../../userAvatar/UserAvatar';
 import style from './Group.module.scss'
 
-function Group({ open, onClose }) {
+function Group({ open, onClose, onSuccess }) {
     const { currentUser } = useContext(CurrentUserContext);
     const [details, setDetails] = useState(null);
     const [groupName, setGroupName] = useState("");
@@ -24,7 +24,28 @@ function Group({ open, onClose }) {
         fetchFollow()
     }, [currentUser])
 
-    const handleGroup = () => {
+    const handleGroup = async () => {
+        if (!groupName) {
+            alert('group name required');
+            return;
+        }
+        if (members.size < 1) {
+            alert('atleast one member required')
+        }
+        const users = Array.from(members);
+        users.unshift(currentUser?._id);
+        console.log(users);
+        const data = {
+            admin: currentUser?._id,
+            members: users,
+            groupName
+        }
+        console.log(data)
+        const res = await api.postGroup(data);
+        if (res.status === 200) {
+            onSuccess(res.data)
+            onClose()
+        }
         // require name  + you  + alteast one more user added 
         // api for post of the group 
         // receive the group id then join all in that groupid 
@@ -47,6 +68,8 @@ function Group({ open, onClose }) {
             setMembers(prev => new Set([...prev, id]))
         }
     }
+
+    console.log(members)
 
     return (
         <Dialog open={open} onClose={onClose} sx={{ padding: '10px' }}>

@@ -15,7 +15,8 @@ const ROUTES = {
     COMMENT: '/comment',
     DELETE: '/delete',
     SAVE: '/save',
-    SAVEDPOST: '/saved-posts'
+    SAVEDPOST: '/saved-posts',
+    GROUP: '/group'
 }
 
 export default ROUTES;

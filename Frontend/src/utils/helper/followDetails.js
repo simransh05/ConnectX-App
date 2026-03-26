@@ -3,6 +3,7 @@ import api from "../api";
 
 const useFollowDetail = (userId) => {
     const [detail, setDetail] = useState(null);
+    console.log(userId)
 
     useEffect(() => {
         if (!userId) return;
