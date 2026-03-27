@@ -10,16 +10,28 @@ module.exports = (io) => {
             userMap.set(userId, socket.id)
             console.log('user connected', socket.id, socket.userId);
         })
-        socket.on('send', async ({ sender, receiver, msg, groupId }, callback) => {
+        socket.on('send', async ({ sender, receiver, msg, type }, callback) => {
             // console.log('send', sender, receiver, msg)
             // console.log('receive', receiverId);
-            const res = await Message.postMessage(sender, receiver, msg, groupId);
-            await Notification.deleteSocketNotify(receiver, sender, "message")
-            // console.log('socket', r)
-            // console.log('status', res?.status, res);
+            const res = await Message.postMessage(sender, receiver, msg, type);
+            console.log('sending', res)
+            if (type === 'individual') {
+                await Notification.deleteSocketNotify(receiver, sender, "message")
+            }
             if (res.status === 200) {
                 callback({ status: 200 })
             }
+
+            if (type === 'group') {
+                res.members.forEach(m => {
+                    const memberId = userMap.get(m.toString());
+                    io.to(memberId).emit('receive', { sender, receiver, msg, type })
+                })
+                return;
+            }
+
+            // console.log('socket', r)
+            // console.log('status', res?.status, res);
             const senderId = userMap.get(sender);
             // console.log('receiver' , receiver);
             io.to(senderId).emit('message-send', { receiver, type: "message" })

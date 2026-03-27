@@ -11,7 +11,10 @@ const messageSchema = new mongoose.Schema({
     },
     groupId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'Group'
+    },
+    defaultMessage: {
+        type: String
     },
     typeOfChat: {
         type: String,
@@ -21,10 +24,6 @@ const messageSchema = new mongoose.Schema({
     message: {
         type: String,
         require: true
-    },
-    seenAt: {
-        type: Date,
-        default: Date.now
     },
     deleteBy: [{
         type: mongoose.Schema.Types.ObjectId,

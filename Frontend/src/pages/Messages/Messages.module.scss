@@ -71,6 +71,16 @@
     background-color: #22c55e;
 }
 
+.groupIcon {
+    border: $border-black;
+    border-radius: $circle;
+    margin-left: 20px;
+    height: 45px;
+    width: 45px;
+    color: white;
+    background-color: black;
+}
+
 .userName {
     margin: $padding-md;
     cursor: pointer;

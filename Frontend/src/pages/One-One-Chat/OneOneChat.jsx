@@ -11,6 +11,7 @@ import { Menu, MenuItem } from '@mui/material';
 import Swal from 'sweetalert2';
 import { useParams } from 'react-router-dom';
 import { userStore } from '../../Zustand/AllUsers';
+import { MdGroups } from 'react-icons/md';
 
 function OneOneChat() {
   const { userId } = useParams()
@@ -24,17 +25,12 @@ function OneOneChat() {
   // get chat of that person
   useEffect(() => {
     if (prevUser != selectedUser) {
-      setMessage("")
-      // setChat(null);
+      setMessage("");
     }
     const fetchChat = async () => {
-      if (userId) {
-        const select = allUsers?.find(u => u._id === userId)
-        // console.log(allUsers, select)
-        setSelectedUser(select)
-      }
+
       if (selectedUser?._id && prevUser != selectedUser) {
-        const res = await api.getIndividualMessage(currentUser?._id, selectedUser?._id)
+        const res = await api.getIndividualMessage(currentUser?._id, selectedUser?._id, selectedUser?.type)
         // console.log(res.data)
         setChat(res.data);
       }
@@ -50,9 +46,16 @@ function OneOneChat() {
 
   useEffect(() => {
     if (!selectedUser) return;
-    socket.on('receive', ({ sender, reciever, msg }) => {
+    socket.on('receive', ({ sender, receiver, msg, type }) => {
       // console.log(sender, reciever, msg)
-      setChat(prev => [...prev, { sender, reciever, message: msg }])
+      if (selectedUser.type !== type) {
+        return;
+      }
+      if (selectedUser?.type === 'group') {
+        setChat(prev => [...prev, { sender, groupId: receiver, message: msg, typeOfChat: type }])
+      } else {
+        setChat(prev => [...prev, { sender, receiver, message: msg, typeOfChat: type }])
+      }
     })
     return () => {
       socket.off('receive');
@@ -68,14 +71,21 @@ function OneOneChat() {
   const handleClick = () => {
     // e.preventDefault();
     // socket
-    socket.emit('send', { sender: currentUser?._id, receiver: selectedUser?._id, msg: message }, (res) => {
+    socket.emit('send', { sender: currentUser?._id, receiver: selectedUser?._id, msg: message, type: selectedUser?.type }, (res) => {
       // if user is not online then add in notification
-      // console.log(res)
+      console.log(res)
       if (res.status === 200) {
-        setChat(prev => [...prev, { sender: currentUser?._id, receiver: selectedUser?._id, message }])
+        if (selectedUser?.type === 'group') {
+          console.log('here', currentUser?._id, selectedUser?._id, message, selectedUser.type)
+          setChat(prev => [...prev, { sender: currentUser?._id, groupId: selectedUser?._id, message, typeOfChat: selectedUser?.type }])
+        } else {
+          setChat(prev => [...prev, { sender: currentUser?._id, receiver: selectedUser?._id, message, typeOfChat: selectedUser?.type }])
+        }
       }
     });
-    socket.emit('send-notify', { sender: currentUser?._id, receiver: selectedUser?._id, type: "message" })
+    if (selectedUser?.type !== 'group') {
+      socket.emit('send-notify', { sender: currentUser?._id, receiver: selectedUser?._id, type: "message" })
+    }
     setMessage("");
   }
   const handleMenuClick = (event) => {
@@ -105,6 +115,20 @@ function OneOneChat() {
 
   }
 
+  const handleLeave = async () => {
+    const data = {
+      userId: currentUser?._id,
+      groupId: selectedUser?._id
+    }
+    const res = await api.leaveGroup(data);
+    if (res.status === 200) {
+      // socket send to all and update the group members 
+    }
+    // idea is api remove then update on all removed user
+  }
+
+  console.log(selectedUser)
+
   return (
     <>
       {/* right side with whom we are chatting onclick */}
@@ -113,40 +137,76 @@ function OneOneChat() {
       {userId ? (
         <>
           <div className={style["chat-header"]}>
-            <UserAvatar
-              user={selectedUser}
-              size={60}
-            />
-            <div>{selectedUser?.name}</div>
-            <div className={style.menuParent}>
+            {selectedUser?.type === 'group' ?
+              <>
+                <MdGroups className={style.groupIcon} />
+                <div className={style.memberNames}>
+                  {selectedUser.members.map(m => (
+                    <span key={m._id} className={style.members}>{m.name}</span>
+                  ))}
+                </div>
 
-              <CiMenuKebab
-                style={{
-                  fontSize: '14px'
-                }}
-                className={style.menuBtn}
-                onClick={handleMenuClick}
-              />
-              {/* menu */}
-              <Menu anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleClose} className={style.deleteBtn}>
-                <MenuItem onClick={handleDelete}>Delete Chat</MenuItem>
-                {/* add leave group option for the chat of group  */}
-              </Menu>
-            </div>
+                <CiMenuKebab
+                  style={{
+                    fontSize: '14px'
+                  }}
+                  className={style.menuBtn}
+                  onClick={handleMenuClick}
+                />
+                {/* menu */}
+                <Menu anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose} className={style.deleteBtn}>
+                  <MenuItem onClick={handleDelete}>Delete Chat</MenuItem>
+                  <MenuItem onClick={handleLeave}>Leave Group</MenuItem>
+                  {/* add leave group option for the chat of group  */}
+                </Menu>
+              </>
+              // avatar
+              // names
+              // menu with leave group
+              :
+              <>
+                <UserAvatar
+                  user={selectedUser}
+                  size={60}
+                />
+                <div>{selectedUser?.name}</div>
+                <div className={style.menuParent}>
 
+                  <CiMenuKebab
+                    style={{
+                      fontSize: '14px'
+                    }}
+                    className={style.menuBtn}
+                    onClick={handleMenuClick}
+                  />
+                  {/* menu */}
+                  <Menu anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose} className={style.deleteBtn}>
+                    <MenuItem onClick={handleDelete}>Delete Chat</MenuItem>
+                    {/* add leave group option for the chat of group  */}
+                  </Menu>
+                </div>
+              </>
+            }
           </div>
           <div className={style["chat-body"]}>
             {chats?.map((c, idx) => (
-              <div className={c.sender === currentUser?._id ? style.sender : style.receiver} key={idx}>{c.message}</div>
+              <div className={c.defaultMessage
+                ? style.defaultMessage
+                : c.sender === currentUser?._id
+                  ? style.sender
+                  : style.receiver
+              } key={idx}>{c.message ? c.message : c.defaultMessage}</div>
             ))}
             <div ref={scroll}></div>
             {/* space and data */}
           </div>
           <div className={style["chat-footer"]}>
             <input type="text" name='chat' className={style['input-field']} placeholder='Type a message' onChange={(e) => setMessage(e.target.value)} value={message} onKeyDown={handleEnter} />
-            {message.trim()!="" ? <button onClick={handleClick} className={style.buttonSend}>Send</button> : <button className={style.buttonSendDisabled} disabled>Send</button>}
+            {message.trim() != "" ? <button onClick={handleClick} className={style.buttonSend}>Send</button> : <button className={style.buttonSendDisabled} disabled>Send</button>}
           </div>
         </>
       ) : (

@@ -57,16 +57,25 @@ module.exports.formatComment = (comment) => {
     }
 }
 
-module.exports.formatChat = (user) => {
-    if (!user) return null;
-    return {
-        _id: user._id,
-        name: user.name,
-        profilePic: user.profilePic
-            ? `data:${user.fileType};base64,${user.profilePic.toString("base64")}`
-            : null
+module.exports.formatChat = (chat) => {
+    if (chat?.groupName) {
+        return {
+            _id: chat._id,
+            type: 'group',
+            groupName: chat.groupName,
+            members: chat.members, 
+        };
+    } else {
+        return {
+            _id: chat._id,
+            type: 'individual',
+            name: chat.name,
+            profilePic: chat?.profilePic
+                ? `data:${chat.fileType};base64,${chat.profilePic.toString("base64")}`
+                : null
+        };
     }
-}
+};
 
 module.exports.formatFollow = (data) => {
     const user = data?.following?.name ? data?.following : data?.follower;

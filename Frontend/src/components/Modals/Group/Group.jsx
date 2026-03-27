@@ -38,7 +38,8 @@ function Group({ open, onClose, onSuccess }) {
         const data = {
             admin: currentUser?._id,
             members: users,
-            groupName
+            groupName,
+            defaultMessage: 'Group Created'
         }
         console.log(data)
         const res = await api.postGroup(data);
