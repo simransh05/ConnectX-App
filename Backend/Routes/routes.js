@@ -71,9 +71,11 @@ router.get('/notification/:userId', notification.getNotification);
 
 router.post('/notification/delete/:userId', notification.deleteNotify)
 
-router.get('/chats/individual/:user1/:user2', message.getIndividualMessage);
+router.get('/chats/individual/:user1/:user2/:type', message.getIndividualMessage);
 
-router.post('/group/post', message.postGroup)
+router.post('/group/post', message.postGroup);
+
+router.put('/group', message.leaveGroup);
 
 router.get('/chats/:userId', message.getMessages);
 

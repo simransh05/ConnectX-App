@@ -11,6 +11,7 @@ import UserAvatar from '../../components/userAvatar/UserAvatar'
 import { useNavigate, useParams } from 'react-router-dom'
 import { userStore } from '../../Zustand/AllUsers'
 import socket from '../../Socket/socket'
+import { MdGroups } from "react-icons/md";
 import { Divider } from '@mui/material'
 import Group from '../../components/Modals/Group/Group'
 
@@ -28,7 +29,7 @@ function Messages() {
   }
 
   const { currentUser } = useContext(CurrentUserContext);
-  const { setSelectedUser, setPrevUser, prevUser } = useContext(SelectedUserContext);
+  const { selectedUser, setSelectedUser, setPrevUser, prevUser } = useContext(SelectedUserContext);
   const [myChats, setMyChats] = useState(null);
   useEffect(() => {
     const fetchMyChatUsers = async () => {
@@ -50,9 +51,9 @@ function Messages() {
     if (prevUser === null) {
       setPrevUser(c);
     } else {
-      const prev = allUsers.find(u => u._id === userId)
-      setPrevUser(prev);
+      setPrevUser(selectedUser);
     }
+    console.log(c)
     setSelectedUser(c);
     navigate(`${ROUTES.MESSAGES}/${c?._id}`)
   }
@@ -107,7 +108,7 @@ function Messages() {
     const { value } = e.target;
     setSearch(value);
     const lower = value.toLowerCase();
-    const result = myChats.filter(c => c.name.toLowerCase().includes(lower));
+    const result = myChats.filter(c => c.name.toLowerCase().includes(lower) || c.groupName.toLowerCase().includes(lower));
     setSearchResult(result);
     // my chat filter
   }
@@ -173,8 +174,17 @@ function Messages() {
                   onClick={() => handleClick(c)}
                   key={c?._id}
                 >
-                  <UserAvatar user={c} size={50} />
-                  <div>{c?.name}</div>
+                  {c.type === 'group' ?
+                    <>
+                      <MdGroups className={style.groupIcon} />
+                      <div>{c.groupName}</div>
+                    </>
+                    :
+                    <>
+                      <UserAvatar user={c} size={50} />
+                      <div>{c?.name}</div>
+                    </>}
+
                 </div>
               ))}
 

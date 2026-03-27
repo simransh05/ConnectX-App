@@ -23,8 +23,8 @@ const api = {
     getNotification: async (userId) => {
         return await apiInstance.get(`${ROUTES.NOTIFICATION}/${userId}`)
     },
-    getIndividualMessage: async (user1, user2) => {
-        return await apiInstance.get(`${ROUTES.MESSAGES}${ROUTES.INDIVIDUAL}/${user1}/${user2}`)
+    getIndividualMessage: async (user1, user2, type) => {
+        return await apiInstance.get(`${ROUTES.MESSAGES}${ROUTES.INDIVIDUAL}/${user1}/${user2}/${type}`)
     },
     getMessages: async (userId) => {
         return await apiInstance.get(`${ROUTES.MESSAGES}/${userId}`)
@@ -74,6 +74,9 @@ const api = {
     postGroup: async (data) => {
         return await apiInstance.post(`${ROUTES.GROUP}${ROUTES.POST}`, data)
     },
+    leaveGroup: async (data) => {
+        return await apiInstance.put(`${ROUTES.GROUP}`, data)
+    }
 }
 
 export default api

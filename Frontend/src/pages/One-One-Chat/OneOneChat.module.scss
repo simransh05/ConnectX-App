@@ -64,6 +64,43 @@
     color: black;
 }
 
+.memberNames {
+    margin-left: $padding-md;
+    justify-content: flex-start;
+}
+
+.members {
+    gap: $padding-md;
+    margin: 5px;
+
+    &::after {
+        content: ',';
+    }
+
+    &:last-child::after {
+        content: '';
+    }
+}
+
+.groupIcon {
+    border: $border-black;
+    border-radius: $circle;
+    margin-left: 20px;
+    height: 50px;
+    width: 50px;
+    color: white;
+    background-color: black;
+}
+
+.defaultMessage {
+    margin: 0 auto;
+    color: black;
+    background-color: orange;
+    border-radius: $padding-md;
+    padding: $padding-md;
+    margin-top: $padding-md;
+}
+
 .chat-footer {
     height: 10%;
     border: $border-black;

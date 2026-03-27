@@ -36,7 +36,7 @@ function Navbar() {
 
   }, [loading, notify, currentUser])
 
-  // console.log(currentUser)
+  console.log(allUsers)
 
   const handleChange = (e) => {
     const value = e.target.value;
