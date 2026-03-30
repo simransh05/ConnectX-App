@@ -49,7 +49,14 @@ function OthersProfile() {
             navigate(ROUTES.LOGIN);
             return;
         }
-        setSelectedUser(userInfo);
+        const data = {
+            _id: userInfo?._id,
+            type: 'individual',
+            name: userInfo?.name,
+            profilePic: userInfo?.profilePic
+        }
+        console.log(data)
+        setSelectedUser(data);
         // console.log(`${ROUTES.MESSAGES}/${userInfo._id}`)
         // set select user is this user and navigate to chat page
         navigate(`${ROUTES.MESSAGES}/${userInfo._id}`)
@@ -96,7 +103,7 @@ function OthersProfile() {
         console.log(alreadyFollow, detail)
         if (alreadyFollow) {
             setIsFollow(true);
-        }else {
+        } else {
             setIsFollow(false)
         }
     }, [detail, userId])

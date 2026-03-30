@@ -32,6 +32,9 @@ function Notification() {
       case "comment":
         return `${n.name} commented on your post`;
 
+      case "group":
+        return `${n.name} created a group`;
+
       case "follow":
         return `${n.name} started following you`;
 

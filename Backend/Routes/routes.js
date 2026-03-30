@@ -79,7 +79,7 @@ router.put('/group', message.leaveGroup);
 
 router.get('/chats/:userId', message.getMessages);
 
-router.post('/chats/delete/:userId/:other', message.deleteChat)
+router.post('/chats/delete/:userId/:other/:type', message.deleteChat)
 
 router.get('/follow/:userId', follow.getFollow);
 

@@ -11,7 +11,12 @@
     border-radius: $padding-md;
     padding: $padding-md;
     border: $border-black;
-    width: 94%;
+    width: 92%;
+}
+
+.nameOfChat {
+    width: 50%;
+    overflow-wrap: break-word;
 }
 
 .left-mobile,
@@ -31,10 +36,6 @@
 .noChats {
     @include flex-center;
     margin-top: $padding-md;
-}
-
-.inputContainer {
-    position: relative;
 }
 
 .searchContainer {
@@ -59,9 +60,9 @@
 
 
 .createGrp {
-    position: absolute;
-    bottom: 5%;
-    right: 5%;
+    position: fixed;
+    bottom: 30px;
+    left: 15%;
     border-radius: $circle;
     border: $border-black;
     padding: $padding-md 0;
@@ -124,6 +125,10 @@
         border-top: 0;
         border-radius: $padding-md;
         margin: 0 auto;
+    }
+
+    .createGrp {
+        left: 60%;
     }
 
     .right-mobile {

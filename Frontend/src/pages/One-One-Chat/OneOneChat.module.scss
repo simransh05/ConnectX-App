@@ -82,6 +82,15 @@
     }
 }
 
+.groupInfo {
+    display: flex;
+
+    div {
+        margin: auto 0;
+        margin-left: $padding-md;
+    }
+}
+
 .groupIcon {
     border: $border-black;
     border-radius: $circle;

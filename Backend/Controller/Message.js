@@ -34,7 +34,7 @@ module.exports.getMessages = async (req, res) => {
 
         messages.forEach(m => {
             if (m.typeOfChat === 'individual') {
-                console.log('m', m);
+                // console.log('m', m);
                 if (m.sender._id.toString() !== userId) {
                     usersMap.set(m.sender._id.toString(), m.sender);
                 }
@@ -58,7 +58,7 @@ module.exports.getMessages = async (req, res) => {
         });
 
         const users = Array.from(usersMap.values());
-        console.log('users', users)
+        // console.log('users', users)
 
         if (!messages) {
             return res.status(200).json([]);
@@ -73,24 +73,47 @@ module.exports.getMessages = async (req, res) => {
 }
 
 module.exports.deleteChat = async (req, res) => {
-    const { userId, other } = req.params;
+    const { userId, other, type } = req.params;
     try {
-        await Message.updateMany(
-            {
-                $or: [
-                    { sender: userId, receiver: other },
-                    { sender: other, receiver: userId }
-                ]
-            },
-            {
-                $addToSet: { deleteBy: userId }
-            }
-        )
-        await Message.deleteMany(
-            {
-                deleteBy: [userId, other]
-            },
-        )
+        if (type === 'group') {
+            const chats = await Message.updateMany(
+                {
+                    groupId: other,
+                    defaultMessage: { $exists: false }
+                },
+                {
+                    $addToSet: { deleteBy: userId }
+                }
+            )
+            const group = await Group.findById(other);
+            const totalMembers = group.members.length;
+            await Message.deleteMany({
+                groupId: other,
+                $expr: {
+                    $eq: [
+                        { $size: "$deleteBy" },
+                        totalMembers
+                    ]
+                }
+            });
+        } else {
+            await Message.updateMany(
+                {
+                    $or: [
+                        { sender: userId, receiver: other },
+                        { sender: other, receiver: userId }
+                    ]
+                },
+                {
+                    $addToSet: { deleteBy: userId }
+                }
+            )
+            await Message.deleteMany(
+                {
+                    deleteBy: [userId, other]
+                },
+            )
+        }
         return res.status(200).json({ message: 'Success' })
     } catch (err) {
         return res.status(500).json({ message: err.message })
@@ -114,7 +137,7 @@ module.exports.getIndividualMessage = async (req, res) => {
             })
                 .sort({ sendAt: 1 });
         }
-        console.log('messages', messages)
+        // console.log('messages', messages)
         const filterMessage = messages.filter(m => !m.deleteBy.includes(user1));
         // console.log(filterMessage)
         if (!messages) {
@@ -155,7 +178,7 @@ module.exports.postMessage = async (sender, receiver, msg, type) => {
 
 module.exports.postGroup = async (req, res) => {
     const { groupName, members, admin, defaultMessage } = req.body;
-    console.log('body', req.body)
+    // console.log('body', req.body)
     try {
         if (!groupName || !members || !admin) {
             return res.status(404).json({ message: 'All Fields Required' })
@@ -172,6 +195,7 @@ module.exports.postGroup = async (req, res) => {
             groupId: group._id,
             typeOfChat: 'group'
         })
+        await group.populate('members', '_id name')
 
         console.log('group', group)
         return res.status(200).json(group)

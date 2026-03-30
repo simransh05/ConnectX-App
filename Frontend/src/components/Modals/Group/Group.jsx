@@ -1,9 +1,10 @@
-import { Dialog, Modal, TextField } from '@mui/material'
+import { Dialog, Divider, Modal, TextField } from '@mui/material'
 import React, { useContext, useEffect, useState } from 'react'
 import { CurrentUserContext } from '../../../Context/currentUserProvider'
 import api from '../../../utils/api';
 import UserAvatar from '../../userAvatar/UserAvatar';
 import style from './Group.module.scss'
+import Swal from 'sweetalert2';
 
 function Group({ open, onClose, onSuccess }) {
     const { currentUser } = useContext(CurrentUserContext);
@@ -44,8 +45,8 @@ function Group({ open, onClose, onSuccess }) {
         console.log(data)
         const res = await api.postGroup(data);
         if (res.status === 200) {
-            onSuccess(res.data)
             onClose()
+            onSuccess(res.data)
         }
         // require name  + you  + alteast one more user added 
         // api for post of the group 
@@ -65,15 +66,16 @@ function Group({ open, onClose, onSuccess }) {
                     old.delete(id);
                     return old;
                 })
+            } else {
+                setMembers(prev => new Set([...prev, id]))
             }
-            setMembers(prev => new Set([...prev, id]))
         }
     }
 
     console.log(members)
 
     return (
-        <Dialog open={open} onClose={onClose} sx={{ padding: '10px' }}>
+        <Dialog open={open} onClose={onClose} className={style.groupContainer}>
             <TextField
                 name='groupName'
                 onChange={(e) => setGroupName(e.target.value)}
@@ -92,15 +94,16 @@ function Group({ open, onClose, onSuccess }) {
                                         size={40}
                                     />
                                     <div className={style.usernameGroup}>{d.name}</div>
+                                    <Divider />
                                 </div>
 
-                                {members.has(d.userId) ? <button onClick={() => handleAdd(d.userId)}>Remove</button> : <button onClick={() => handleAdd(d.userId)}>Add</button>}
+                                {members.has(d.userId) ? <button onClick={() => handleAdd(d.userId)} className={style.removeMember}>Remove</button> : <button onClick={() => handleAdd(d.userId)} className={style.addMember}>Add</button>}
                             </div>
                         ))}
                         {members.size > 0 && members.forEach(m => {
                             <span></span>
                         })}
-                        <button onClick={handleGroup}>Create Group</button>
+                        <button onClick={handleGroup} className={style.createGroup}>Create Group</button>
                     </>
                 )
                 :
