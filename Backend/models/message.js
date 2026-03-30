@@ -22,8 +22,7 @@ const messageSchema = new mongoose.Schema({
         default: 'individual'
     },
     message: {
-        type: String,
-        require: true
+        type: String
     },
     deleteBy: [{
         type: mongoose.Schema.Types.ObjectId,

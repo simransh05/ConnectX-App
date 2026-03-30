@@ -22,15 +22,16 @@ function Messages() {
   const [search, setSearch] = useState('');
   const [groupModal, setGroupModal] = useState(false);
   const [searchResult, setSearchResult] = useState(null);
+  const { currentUser } = useContext(CurrentUserContext);
+  const { selectedUser, setSelectedUser, setPrevUser, prevUser } = useContext(SelectedUserContext);
+  const [myChats, setMyChats] = useState(null);
+
   if (userId) {
     useUserAvailable(`${ROUTES.MESSAGES}/${userId}`)
   } else {
     useUserAvailable(`${ROUTES.MESSAGES}`)
   }
 
-  const { currentUser } = useContext(CurrentUserContext);
-  const { selectedUser, setSelectedUser, setPrevUser, prevUser } = useContext(SelectedUserContext);
-  const [myChats, setMyChats] = useState(null);
   useEffect(() => {
     const fetchMyChatUsers = async () => {
       if (currentUser) {
@@ -42,48 +43,55 @@ function Messages() {
     fetchMyChatUsers();
   }, [currentUser])
 
+  useEffect(() => {
+    if (userId) {
+      const select = myChats?.find(c => c._id === userId);
+      console.log(select)
+      if (select) {
+        setSelectedUser(select)
+      }
+    }
+  }, [userId, myChats])
+
   // console.log(userId);
 
   const handleClick = (c) => {
     if (search.trim()) {
       setSearch("")
     }
-    if (prevUser === null) {
-      setPrevUser(c);
-    } else {
-      setPrevUser(selectedUser);
-    }
+
+    setPrevUser(selectedUser);
+
     console.log(c)
     setSelectedUser(c);
     navigate(`${ROUTES.MESSAGES}/${c?._id}`)
   }
 
-  const updateChatList = (userId, isGroup) => {
+  const updateChatList = (data, isGroup) => {
+    console.log(data, isGroup);
     setMyChats(prev => {
       if (!prev) prev = [];
+
+      let formatted;
+
       if (isGroup) {
-        const filtered = prev.filter(c => c._id !== chatData._id);
-
-        return [
-          chatData,
-          ...filtered
-        ];
+        formatted = data;
+      } else {
+        const otherInfo = allUsers?.find(u => u._id === data);
+        // if (!otherInfo) return prev;
+        console.log(otherInfo);
+        formatted = {
+          _id: otherInfo?._id,
+          type: 'individual',
+          name: otherInfo?.name,
+          profilePic: otherInfo.profilePic
+        };
       }
-      const otherInfo = allUsers?.find(u => u._id === userId);
-      // console.log(otherInfo)
-      if (!otherInfo) return prev;
+      console.log(formatted);
 
-      const filtered = prev?.filter(c => c._id !== userId);
-      // console.log(filtered)
-
-      return [
-        {
-          _id: otherInfo._id,
-          name: otherInfo.name,
-          profilePic: otherInfo.profilePic,
-        },
-        ...filtered,
-      ];
+      const filtered = prev.filter(c => c._id !== formatted._id);
+      console.log(filtered)
+      return [formatted, ...filtered];
     });
   };
   useEffect(() => {
@@ -91,11 +99,20 @@ function Messages() {
       updateChatList(receiver)
     })
     socket.on('receive', ({ sender }) => {
-      updateChatList(sender)
+      if (sender != currentUser?._id) {
+        updateChatList(sender)
+      }
     })
-    socket.on('receive-notify', (data) => {
-      if (data.type === 'group' && data.status === 'add')
-        updateChatList(data.groupId, true)
+    socket.on('receiver-notify', ({ receiver, groupId, type, groupName }) => {
+      const data = {
+        _id: groupId,
+        type,
+        members: receiver,
+        groupName
+      }
+      if (type === 'group') {
+        updateChatList(data, true)
+      }
     })
 
     return () => {
@@ -104,6 +121,7 @@ function Messages() {
       socket.off('receiver-notify')
     }
   }, [])
+
   const handleChange = (e) => {
     const { value } = e.target;
     setSearch(value);
@@ -118,13 +136,20 @@ function Messages() {
       sender: data.admin,
       receiver: data.members,
       groupId: data._id,
+      name: data.groupName,
       groupName: data.groupName,
       type: "group",
       status: "add"
     });
-    // data have group amdin member list and then name of group 
-    // socket send message to all that this admin created a group 
-    // navigate to the chat of the groupId
+    const info = {
+      _id: data._id,
+      type: "group",
+      groupName: data.groupName,
+      members: data.members
+    }
+    console.log(info)
+    setMyChats(prev => [info, ...prev])
+    setSelectedUser(info)
     navigate(`/chats/${data._id}`);
   }
 
@@ -177,30 +202,29 @@ function Messages() {
                   {c.type === 'group' ?
                     <>
                       <MdGroups className={style.groupIcon} />
-                      <div>{c.groupName}</div>
+                      <div className={style.nameOfChat}>{c.groupName}</div>
                     </>
                     :
                     <>
                       <UserAvatar user={c} size={50} />
-                      <div>{c?.name}</div>
+                      <div className={style.nameOfChat}>{c?.name}</div>
                     </>}
 
                 </div>
               ))}
 
-              <button className={style.createGrp} onClick={() => setGroupModal(true)}>Create Group</button>
-              {groupModal &&
-                <Group
-                  open={groupModal}
-                  onClose={() => setGroupModal(false)}
-                  onSuccess={(data) => handleSuccess(data)}
-                />
-              }
             </div>
           ) : (
             <div className={style.noChats}>No Chats</div>
           )}
-
+          <button className={style.createGrp} onClick={() => setGroupModal(true)}>Create Group</button>
+          {groupModal &&
+            <Group
+              open={groupModal}
+              onClose={() => setGroupModal(false)}
+              onSuccess={(data) => handleSuccess(data)}
+            />
+          }
         </div>
 
         <div className={userId ? style["right-mobile"] : style["right-side"]}>

@@ -28,8 +28,9 @@ function OneOneChat() {
       setMessage("");
     }
     const fetchChat = async () => {
-
+      // console.log(selectedUser?._id, prevUser, selectedUser)
       if (selectedUser?._id && prevUser != selectedUser) {
+        // console.log(currentUser?._id, selectedUser?._id, selectedUser?.type)
         const res = await api.getIndividualMessage(currentUser?._id, selectedUser?._id, selectedUser?.type)
         // console.log(res.data)
         setChat(res.data);
@@ -42,7 +43,7 @@ function OneOneChat() {
     scroll.current?.scrollIntoView({ behavior: "smooth" });
   }, [chats])
 
-  console.log(chats)
+  // console.log(chats)
 
   useEffect(() => {
     if (!selectedUser) return;
@@ -73,10 +74,10 @@ function OneOneChat() {
     // socket
     socket.emit('send', { sender: currentUser?._id, receiver: selectedUser?._id, msg: message, type: selectedUser?.type }, (res) => {
       // if user is not online then add in notification
-      console.log(res)
+      // console.log(res)
       if (res.status === 200) {
         if (selectedUser?.type === 'group') {
-          console.log('here', currentUser?._id, selectedUser?._id, message, selectedUser.type)
+          // console.log('here', currentUser?._id, selectedUser?._id, message, selectedUser.type)
           setChat(prev => [...prev, { sender: currentUser?._id, groupId: selectedUser?._id, message, typeOfChat: selectedUser?.type }])
         } else {
           setChat(prev => [...prev, { sender: currentUser?._id, receiver: selectedUser?._id, message, typeOfChat: selectedUser?.type }])
@@ -107,7 +108,7 @@ function OneOneChat() {
       cancelButtonText: 'No'
     })
     if (result.isConfirmed) {
-      const res = await api.deleteChat(currentUser?._id, userId);
+      const res = await api.deleteChat(currentUser?._id, userId, selectedUser?.type);
       if (res.status === 200) {
         setChat(null);
       }
@@ -127,7 +128,7 @@ function OneOneChat() {
     // idea is api remove then update on all removed user
   }
 
-  console.log(selectedUser)
+  // console.log('select',selectedUser)
 
   return (
     <>
@@ -139,7 +140,10 @@ function OneOneChat() {
           <div className={style["chat-header"]}>
             {selectedUser?.type === 'group' ?
               <>
-                <MdGroups className={style.groupIcon} />
+                <div className={style.groupInfo}>
+                  <MdGroups className={style.groupIcon} />
+                  <div>{selectedUser?.groupName}</div>
+                </div>
                 <div className={style.memberNames}>
                   {selectedUser.members.map(m => (
                     <span key={m._id} className={style.members}>{m.name}</span>

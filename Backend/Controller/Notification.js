@@ -15,18 +15,38 @@ module.exports.getNotification = async (req, res) => {
     }
 }
 
-module.exports.postNotification = async (sender, receiver, type, postId) => {
-    // idea to add this for the currentuser is the sender and the reciever is who's post or whom 
+module.exports.postNotification = async (sender, receiver, type, postId, groupId) => {
     try {
         let notify;
+
         if (type === 'post') {
-            notify = await Notification.create(
+            notify = await Notification.create({
                 sender,
                 receiver,
                 type,
-            )
+                postId
+            });
+
+        } else if (type === 'group') {
+            const check = await Notification.findOne({
+                groupId,
+                sender,
+                type: 'group'
+            });
+
+            if (!check) {
+                notify = await Notification.create({
+                    sender,
+                    receiver,
+                    type: 'group',
+                    groupId
+                });
+            } else {
+                notify = check;
+            }
+
         } else {
-            notify = await Notification.updateOne(
+            notify = await Notification.findOneAndUpdate(
                 {
                     sender,
                     receiver,
@@ -34,17 +54,19 @@ module.exports.postNotification = async (sender, receiver, type, postId) => {
                     postId: postId || null
                 },
                 {
-                    createdAt: Date.now()
+                    $set: { createdAt: Date.now() }
                 },
-                { upsert: true, returnDocument: "after" }
-            )
+                { upsert: true, new: true }
+            );
         }
 
         return { notify, status: 200 };
+
     } catch (err) {
-        console.error(err.message)
+        console.error(err.message);
+        return { status: 500 };
     }
-}
+};
 
 module.exports.deleteNotify = async (req, res) => {
     const { userId } = req.params;

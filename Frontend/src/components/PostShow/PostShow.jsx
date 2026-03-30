@@ -228,7 +228,7 @@ function PostShow({ posts, loading, isProfile }) {
         navigate(`${ROUTES.PROFILE}/${userId}`)
     }
 
-    console.log(posts)
+    // console.log(posts)
     return (
         <div className={style.postContainer}>
             {post?.length > 0 ? (

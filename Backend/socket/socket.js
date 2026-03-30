@@ -14,7 +14,7 @@ module.exports = (io) => {
             // console.log('send', sender, receiver, msg)
             // console.log('receive', receiverId);
             const res = await Message.postMessage(sender, receiver, msg, type);
-            console.log('sending', res)
+            // console.log('sending', res)
             if (type === 'individual') {
                 await Notification.deleteSocketNotify(receiver, sender, "message")
             }
@@ -39,14 +39,14 @@ module.exports = (io) => {
             io.to(receiverId).emit('receive', { sender, receiver, msg })
         })
 
-        socket.on('send-notify', async ({ sender, receiver, type, postId, status }, callback) => {
+        socket.on('send-notify', async ({ sender, receiver, type, postId, status, groupId, groupName }, callback) => {
             const receiverId = userMap.get(receiver);
             if (status === 'remove' && type != 'post' && sender != receiver) {
                 await Notification.deleteSocketNotify(sender, receiver, type, postId || null);
             } else if (status === 'add' && type != 'post' && sender != receiver) {
                 await Notification.postNotification(sender, receiver, type, postId || null);
             }
-            console.log('socket', sender, receiver)
+            // console.log('socket', sender, receiver)
             if (type === 'follow') {
                 if (status === 'remove') {
                     await Follow.removeFollow(sender, receiver);
@@ -56,28 +56,32 @@ module.exports = (io) => {
             } else if (type === "group") {
 
                 for (let m of receiver) {
-
-                    if (m === sender) continue;
+                    console.log('m', m)
+                    if (m._id === sender) continue;
 
                     await Notification.postNotification(
                         sender,
-                        m,
-                        "group"
+                        m._id,
+                        "group",
+                        null,
+                        groupId
                     );
 
-                    const memberSocket = userMap.get(m);
+                    const memberSocket = userMap.get(m._id);
+                    console.log('socket', memberSocket)
 
                     if (memberSocket) {
                         io.to(memberSocket).emit("receiver-notify", {
                             sender,
-                            receiver: m,
-                            type: "group-chat",
+                            receiver,
+                            type,
                             groupId,
                             groupName,
                             status
                         });
                     }
-                } return;
+                }
+                return;
             }
             else if (type === 'like') {
                 if (status === 'remove') {

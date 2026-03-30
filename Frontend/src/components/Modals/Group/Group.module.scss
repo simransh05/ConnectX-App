@@ -1,9 +1,40 @@
 @use '../../../Style/variables' as *;
 @use '../../../Style/mixins' as *;
 
+.groupContainer .MuiPaper-root {
+    padding: $padding-md
+}
+
 .groupInd {
     @include flex-justify;
     margin: $padding-md ;
+}
+
+.addMember {
+    border-radius: $padding-md;
+    color: white;
+    background-color: blue;
+    border: none;
+    padding: $padding-md;
+}
+
+.removeMember {
+    border-radius: $padding-md;
+    color: white;
+    background-color: red;
+    border: none;
+    padding: $padding-md;
+}
+
+.createGroup {
+    width: 80%;
+    margin: 0 auto;
+    color: white;
+    background-color: blueviolet;
+    padding: $padding-md;
+    border: none;
+    border-radius: $padding-md;
+    margin-bottom: $padding-md;
 }
 
 .userInfoGroup {

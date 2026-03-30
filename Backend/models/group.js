@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const groupSchema = new mongoose.Schema({
     groupName: {
         type: String,
-        require: true
+        required: true
     },
     members: [{
         type: mongoose.Schema.Types.ObjectId,
