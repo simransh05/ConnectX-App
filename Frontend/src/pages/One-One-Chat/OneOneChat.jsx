@@ -12,13 +12,15 @@ import Swal from 'sweetalert2';
 import { useParams } from 'react-router-dom';
 import { userStore } from '../../Zustand/AllUsers';
 import { MdGroups } from 'react-icons/md';
+import AddMember from '../../components/Modals/AddMember/AddMember';
 
 function OneOneChat() {
   const { userId } = useParams()
   const { allUsers } = userStore()
   const [chats, setChat] = useState(null);
+  const [showMember, setShowMember] = useState(false);
   const { currentUser } = useContext(CurrentUserContext);
-  const { selectedUser, setSelectedUser, prevUser } = useContext(SelectedUserContext);
+  const { selectedUser, setSelectedUser, prevUser, setPrevUser } = useContext(SelectedUserContext);
   const [message, setMessage] = useState("");
   const scroll = useRef(null);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -123,7 +125,8 @@ function OneOneChat() {
     }
     const res = await api.leaveGroup(data);
     if (res.status === 200) {
-      // socket send to all and update the group members 
+      setSelectedUser(null);
+      setPrevUser(null)
     }
     // idea is api remove then update on all removed user
   }
@@ -163,8 +166,16 @@ function OneOneChat() {
                   onClose={handleClose} className={style.deleteBtn}>
                   <MenuItem onClick={handleDelete}>Delete Chat</MenuItem>
                   <MenuItem onClick={handleLeave}>Leave Group</MenuItem>
+                  <MenuItem onClick={() => setShowMember(true)}>Add Member</MenuItem>
                   {/* add leave group option for the chat of group  */}
                 </Menu>
+                {showMember &&
+                  <AddMember
+                    open={() => setShowMember(true)}
+                    onClose={() => setShowMember(false)}
+                    members={selectedUser?.members}
+                  />
+                }
               </>
               // avatar
               // names

@@ -11,6 +11,7 @@ function Group({ open, onClose, onSuccess }) {
     const [details, setDetails] = useState(null);
     const [groupName, setGroupName] = useState("");
     const [members, setMembers] = useState(new Set())
+    const [memberList, setMemberList] = useState([]);
     useEffect(() => {
         const fetchFollow = async () => {
             const res = await api.getFollow(currentUser?._id);
@@ -55,11 +56,14 @@ function Group({ open, onClose, onSuccess }) {
         // logic change for the format of chat
     }
 
-    const handleAdd = (id) => {
+    const handleAdd = (id, name) => {
         if (members.size > 19) {
             alert('Only 20 members allowed')
         } else {
             if (members.has(id)) {
+                setMemberList(prev => {
+                    return prev?.filter(p => p.id !== id)
+                })
                 // remove
                 setMembers(prev => {
                     const old = new Set(prev);
@@ -67,15 +71,23 @@ function Group({ open, onClose, onSuccess }) {
                     return old;
                 })
             } else {
+                setMemberList(prev => [...prev, { id, name }])
                 setMembers(prev => new Set([...prev, id]))
             }
         }
     }
 
-    console.log(members)
+    console.log(memberList)
 
     return (
-        <Dialog open={open} onClose={onClose} className={style.groupContainer}>
+        <Dialog open={open} onClose={onClose}
+            PaperProps={{
+                sx: {
+                    padding: '20px',
+                    width: '250px'
+                }
+            }}
+            className={style.groupContainer}>
             <TextField
                 name='groupName'
                 onChange={(e) => setGroupName(e.target.value)}
@@ -87,27 +99,36 @@ function Group({ open, onClose, onSuccess }) {
                 (
                     <>
                         {details.map(d => (
-                            <div key={d._id} className={style.groupInd}>
-                                <div className={style.userInfoGroup}>
-                                    <UserAvatar
-                                        user={d}
-                                        size={40}
-                                    />
-                                    <div className={style.usernameGroup}>{d.name}</div>
-                                    <Divider />
-                                </div>
+                            <div key={d._id}>
+                                <div className={style.groupInd}>
+                                    <div className={style.userInfoGroup}>
+                                        <UserAvatar
+                                            user={d}
+                                            size={40}
+                                        />
+                                        <div className={style.usernameGroup}>{d.name}</div>
+                                    </div>
 
-                                {members.has(d.userId) ? <button onClick={() => handleAdd(d.userId)} className={style.removeMember}>Remove</button> : <button onClick={() => handleAdd(d.userId)} className={style.addMember}>Add</button>}
+                                    {members.has(d.userId) ? <button onClick={() => handleAdd(d.userId, d.name)} className={style.removeMember}>Remove</button> : <button onClick={() => handleAdd(d.userId, d.name)} className={style.addMember}>Add</button>}
+
+                                </div>
+                                <Divider />
                             </div>
                         ))}
-                        {members.size > 0 && members.forEach(m => {
-                            <span></span>
-                        })}
+                        {memberList.length > 0 &&
+                            <div className={style.memberContainer}>
+                                <div>Selected:- </div>
+                                {memberList.length > 0 && memberList.map(m => (
+                                    <div key={m.id} className={style.memberList}>{m.name}</div>
+                                ))}
+                            </div>
+                        }
+
                         <button onClick={handleGroup} className={style.createGroup}>Create Group</button>
                     </>
                 )
                 :
-                <div>No User Available</div>
+                <div className={style.noUserPresent}>No User Available</div>
             }
         </Dialog >
     )

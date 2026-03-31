@@ -20,28 +20,55 @@ function Follow({ open, onClose, data, type }) {
         navigate(`${ROUTES.PROFILE}/${userId}`)
     }
     return (
-        <Drawer open={open} onClose={onClose} anchor='right' PaperProps={{
-            sx: {
-                width: '250px',
-                height: '100vh',
-                borderTopLeftRadius: '10px',
-                borderBottomLeftRadius: '10px'
-            }
-        }}>
-            <div className={style.headFollow}>{formatName(type)}</div>
-            <Divider />
-            {data?.length > 0 ? data?.map((d, idx) => (
-                <div key={idx} className={style.indFollow} onClick={() => handleUser(d.userId)}>
-                    <UserAvatar
-                        user={d}
-                        size={70}
-                    />
-                    <div className={style.username}>{d?.name}</div>
-                    <Divider />
-                </div>
-            )) :
-                <div className={style.noFollow}>No {type}</div>
-            }
+        <Drawer
+            open={open}
+            onClose={onClose}
+            anchor="right"
+            PaperProps={{
+                sx: {
+                    width: "250px",
+                    height: "100vh",
+                    borderTopLeftRadius: "10px",
+                    borderBottomLeftRadius: "10px",
+                },
+            }}
+        >
+            <table>
+                <thead>
+                    <tr>
+                        <th colSpan="3" className={style.headFollow}>{formatName(type)}</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {data?.length > 0 ? (
+                        data.map((d, idx) => (
+                            <tr key={idx} className={style.indFollow}>
+                                <td>
+                                    <UserAvatar user={d} size={60} />
+                                </td>
+
+                                <td className={style.username}>{d?.name}</td>
+
+                                <td className={style.btnView}>
+                                    <button
+                                        onClick={() => handleUser(d.userId)}
+                                        className={style.viewProfile}
+                                    >
+                                        View Profile
+                                    </button>
+                                </td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="3" className={style.noFollow}>
+                                No {type}
+                            </td>
+                        </tr>
+                    )}
+                </tbody>
+            </table>
         </Drawer>
     )
 }

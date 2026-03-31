@@ -2,12 +2,22 @@
 @use '../../../Style/mixins' as *;
 
 .groupContainer .MuiPaper-root {
-    padding: $padding-md
+    padding: $padding-md;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 }
 
 .groupInd {
-    @include flex-justify;
-    margin: $padding-md ;
+    @include space-flex;
+    display: flex;
+    justify-content: space-between;
+    margin: $padding-md;
+    height: 40px;
+}
+
+.noUserPresent {
+    margin: 20px auto;
+    margin-bottom: 0;
+
 }
 
 .addMember {
@@ -16,6 +26,7 @@
     background-color: blue;
     border: none;
     padding: $padding-md;
+    justify-content: flex-end;
 }
 
 .removeMember {
@@ -29,19 +40,38 @@
 .createGroup {
     width: 80%;
     margin: 0 auto;
+    margin-top: $padding-md;
     color: white;
     background-color: blueviolet;
     padding: $padding-md;
     border: none;
     border-radius: $padding-md;
-    margin-bottom: $padding-md;
 }
+
+.memberContainer {
+    gap: $padding-md;
+    margin: $padding-md;
+    width: 90%;
+    display: flex;
+    flex-wrap: wrap;
+
+    .memberList::after {
+        content: ",";
+    }
+
+    .memberList:last-child::after {
+        content: "";
+    }
+}
+
 
 .userInfoGroup {
     display: flex;
 }
 
 .usernameGroup {
-    margin: $padding-md 0;
+    margin: auto 0;
     margin-left: $padding-md;
+    width: 50%;
+    overflow-wrap: break-word;
 }
