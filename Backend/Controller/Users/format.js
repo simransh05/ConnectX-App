@@ -58,12 +58,13 @@ module.exports.formatComment = (comment) => {
 }
 
 module.exports.formatChat = (chat) => {
+    console.log('format', chat)
     if (chat?.groupName) {
         return {
             _id: chat._id,
             type: 'group',
             groupName: chat.groupName,
-            members: chat.members, 
+            members: chat.members.map(m => m.userId)
         };
     } else {
         return {

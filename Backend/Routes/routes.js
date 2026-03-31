@@ -75,6 +75,8 @@ router.get('/chats/individual/:user1/:user2/:type', message.getIndividualMessage
 
 router.post('/group/post', message.postGroup);
 
+router.post('/group/update' , message.addMembers);
+
 router.put('/group', message.leaveGroup);
 
 router.get('/chats/:userId', message.getMessages);

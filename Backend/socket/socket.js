@@ -40,84 +40,163 @@ module.exports = (io) => {
         })
 
         socket.on('send-notify', async ({ sender, receiver, type, postId, status, groupId, groupName }, callback) => {
-            const receiverId = userMap.get(receiver);
-            if (status === 'remove' && type != 'post' && sender != receiver) {
-                await Notification.deleteSocketNotify(sender, receiver, type, postId || null);
-            } else if (status === 'add' && type != 'post' && sender != receiver) {
-                await Notification.postNotification(sender, receiver, type, postId || null);
-            }
-            // console.log('socket', sender, receiver)
-            if (type === 'follow') {
-                if (status === 'remove') {
-                    await Follow.removeFollow(sender, receiver);
-                } else {
-                    await Follow.postFollow(sender, receiver);
+            try {
+                if (type === "group") {
+                    for (let m of receiver) {
+                        if (m._id.toString() === sender) continue;
+
+                        await Notification.postNotification(
+                            sender,
+                            m._id,
+                            "group",
+                            null,
+                            groupId
+                        );
+
+                        const memberSocket = userMap.get(m._id);
+
+                        if (memberSocket) {
+                            io.to(memberSocket).emit("receiver-notify", {
+                                sender,
+                                receiver,
+                                type,
+                                groupId,
+                                groupName,
+                                status
+                            });
+                        }
+                    }
+
+                    if (callback) callback({ status: 200 });
+                    return;
                 }
-            } else if (type === "group") {
+                if (type === 'follow') {
 
-                for (let m of receiver) {
-                    console.log('m', m)
-                    if (m._id === sender) continue;
+                    if (status === 'remove') {
+                        await Follow.removeFollow(sender, receiver);
+                        await Notification.deleteSocketNotify(sender, receiver, type);
+                    } else {
+                        await Follow.postFollow(sender, receiver);
+                        await Notification.postNotification(sender, receiver, type);
+                    }
 
-                    await Notification.postNotification(
-                        sender,
-                        m._id,
-                        "group",
-                        null,
-                        groupId
-                    );
+                    const receiverId = userMap.get(receiver);
 
-                    const memberSocket = userMap.get(m._id);
-                    console.log('socket', memberSocket)
-
-                    if (memberSocket) {
-                        io.to(memberSocket).emit("receiver-notify", {
+                    if (receiverId && sender !== receiver) {
+                        io.to(receiverId).emit('receiver-notify', {
                             sender,
                             receiver,
                             type,
-                            groupId,
-                            groupName,
                             status
                         });
                     }
-                }
-                return;
-            }
-            else if (type === 'like') {
-                if (status === 'remove') {
-                    await Post.deleteLike(postId, sender);
-                } else {
-                    await Post.postLike(postId, sender)
-                }
-                // postid and data add like comment
-            } else if (type === 'post') {
-                const followers = await Follow.getFollower(sender);
-                if (status === 'remove') {
-                    for (let f of followers) {
-                        // console.log('f' , f)
-                        await Notification.deleteSocketNotify(sender, f, type);
-                        const followerId = userMap.get(f);
-                        io.to(followerId).emit('receiver-notify', { sender, receiver: f, type, status })
-                    }
-                    return;
-                }
-                else {
-                    for (let f of followers) {
-                        await Notification.postNotification(sender, f, type);
-                        const followerId = userMap.get(f);
-                        io.to(followerId).emit('receiver-notify', { sender, receiver: f, type, status })
-                    }
-                    return;
-                }
-            }
-            if (callback) {
-                callback({ status: 200 }) // for making follow to already follow
-            }
-            if (sender != receiver) {
-                io.to(receiverId).emit('receiver-notify', { sender, receiver, type, postId: postId || null, status })
-            }
 
-        })
+                    if (callback) callback({ status: 200 });
+                    return;
+                }
+
+                if (type === 'like') {
+
+                    if (status === 'remove') {
+                        await Post.deleteLike(postId, sender);
+                        await Notification.deleteSocketNotify(sender, receiver, type, postId);
+                    } else {
+                        await Post.postLike(postId, sender);
+                        await Notification.postNotification(sender, receiver, type, postId);
+                    }
+
+                    const receiverId = userMap.get(receiver);
+
+                    if (receiverId && sender !== receiver) {
+                        io.to(receiverId).emit('receiver-notify', {
+                            sender,
+                            receiver,
+                            type,
+                            postId,
+                            status
+                        });
+                    }
+
+                    if (callback) callback({ status: 200 });
+                    return;
+                }
+                if (type === 'comment') {
+
+                    if (status === 'add') {
+                        await Notification.postNotification(sender, receiver, type, postId);
+                    }
+
+                    const receiverId = userMap.get(receiver);
+
+                    if (receiverId && sender !== receiver) {
+                        io.to(receiverId).emit('receiver-notify', {
+                            sender,
+                            receiver,
+                            type,
+                            postId,
+                            status
+                        });
+                    }
+
+                    if (callback) callback({ status: 200 });
+                    return;
+                }
+
+                if (type === 'post') {
+
+                    const followers = await Follow.getFollower(sender);
+
+                    for (let f of followers) {
+
+                        if (status === 'remove') {
+                            await Notification.deleteSocketNotify(sender, f, type);
+                        } else {
+                            await Notification.postNotification(sender, f, type);
+                        }
+
+                        const followerSocket = userMap.get(f);
+
+                        if (followerSocket) {
+                            io.to(followerSocket).emit('receiver-notify', {
+                                sender,
+                                receiver: f,
+                                type,
+                                status
+                            });
+                        }
+                    }
+
+                    if (callback) callback({ status: 200 });
+                    return;
+                }
+                if (type === 'message') {
+
+                    if (status === 'remove') {
+                        await Notification.deleteSocketNotify(sender, receiver, type);
+                    } else {
+                        await Notification.postNotification(sender, receiver, type);
+                    }
+
+                    const receiverId = userMap.get(receiver);
+
+                    if (receiverId && sender !== receiver) {
+                        io.to(receiverId).emit('receiver-notify', {
+                            sender,
+                            receiver,
+                            type,
+                            status
+                        });
+                    }
+
+                    if (callback) callback({ status: 200 });
+                    return;
+                }
+
+            } catch (err) {
+                console.error("Socket notify error:", err);
+                if (callback) callback({ status: 500 });
+            }
+        });
 
         socket.on('join-group', ({ sender, groupId, groupName, members }) => {
             // 

@@ -256,7 +256,7 @@ function PostShow({ posts, loading, isProfile }) {
                                         user={p.userId}
                                         size={30}
                                     />
-                                    <div>{p?.userId?.name}</div>
+                                    <div className={style.postUserName}>{p?.userId?.name}</div>
                                 </div>
                                 <div className={style.postCaption}>{p?.caption}</div>
                                 <div className={style.postTypeInfo}>

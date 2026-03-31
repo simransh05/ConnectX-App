@@ -1,11 +1,30 @@
 @use '../../../Style/mixins' as *;
 @use '../../../Style/variables' as *;
 
+.MuiPaper-root {
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
 .indFollow {
     gap: $padding-md;
     display: flex;
     margin: $padding-md;
     cursor: pointer;
+    border-bottom: $border-black;
+    padding-bottom: $padding-md;
+}
+
+.btnView {
+    margin: auto 0;
+}
+
+.viewProfile {
+    border: none;
+    border-radius: $padding-md;
+    padding: $padding-md;
+    color: white;
+    background-color: blue;
+    height: 40px;
+    margin: auto 0;
 }
 
 .username {

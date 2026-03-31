@@ -5,7 +5,7 @@ const Group = require('../models/group')
 module.exports.getMessages = async (req, res) => {
     const { userId } = req.params;
     try {
-        const groups = await Group.find({ members: userId })
+        const groups = await Group.find({ "members.userId": userId })
             .select("_id");
         const groupIds = groups.map(g => g._id);
         // console.log('groups', groups);
@@ -22,13 +22,13 @@ module.exports.getMessages = async (req, res) => {
                 path: 'groupId',
                 select: '_id groupName members',
                 populate: {
-                    path: 'members',
+                    path: 'members.userId',
                     select: '_id name'
                 }
             })
             .sort({ sendAt: -1 });
 
-        // console.log('chat', userId, messages);
+        console.log('chat', userId, messages);
 
         const usersMap = new Map();
 
@@ -58,7 +58,7 @@ module.exports.getMessages = async (req, res) => {
         });
 
         const users = Array.from(usersMap.values());
-        // console.log('users', users)
+        console.log('users', users)
 
         if (!messages) {
             return res.status(200).json([]);
@@ -124,9 +124,16 @@ module.exports.getIndividualMessage = async (req, res) => {
     const { user1, user2, type } = req.params;
     try {
         let messages;
+
         if (type === 'group') {
+            const group = await Group.findById(user2);
+            const joined = group.members.find(m => m.userId.toString() === user1);
             messages = await Message.find({
-                groupId: user2
+                groupId: user2,
+                $or: [
+                    { sendAt: { $gte: joined.AddedOn } },
+                    { defaultMessage: { $exists: true } }
+                ]
             }).sort({ sendAt: 1 })
         } else {
             messages = await Message.find({
@@ -180,12 +187,15 @@ module.exports.postGroup = async (req, res) => {
     const { groupName, members, admin, defaultMessage } = req.body;
     // console.log('body', req.body)
     try {
+        const format = members.map(m => ({
+            userId: m
+        }))
         if (!groupName || !members || !admin) {
             return res.status(404).json({ message: 'All Fields Required' })
         }
         const group = await Group.create({
             admin,
-            members,
+            members: format,
             groupName,
         })
         console.log('group', group)
@@ -195,10 +205,10 @@ module.exports.postGroup = async (req, res) => {
             groupId: group._id,
             typeOfChat: 'group'
         })
-        await group.populate('members', '_id name')
+        await group.populate('members.userId', '_id name')
 
         console.log('group', group)
-        return res.status(200).json(group)
+        return res.status(200).json(formatChat(group))
     }
     catch (err) {
         return res.status(500).json({ message: err.message })
@@ -220,7 +230,7 @@ module.exports.leaveGroup = async (req, res) => {
         group.members = group.members.filter(m => m.toString() !== userId);
         if (group.admin.toString() === userId) {
             if (group.members.length > 0) {
-                group.admin = group.members[0];
+                group.admin = group.members[0].userId;
             } else {
                 await Group.findByIdAndDelete(groupId);
                 return res.status(200).json({ message: 'Group deleted as no members left' });
@@ -228,6 +238,27 @@ module.exports.leaveGroup = async (req, res) => {
         }
         await group.save();
         return res.status(200).json({ message: 'Success', group });
+    } catch (err) {
+        return res.status(500).json({ message: err.message });
+    }
+}
+
+module.exports.addMembers = async (req, res) => {
+    const { groupId, members } = req.body;
+    try {
+        console.log('members', members)
+        const format = members.map(id => ({
+            userId: id,
+            AddedOn: Date.now
+        }))
+        const update = await Group.findByIdAndUpdate(
+            groupId,
+            {
+                $addToSet: { $each: format }
+            },
+            { new: true }
+        )
+        return res.status(200).json(formatChat(update));
     } catch (err) {
         return res.status(500).json({ message: err.message });
     }

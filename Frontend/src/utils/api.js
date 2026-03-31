@@ -76,7 +76,10 @@ const api = {
     },
     leaveGroup: async (data) => {
         return await apiInstance.put(`${ROUTES.GROUP}`, data)
-    }
+    },
+    addMember : async (data) => {
+        return await apiInstance.post(`${ROUTES.GROUP}${ROUTES.UPDATE}`, data)
+    },
 }
 
 export default api

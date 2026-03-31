@@ -1,0 +1,84 @@
+@use '../../../Style/variables' as *;
+@use '../../../Style/mixins' as *;
+
+
+.userInfo {
+    display: flex;
+}
+
+.name {
+    margin: auto $padding-md;
+    width: 50%;
+    overflow-wrap: break-word
+}
+
+.userRow {
+    @include flex-justify;
+    margin: $padding-md;
+}
+
+.heading {
+    margin: $padding-md auto;
+}
+
+.finalBtn {
+    padding: $padding-md;
+    color: white;
+    background-color: blueviolet;
+    border: none;
+    border-radius: $padding-md;
+    width: 50%;
+    margin: 0 auto;
+    margin-top: $padding-md;
+}
+
+.addMember {
+    border-radius: $padding-md;
+    color: white;
+    background-color: blue;
+    border: none;
+    padding: $padding-md;
+    justify-content: flex-end;
+}
+
+.removeMember {
+    border-radius: $padding-md;
+    color: white;
+    background-color: red;
+    border: none;
+    padding: $padding-md;
+}
+
+.disbaledBtn {
+    border: none;
+    background-color: grey;
+    border-radius: $padding-md;
+    color: white;
+    padding: $padding-md;
+}
+
+.disabledBtncreate {
+    border: none;
+    background-color: grey;
+    border-radius: $padding-md;
+    color: white;
+    padding: $padding-md;
+    width: 50%;
+    margin: 0 auto;
+    margin-top: $padding-md;
+}
+
+.memberContainer {
+    display: flex;
+    gap: $padding-md;
+    flex-wrap: wrap;
+    margin: $padding-md ;
+
+    .memberContainer::after {
+        content: ",";
+    }
+
+    .memberContainer::after:last-child {
+        content: " ";
+    }
+}
