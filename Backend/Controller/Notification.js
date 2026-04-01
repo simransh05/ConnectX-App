@@ -51,14 +51,15 @@ module.exports.postNotification = async (sender, receiver, type, postId, groupId
                     sender,
                     receiver,
                     type,
-                    postId: postId || null
+                    postId
                 },
                 {
                     $set: { createdAt: Date.now() }
                 },
-                { upsert: true, new: true }
+                { upsert: true, returnDocument: 'after' }
             );
         }
+        // console.log('notify', notify)
 
         return { notify, status: 200 };
 

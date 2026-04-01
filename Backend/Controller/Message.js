@@ -28,7 +28,7 @@ module.exports.getMessages = async (req, res) => {
             })
             .sort({ sendAt: -1 });
 
-        console.log('chat', userId, messages);
+        // console.log('chat', userId, messages);
 
         const usersMap = new Map();
 
@@ -45,24 +45,23 @@ module.exports.getMessages = async (req, res) => {
             }
             else if (m.typeOfChat === 'group') {
                 if (m.groupId) {
-                    usersMap.set(
-                        m.groupId._id.toString(),
-                        {
-                            _id: m.groupId._id,
-                            groupName: m.groupId.groupName,
-                            members: m.groupId.members
-                        }
-                    );
+                    const present = m.groupId.members.some(m => m.userId._id.toString() === userId);
+                    if (present) {
+                        usersMap.set(
+                            m.groupId._id.toString(),
+                            {
+                                _id: m.groupId._id,
+                                groupName: m.groupId.groupName,
+                                members: m.groupId.members
+                            }
+                        );
+                    }
                 }
             }
         });
 
         const users = Array.from(usersMap.values());
-        console.log('users', users)
-
-        if (!messages) {
-            return res.status(200).json([]);
-        }
+        // console.log('users', users)
 
         return res.status(200).json(users.map(formatChat));
 
@@ -173,7 +172,7 @@ module.exports.postMessage = async (sender, receiver, msg, type) => {
 
         if (type === 'group') {
             const group = await Group.findById(receiver)
-            return { members: group.members };
+            return { members: group.members, status: 200 };
         }
 
         return { message, status: 200 };
@@ -198,7 +197,7 @@ module.exports.postGroup = async (req, res) => {
             members: format,
             groupName,
         })
-        console.log('group', group)
+        // console.log('group', group)
         await Message.create({
             sender: admin,
             defaultMessage,
@@ -207,7 +206,7 @@ module.exports.postGroup = async (req, res) => {
         })
         await group.populate('members.userId', '_id name')
 
-        console.log('group', group)
+        // console.log('group', group)
         return res.status(200).json(formatChat(group))
     }
     catch (err) {
@@ -227,7 +226,7 @@ module.exports.leaveGroup = async (req, res) => {
         if (!group) {
             return res.status(404).json({ message: 'Group not found' });
         }
-        group.members = group.members.filter(m => m.toString() !== userId);
+        group.members = group.members.filter(m => m.userId.toString() !== userId);
         if (group.admin.toString() === userId) {
             if (group.members.length > 0) {
                 group.admin = group.members[0].userId;
@@ -236,6 +235,7 @@ module.exports.leaveGroup = async (req, res) => {
                 return res.status(200).json({ message: 'Group deleted as no members left' });
             }
         }
+        // console.log('group after leave', group);
         await group.save();
         return res.status(200).json({ message: 'Success', group });
     } catch (err) {
@@ -248,16 +248,20 @@ module.exports.addMembers = async (req, res) => {
     try {
         console.log('members', members)
         const format = members.map(id => ({
-            userId: id,
-            AddedOn: Date.now
+            userId: id
         }))
+        console.log('format', format)
         const update = await Group.findByIdAndUpdate(
             groupId,
             {
-                $addToSet: { $each: format }
+                $addToSet: {
+                    members: { $each: format }
+                }
             },
-            { new: true }
+            { returnDocument: 'after' }
         )
+        await update.populate('members.userId', '_id name')
+        console.log(update)
         return res.status(200).json(formatChat(update));
     } catch (err) {
         return res.status(500).json({ message: err.message });

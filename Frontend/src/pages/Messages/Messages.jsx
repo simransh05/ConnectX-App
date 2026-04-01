@@ -67,24 +67,31 @@ function Messages() {
     navigate(`${ROUTES.MESSAGES}/${c?._id}`)
   }
 
-  const updateChatList = (data, isGroup) => {
-    console.log(data, isGroup);
+  const updateChatList = (sender, receiver, type, groupName, members) => {
+    console.log(receiver, type, groupName, members)
     setMyChats(prev => {
       if (!prev) prev = [];
 
       let formatted;
 
-      if (isGroup) {
-        formatted = data;
+      if (type === 'group') {
+        const existing = prev.find(m => m._id === id);
+
+        formatted = {
+          _id: existing?._id || receiver,
+          type,
+          groupName: existing?.groupName || groupName,
+          members: existing?.members || members
+        };
       } else {
-        const otherInfo = allUsers?.find(u => u._id === data);
+        const otherInfo = allUsers?.find(u => u._id === receiver);
         // if (!otherInfo) return prev;
         console.log(otherInfo);
         formatted = {
           _id: otherInfo?._id,
           type: 'individual',
           name: otherInfo?.name,
-          profilePic: otherInfo.profilePic
+          profilePic: otherInfo?.profilePic
         };
       }
       console.log(formatted);
@@ -95,30 +102,44 @@ function Messages() {
     });
   };
   useEffect(() => {
-    socket.on('message-send', ({ receiver }) => {
-      updateChatList(receiver)
+    socket.on('receive-member', ({ groupId, members }) => {
+      setMyChats(prev => prev.map(p => p._id === groupId ? ({ ...p, members }) : p))
     })
-    socket.on('receive', ({ sender }) => {
-      if (sender != currentUser?._id) {
-        updateChatList(sender)
-      }
+
+    socket.on('left', ({ groupId, userId }) => {
+      setMyChats(prev =>
+        prev.map(p =>
+          p._id === groupId
+            ? {
+              ...p,
+              members: p.members.filter(m => m._id !== userId)
+            }
+            : p
+        )
+      );
+    });
+    socket.on('message-send', ({ sender, receiver, type }) => {
+      // format for currentuser 
+      updateChatList(sender, receiver, type)
     })
-    socket.on('receiver-notify', ({ receiver, groupId, type, groupName }) => {
-      const data = {
-        _id: groupId,
-        type,
-        members: receiver,
-        groupName
-      }
+    socket.on('receive', ({ sender, receiver, type, groupName }) => {
+      // format when other send
+      updateChatList(sender, receiver, type, groupName)
+    })
+    socket.on('receiver-notify', ({ sender, receiver, groupId, type, groupName, members }) => {
+      console.log(sender, receiver, groupId, type, groupName, members)
       if (type === 'group') {
-        updateChatList(data, true)
+        updateChatList(sender, groupId, type, groupName, members)
+      } else {
+        updateChatList(sender, receiver, type, groupName, members)
       }
     })
 
     return () => {
       socket.off('message-send');
       socket.off('receive');
-      socket.off('receiver-notify')
+      socket.off('receive-member');
+      // socket.off('receiver-notify')
     }
   }, [])
 
@@ -132,8 +153,9 @@ function Messages() {
   }
 
   const handleSuccess = (data) => {
+    console.log(data)
     socket.emit("send-notify", {
-      sender: data.admin,
+      sender: data.members[0]._id,
       receiver: data.members,
       groupId: data._id,
       name: data.groupName,
@@ -151,6 +173,12 @@ function Messages() {
     setMyChats(prev => [info, ...prev])
     setSelectedUser(info)
     navigate(`/chats/${data._id}`);
+  }
+
+  const handleLeave = (groupId) => {
+    setMyChats(prev => {
+      return prev.filter(m => m._id !== groupId)
+    })
   }
 
   // console.log(searchResult);
@@ -199,7 +227,7 @@ function Messages() {
                   onClick={() => handleClick(c)}
                   key={c?._id}
                 >
-                  {c.type === 'group' ?
+                  {c?.type === 'group' ?
                     <>
                       <MdGroups className={style.groupIcon} />
                       <div className={style.nameOfChat}>{c.groupName}</div>
@@ -228,7 +256,9 @@ function Messages() {
         </div>
 
         <div className={userId ? style["right-mobile"] : style["right-side"]}>
-          <OneOneChat />
+          <OneOneChat
+            leave={(groupId) => handleLeave(groupId)}
+          />
         </div>
       </div>
 

@@ -58,7 +58,7 @@ module.exports.formatComment = (comment) => {
 }
 
 module.exports.formatChat = (chat) => {
-    console.log('format', chat)
+    // console.log('format', chat)
     if (chat?.groupName) {
         return {
             _id: chat._id,

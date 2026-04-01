@@ -49,6 +49,7 @@ function Navbar() {
   useEffect(() => {
     socket.on('receiver-notify', ({ sender, receiver, type, postId, status }) => {
       // number increase 
+      console.log(status)
       if (status === 'add') {
         setNumber(prev => prev + 1)
       }
@@ -80,7 +81,7 @@ function Navbar() {
     setSearchResult(null);
     navigate(`${ROUTES.PROFILE}/${id}`)
   }
-  // console.log(allUsers);
+  console.log(number);
   return (
     <div className={style.navbar}>
       {/* image */}

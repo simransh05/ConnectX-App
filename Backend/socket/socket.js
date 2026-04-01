@@ -18,55 +18,76 @@ module.exports = (io) => {
             if (type === 'individual') {
                 await Notification.deleteSocketNotify(receiver, sender, "message")
             }
+            console.log('message send', res)
             if (res.status === 200) {
                 callback({ status: 200 })
             }
 
             if (type === 'group') {
                 res.members.forEach(m => {
-                    const memberId = userMap.get(m.toString());
-                    io.to(memberId).emit('receive', { sender, receiver, msg, type })
+                    const memberId = userMap.get(m.userId.toString());
+                    if (m.userId.toString() !== sender) {
+                        io.to(memberId).emit('receive', { sender, receiver, msg, type })
+                    }
                 })
                 return;
             }
-
-            // console.log('socket', r)
-            // console.log('status', res?.status, res);
             const senderId = userMap.get(sender);
             // console.log('receiver' , receiver);
-            io.to(senderId).emit('message-send', { receiver, type: "message" })
+            io.to(senderId).emit('message-send', { sender, receiver, msg, type })
             const receiverId = userMap.get(receiver);
-            io.to(receiverId).emit('receive', { sender, receiver, msg })
+            io.to(receiverId).emit('receive', { sender, receiver, msg, type })
         })
 
-        socket.on('send-notify', async ({ sender, receiver, type, postId, status, groupId, groupName }, callback) => {
+        socket.on('add-member', ({ groupId, members }) => {
+            console.log('add member', members)
+            members.forEach(m => {
+                const receive = userMap.get(m._id)
+                io.to(receive).emit('receive-member', { groupId, members })
+            })
+
+        })
+
+        socket.on('group-leave', ({ groupId, userId, members }) => {
+            console.log('member left', members, userId)
+            members.forEach(m => {
+                if (userId !== m._id) {
+                    const receive = userMap.get(m._id)
+                    io.to(receive).emit('left', { groupId, userId })
+                }
+            })
+        })
+
+        socket.on('send-notify', async ({ sender, receiver, type, postId, status, groupId, groupName, members }, callback) => {
             try {
+                console.log('socket', sender, receiver, type, postId, status)
                 if (type === "group") {
                     for (let m of receiver) {
-                        if (m._id.toString() === sender) continue;
-
-                        await Notification.postNotification(
-                            sender,
-                            m._id,
-                            "group",
-                            null,
-                            groupId
-                        );
-
-                        const memberSocket = userMap.get(m._id);
-
-                        if (memberSocket) {
-                            io.to(memberSocket).emit("receiver-notify", {
+                        if (m?._id?.toString() === sender) continue;
+                        else {
+                            await Notification.postNotification(
                                 sender,
-                                receiver,
-                                type,
-                                groupId,
-                                groupName,
-                                status
-                            });
+                                m._id,
+                                "group",
+                                null,
+                                groupId
+                            );
+
+                            const memberSocket = userMap.get(m._id);
+
+                            if (memberSocket) {
+                                io.to(memberSocket).emit("receiver-notify", {
+                                    sender,
+                                    receiver,
+                                    type,
+                                    groupId,
+                                    groupName,
+                                    status,
+                                    members
+                                });
+                            }
                         }
                     }
-
                     if (callback) callback({ status: 200 });
                     return;
                 }
@@ -101,8 +122,11 @@ module.exports = (io) => {
                         await Post.deleteLike(postId, sender);
                         await Notification.deleteSocketNotify(sender, receiver, type, postId);
                     } else {
+
                         await Post.postLike(postId, sender);
-                        await Notification.postNotification(sender, receiver, type, postId);
+                        if (sender !== receiver) {
+                            await Notification.postNotification(sender, receiver, type, postId);
+                        }
                     }
 
                     const receiverId = userMap.get(receiver);
@@ -122,7 +146,7 @@ module.exports = (io) => {
                 }
                 if (type === 'comment') {
 
-                    if (status === 'add') {
+                    if (status === 'add' && sender !== receiver) {
                         await Notification.postNotification(sender, receiver, type, postId);
                     }
 
