@@ -7,7 +7,7 @@ import style from './AddMember.module.scss'
 import { useParams } from 'react-router-dom'
 import socket from '../../../Socket/socket'
 
-function AddMember({ open, onClose, members }) {
+function AddMember({ open, onClose, members, onSuccess }) {
     const { currentUser } = useContext(CurrentUserContext)
     const { userId } = useParams()
 
@@ -43,11 +43,11 @@ function AddMember({ open, onClose, members }) {
                 return updated
             })
 
-            setMemberList(prev => prev.filter(p => p.id !== id))
+            setMemberList(prev => prev.filter(p => p._id !== id))
         } else {
             // add
             setAddMore(prev => new Set([...prev, id]))
-            setMemberList(prev => [...prev, { id, name }])
+            setMemberList(prev => [...prev, { _id: id, name }])
         }
     }
 
@@ -66,6 +66,8 @@ function AddMember({ open, onClose, members }) {
             console.log(data);
             const res = await api.addMember(data);
             console.log(res.data);
+            onSuccess(res.data, memberList);
+            handleClose();
         }
         // idea is first check then api send to add and the socket send message to the new members 
         // socket.emit("send-notify", {
@@ -85,12 +87,18 @@ function AddMember({ open, onClose, members }) {
         // }
     }
 
-    console.log(members, allMutual)
+    const handleClose = () => {
+        setAddMore(null);
+        setMemberList(null)
+        onClose();
+    }
+
+    console.log(members, allMutual, memberList)
 
     return (
         <Dialog
             open={open}
-            onClose={onClose}
+            onClose={handleClose}
             PaperProps={{
                 sx: { width: '300px', padding: '10px' }
             }}
@@ -131,7 +139,7 @@ function AddMember({ open, onClose, members }) {
                         <div className={style.memberContainer}>
                             <div>Selected:- </div>
                             {memberList.length > 0 && memberList.map(m => (
-                                <div key={m.id} className={style.memberList}>{m.name}</div>
+                                <div key={m._id} className={style.memberList}>{m.name}</div>
                             ))}
                         </div>
                     }

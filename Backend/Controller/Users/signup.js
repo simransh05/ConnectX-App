@@ -131,7 +131,7 @@ module.exports.updateProfile = async (req, res) => {
         const user = await User.findByIdAndUpdate(
             userId,
             updateData,
-            { new: true }
+            { returnDocument: 'after' }
         );
         // console.log('here', user)
         return res.status(200).json(formatUser(user));

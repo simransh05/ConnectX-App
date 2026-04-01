@@ -9,12 +9,14 @@ import { useRef } from 'react';
 import { CiMenuKebab } from "react-icons/ci";
 import { Menu, MenuItem } from '@mui/material';
 import Swal from 'sweetalert2';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { userStore } from '../../Zustand/AllUsers';
 import { MdGroups } from 'react-icons/md';
 import AddMember from '../../components/Modals/AddMember/AddMember';
+import ROUTES from '../../constant/Route/route';
 
-function OneOneChat() {
+function OneOneChat({ leave }) {
+  const navigate = useNavigate();
   const { userId } = useParams()
   const { allUsers } = userStore()
   const [chats, setChat] = useState(null);
@@ -49,6 +51,17 @@ function OneOneChat() {
 
   useEffect(() => {
     if (!selectedUser) return;
+    socket.on('receive-member', ({ groupId, members }) => {
+      if (selectedUser._id === groupId) {
+        setSelectedUser(prev => ({ ...prev, members }))
+      }
+    })
+
+    socket.on('left', ({ groupId, userId }) => {
+      if (groupId === selectedUser?._id) {
+        setSelectedUser(prev => ({ ...prev, members: prev.members.filter(f => f._id !== userId) }))
+      }
+    })
     socket.on('receive', ({ sender, receiver, msg, type }) => {
       // console.log(sender, reciever, msg)
       if (selectedUser.type !== type) {
@@ -62,6 +75,7 @@ function OneOneChat() {
     })
     return () => {
       socket.off('receive');
+      socket.off('receive-member')
     }
   }, [])
 
@@ -74,9 +88,10 @@ function OneOneChat() {
   const handleClick = () => {
     // e.preventDefault();
     // socket
+    console.log('here')
     socket.emit('send', { sender: currentUser?._id, receiver: selectedUser?._id, msg: message, type: selectedUser?.type }, (res) => {
       // if user is not online then add in notification
-      // console.log(res)
+      console.log(res)
       if (res.status === 200) {
         if (selectedUser?.type === 'group') {
           // console.log('here', currentUser?._id, selectedUser?._id, message, selectedUser.type)
@@ -99,7 +114,12 @@ function OneOneChat() {
     setAnchorEl(null);
   };
 
+  useEffect(() => {
+    setAnchorEl(null);
+  }, [selectedUser]);
+
   const handleDelete = async () => {
+    handleClose()
     const result = await Swal.fire({
       title: 'Delete Chat',
       text: 'Are you sure you want to delete chat',
@@ -112,26 +132,47 @@ function OneOneChat() {
     if (result.isConfirmed) {
       const res = await api.deleteChat(currentUser?._id, userId, selectedUser?.type);
       if (res.status === 200) {
-        setChat(null);
+        setChat(prev => prev.filter(c => c.defaultMessage));
       }
     }
 
   }
 
+  console.log(chats)
+
+  const handleSuccess = (data, selected) => {
+    // send socket for the same 
+    socket.emit("send-notify", {
+      sender: data.members[0]._id,
+      receiver: selected,
+      groupId: data._id,
+      name: data.groupName,
+      groupName: data.groupName,
+      type: "group",
+      status: "add",
+      members: data.members
+    });
+    socket.emit('add-member', { groupId: data._id, members: data.members })
+  }
+
   const handleLeave = async () => {
+    handleClose()
     const data = {
       userId: currentUser?._id,
       groupId: selectedUser?._id
     }
+    socket.emit('group-leave', { groupId: selectedUser?._id, userId: currentUser?._id, members: selectedUser?.members })
     const res = await api.leaveGroup(data);
     if (res.status === 200) {
+      leave(selectedUser?._id);
       setSelectedUser(null);
       setPrevUser(null)
+      navigate(ROUTES.MESSAGES)
     }
     // idea is api remove then update on all removed user
   }
 
-  // console.log('select',selectedUser)
+  console.log('select', selectedUser)
 
   return (
     <>
@@ -171,9 +212,10 @@ function OneOneChat() {
                 </Menu>
                 {showMember &&
                   <AddMember
-                    open={() => setShowMember(true)}
+                    open={showMember}
                     onClose={() => setShowMember(false)}
                     members={selectedUser?.members}
+                    onSuccess={(data, selected) => handleSuccess(data, selected)}
                   />
                 }
               </>
