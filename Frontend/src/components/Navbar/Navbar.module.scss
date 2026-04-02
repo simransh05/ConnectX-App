@@ -3,14 +3,13 @@
 
 .navbar {
   @include flex-justify;
-  padding-right: $padding-md;
   // margin-bottom: $spacing;
   border-bottom: $border-black;
   position: sticky;
   top: 0;
   background-color: white;
   z-index: 100;
-  width: 96dvw;
+  width: 98%;
   padding: 0 $padding-md ;
 
   .linkInfo {

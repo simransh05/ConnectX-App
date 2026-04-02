@@ -9,7 +9,7 @@ const useIndividualPosts = (userId, isHome) => {
     const [hasMore, setHasMore] = useState(true);
     const limit = 5;
 
-    // console.log(userId)
+    console.log(hasMore)
 
     // fetch posts
     const fetchPosts = async () => {
@@ -65,13 +65,13 @@ const useIndividualPosts = (userId, isHome) => {
     useEffect(() => {
 
         const handleScroll = () => {
-            // console.log(window.innerHeight, document.documentElement.scrollTop, document.documentElement.offsetHeight+15)
+            console.log(window.innerHeight, document.documentElement.scrollTop, document.documentElement.offsetHeight+15)
             if (
                 window.innerHeight +
                 document.documentElement.scrollTop
-                >= document.documentElement.offsetHeight + 15
+                >= document.documentElement.offsetHeight - 50
             ) {
-                console.log('here')
+                // console.log('here')
                 setSkip(prev => prev + limit);
             }
 

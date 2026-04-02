@@ -18,7 +18,7 @@ import { allPostStore } from '../../Zustand/AllPosts';
 import ROUTES from '../../constant/Route/route';
 import { CircularProgress } from '@mui/material';
 
-function PostShow({ posts, loading, isProfile }) {
+function PostShow({ posts, loading, isProfile, isSavedPost }) {
     const [commentDrawer, setCommentDawer] = useState(false);
     const { fetchAllPosts } = allPostStore()
     const navigate = useNavigate()
@@ -42,7 +42,7 @@ function PostShow({ posts, loading, isProfile }) {
             posts?.filter(p => currentUser?.savedPost?.includes(p?._id))
                 .map(p => p._id)
         )
-        // console.log(savedSet, likedSet, currentUser)
+        console.log(savedSet, likedSet, currentUser)
         const arr = [];
 
         posts.forEach(p => {
@@ -160,12 +160,22 @@ function PostShow({ posts, loading, isProfile }) {
                     return old;
                 })
             }
+            setCurrentUser(prev => ({
+                ...prev,
+                savedPost: (prev.savedPost || []).filter(s => s._id !== postId)
+            }));
+            if (isSavedPost) {
+                posts = posts.filter(p => p._id !== postId)
+            }
             return;
         }
         const res = await api.savePost(data);
         if (res.status === 200) {
             setSaved(prev => new Set([...prev, postId]));
-            // setCurrentUser(prev => [{ ...prev, }])
+            setCurrentUser(prev => ({
+                ...prev,
+                savedPost: [...(prev.savedPost || []), postId]
+            }));
         }
     }
 

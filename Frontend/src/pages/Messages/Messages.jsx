@@ -22,7 +22,7 @@ function Messages() {
   const [search, setSearch] = useState('');
   const [groupModal, setGroupModal] = useState(false);
   const [searchResult, setSearchResult] = useState(null);
-  const { currentUser } = useContext(CurrentUserContext);
+  const { currentUser, loading } = useContext(CurrentUserContext);
   const { selectedUser, setSelectedUser, setPrevUser, prevUser } = useContext(SelectedUserContext);
   const [myChats, setMyChats] = useState(null);
 
@@ -33,6 +33,7 @@ function Messages() {
   }
 
   useEffect(() => {
+    if (loading) return;
     const fetchMyChatUsers = async () => {
       if (currentUser) {
         const res = await api.getMessages(currentUser?._id)
@@ -41,14 +42,19 @@ function Messages() {
       }
     }
     fetchMyChatUsers();
-  }, [currentUser])
+  }, [currentUser, loading])
 
   useEffect(() => {
     if (userId) {
       const select = myChats?.find(c => c._id === userId);
-      console.log(select)
+      // console.log(select)
       if (select) {
         setSelectedUser(select)
+      } else {
+        const user = allUsers?.find(u => u._id === userId)
+        if (user) {
+          setSelectedUser(user)
+        }
       }
     }
   }, [userId, myChats])
@@ -62,31 +68,31 @@ function Messages() {
 
     setPrevUser(selectedUser);
 
-    console.log(c)
+    // console.log(c)
     setSelectedUser(c);
     navigate(`${ROUTES.MESSAGES}/${c?._id}`)
   }
 
-  const updateChatList = (sender, receiver, type, groupName, members) => {
-    console.log(receiver, type, groupName, members)
+  const updateChatList = (user, type, groupName, members) => {
+    // console.log(receiver, type, groupName, members)
     setMyChats(prev => {
       if (!prev) prev = [];
 
       let formatted;
 
-      if (type === 'group') {
-        const existing = prev.find(m => m._id === id);
-
+      if (type === 'group' || type === 'group-chat') {
+        const existing = prev?.find(m => m._id === user);
         formatted = {
-          _id: existing?._id || receiver,
-          type,
+          _id: existing?._id || user,
+          type: 'group',
           groupName: existing?.groupName || groupName,
           members: existing?.members || members
         };
       } else {
-        const otherInfo = allUsers?.find(u => u._id === receiver);
-        // if (!otherInfo) return prev;
-        console.log(otherInfo);
+        let otherInfo = prev?.find(u => u._id === user);
+        if (!otherInfo) {
+          otherInfo = allUsers?.find(u => u._id === user)
+        }
         formatted = {
           _id: otherInfo?._id,
           type: 'individual',
@@ -94,10 +100,8 @@ function Messages() {
           profilePic: otherInfo?.profilePic
         };
       }
-      console.log(formatted);
 
       const filtered = prev.filter(c => c._id !== formatted._id);
-      console.log(filtered)
       return [formatted, ...filtered];
     });
   };
@@ -118,28 +122,29 @@ function Messages() {
         )
       );
     });
-    socket.on('message-send', ({ sender, receiver, type }) => {
+    socket.on('message-send', ({ receiver, type }) => {
       // format for currentuser 
-      updateChatList(sender, receiver, type)
+      updateChatList(receiver, type)
     })
-    socket.on('receive', ({ sender, receiver, type, groupName }) => {
-      // format when other send
-      updateChatList(sender, receiver, type, groupName)
-    })
+    // socket.on('receive', ({ sender, type, groupName }) => {
+    //   // format when other send
+    //   console.log(sender, type)
+    //   updateChatList(sender, type, groupName)
+    // })
     socket.on('receiver-notify', ({ sender, receiver, groupId, type, groupName, members }) => {
-      console.log(sender, receiver, groupId, type, groupName, members)
-      if (type === 'group') {
-        updateChatList(sender, groupId, type, groupName, members)
+      if (type === 'group-chat') {
+        updateChatList(groupId, type, groupName, members)
       } else {
-        updateChatList(sender, receiver, type, groupName, members)
+        updateChatList(sender, type, groupName, members)
       }
     })
 
     return () => {
       socket.off('message-send');
       socket.off('receive');
+      socket.off('left')
       socket.off('receive-member');
-      // socket.off('receiver-notify')
+      socket.off('receiver-notify')
     }
   }, [])
 
@@ -153,7 +158,7 @@ function Messages() {
   }
 
   const handleSuccess = (data) => {
-    console.log(data)
+    // console.log(data)
     socket.emit("send-notify", {
       sender: data.members[0]._id,
       receiver: data.members,
@@ -169,7 +174,7 @@ function Messages() {
       groupName: data.groupName,
       members: data.members
     }
-    console.log(info)
+    // console.log(info)
     setMyChats(prev => [info, ...prev])
     setSelectedUser(info)
     navigate(`/chats/${data._id}`);
@@ -182,7 +187,7 @@ function Messages() {
   }
 
   // console.log(searchResult);
-  console.log(myChats)
+  // console.log(myChats)
   return (
     <>
       <Navbar />
@@ -230,12 +235,12 @@ function Messages() {
                   {c?.type === 'group' ?
                     <>
                       <MdGroups className={style.groupIcon} />
-                      <div className={style.nameOfChat}>{c.groupName}</div>
+                      <div className={style.nameOfChat} style={{ marginLeft: '10px' }}>{c.groupName}</div>
                     </>
                     :
                     <>
                       <UserAvatar user={c} size={50} />
-                      <div className={style.nameOfChat}>{c?.name}</div>
+                      <div className={style.nameOfChat} style={{ marginLeft: '10px' }}>{c?.name}</div>
                     </>}
 
                 </div>

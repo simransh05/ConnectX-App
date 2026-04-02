@@ -260,7 +260,7 @@ function Sidebar({ isDrawer, open, onClose }) {
                     {preview ?
                       <Avatar
                         src={preview}
-                        sx={{ width: 80, height: 8000 }}
+                        sx={{ width: 80, height: 80 }}
                       />
                       :
                       <UserAvatar

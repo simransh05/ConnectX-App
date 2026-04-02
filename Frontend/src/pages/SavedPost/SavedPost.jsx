@@ -19,12 +19,13 @@ function SavedPost() {
         fetchPosts()
     }, [currentUser])
 
-    // console.log(posts);
+    console.log(posts);
     return (
         <>
             <Navbar />
             <PostShow
                 posts={posts}
+                isSavedPost={true}
             />
         </>
     )

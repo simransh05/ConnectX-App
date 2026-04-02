@@ -95,7 +95,7 @@ module.exports.deleteChat = async (req, res) => {
                     ]
                 }
             });
-        } else {
+        } else if (type === 'individual') {
             await Message.updateMany(
                 {
                     $or: [
@@ -109,7 +109,7 @@ module.exports.deleteChat = async (req, res) => {
             )
             await Message.deleteMany(
                 {
-                    deleteBy: [userId, other]
+                    deleteBy: { $all: [userId, other] }
                 },
             )
         }
@@ -160,17 +160,17 @@ module.exports.postMessage = async (sender, receiver, msg, type) => {
         const data = {
             sender,
             message: msg,
-            typeOfChat: type
+            typeOfChat: type === 'group-chat' ? 'group' : type
         };
 
-        if (type === 'group') {
+        if (type === 'group-chat') {
             data.groupId = receiver;
         } else {
             data.receiver = receiver;
         }
         const message = await Message.create(data);
 
-        if (type === 'group') {
+        if (type === 'group-chat') {
             const group = await Group.findById(receiver)
             return { members: group.members, status: 200 };
         }
@@ -246,11 +246,11 @@ module.exports.leaveGroup = async (req, res) => {
 module.exports.addMembers = async (req, res) => {
     const { groupId, members } = req.body;
     try {
-        console.log('members', members)
+        // console.log('members', members)
         const format = members.map(id => ({
             userId: id
         }))
-        console.log('format', format)
+        // console.log('format', format)
         const update = await Group.findByIdAndUpdate(
             groupId,
             {
@@ -261,7 +261,7 @@ module.exports.addMembers = async (req, res) => {
             { returnDocument: 'after' }
         )
         await update.populate('members.userId', '_id name')
-        console.log(update)
+        // console.log(update)
         return res.status(200).json(formatChat(update));
     } catch (err) {
         return res.status(500).json({ message: err.message });

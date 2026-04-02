@@ -55,7 +55,7 @@ function OthersProfile() {
             name: userInfo?.name,
             profilePic: userInfo?.profilePic
         }
-        console.log(data)
+        // console.log(data)
         setSelectedUser(data);
         // console.log(`${ROUTES.MESSAGES}/${userInfo._id}`)
         // set select user is this user and navigate to chat page
@@ -100,7 +100,7 @@ function OthersProfile() {
         if (!detail) return;
         // console.log(detail.follower);
         const alreadyFollow = detail.follower.some(f => f.userId === currentUser?._id)
-        console.log(alreadyFollow, detail)
+        // console.log(alreadyFollow, detail)
         if (alreadyFollow) {
             setIsFollow(true);
         } else {

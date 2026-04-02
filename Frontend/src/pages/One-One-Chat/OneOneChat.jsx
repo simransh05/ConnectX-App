@@ -75,7 +75,8 @@ function OneOneChat({ leave }) {
     })
     return () => {
       socket.off('receive');
-      socket.off('receive-member')
+      socket.off('receive-member');
+      socket.off('left')
     }
   }, [])
 
@@ -88,10 +89,10 @@ function OneOneChat({ leave }) {
   const handleClick = () => {
     // e.preventDefault();
     // socket
-    console.log('here')
-    socket.emit('send', { sender: currentUser?._id, receiver: selectedUser?._id, msg: message, type: selectedUser?.type }, (res) => {
+    // console.log('here')
+    socket.emit('send', { sender: currentUser?._id, receiver: selectedUser?._id, msg: message, type: selectedUser?.type === 'individual' ? selectedUser?.type : "group-chat" }, (res) => {
       // if user is not online then add in notification
-      console.log(res)
+      // console.log(res)
       if (res.status === 200) {
         if (selectedUser?.type === 'group') {
           // console.log('here', currentUser?._id, selectedUser?._id, message, selectedUser.type)
@@ -102,7 +103,9 @@ function OneOneChat({ leave }) {
       }
     });
     if (selectedUser?.type !== 'group') {
-      socket.emit('send-notify', { sender: currentUser?._id, receiver: selectedUser?._id, type: "message" })
+      socket.emit('send-notify', { sender: currentUser?._id, receiver: selectedUser?._id, type: "message", status: 'add' })
+    } else if (selectedUser?.type === 'group') {
+      socket.emit('send-notify', { sender: currentUser?._id, receiver: selectedUser?.members, type: "group-chat", groupId: selectedUser?._id, status: 'add' })
     }
     setMessage("");
   }
@@ -138,7 +141,7 @@ function OneOneChat({ leave }) {
 
   }
 
-  console.log(chats)
+  // console.log(chats)
 
   const handleSuccess = (data, selected) => {
     // send socket for the same 
@@ -172,7 +175,7 @@ function OneOneChat({ leave }) {
     // idea is api remove then update on all removed user
   }
 
-  console.log('select', selectedUser)
+  // console.log('select', selectedUser)
 
   return (
     <>

@@ -14,11 +14,6 @@
     width: 92%;
 }
 
-.nameOfChat {
-    width: 50%;
-    overflow-wrap: break-word;
-}
-
 .left-mobile,
 .left-side {
     overflow-y: scroll;
@@ -75,7 +70,7 @@
 .groupIcon {
     border: $border-black;
     border-radius: $circle;
-    margin-left: 20px;
+    // margin-left: 20px;
     height: 45px;
     width: 45px;
     color: white;
@@ -100,7 +95,7 @@
     display: flex;
     border-bottom: $border-black;
     padding: $padding-md;
-    padding-left: 0;
+    padding-left: 20px;
     cursor: pointer;
 
     .people:first-child {
@@ -109,8 +104,13 @@
 
     div {
         margin: auto 0;
-        margin-left: $padding-md;
     }
+}
+
+.nameOfChat {
+    width: 50%;
+    margin-left: $padding-md;
+    overflow-wrap: break-word;
 }
 
 
