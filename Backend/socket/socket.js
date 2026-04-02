@@ -13,18 +13,21 @@ module.exports = (io) => {
         socket.on('send', async ({ sender, receiver, msg, type }, callback) => {
             // console.log('send', sender, receiver, msg)
             // console.log('receive', receiverId);
-            const res = await Message.postMessage(sender, receiver, msg, type);
             // console.log('sending', res)
+            const res = await Message.postMessage(sender, receiver, msg, type);
             if (type === 'individual') {
                 await Notification.deleteSocketNotify(receiver, sender, "message")
             }
-            console.log('message send', res)
+
             if (res.status === 200) {
                 callback({ status: 200 })
             }
+            const senderId = userMap.get(sender);
+            io.to(senderId).emit('message-send', { sender, receiver, msg, type })
 
             if (type === 'group') {
-                res.members.forEach(m => {
+                res.members.forEach(async m => {
+                    await Notification.deleteSocketNotify(receiver, sender, "message")
                     const memberId = userMap.get(m.userId.toString());
                     if (m.userId.toString() !== sender) {
                         io.to(memberId).emit('receive', { sender, receiver, msg, type })
@@ -32,15 +35,15 @@ module.exports = (io) => {
                 })
                 return;
             }
-            const senderId = userMap.get(sender);
+
             // console.log('receiver' , receiver);
-            io.to(senderId).emit('message-send', { sender, receiver, msg, type })
+
             const receiverId = userMap.get(receiver);
             io.to(receiverId).emit('receive', { sender, receiver, msg, type })
         })
 
         socket.on('add-member', ({ groupId, members }) => {
-            console.log('add member', members)
+            // console.log('add member', members)
             members.forEach(m => {
                 const receive = userMap.get(m._id)
                 io.to(receive).emit('receive-member', { groupId, members })
@@ -49,7 +52,7 @@ module.exports = (io) => {
         })
 
         socket.on('group-leave', ({ groupId, userId, members }) => {
-            console.log('member left', members, userId)
+            // console.log('member left', members, userId)
             members.forEach(m => {
                 if (userId !== m._id) {
                     const receive = userMap.get(m._id)
@@ -212,8 +215,26 @@ module.exports = (io) => {
                         });
                     }
 
+
                     if (callback) callback({ status: 200 });
                     return;
+                }
+
+                if (type === 'group-chat') {
+                    console.log('here in group chat')
+                    for (let m of receiver) {
+                        if (sender !== m._id) {
+                            await Notification.postNotification(sender, m._id, type)
+                            const receiverId = userMap.get(m._id);
+                            io.to(receiverId).emit('receiver-notify', {
+                                sender,
+                                receiver: m._id,
+                                type,
+                                status,
+                                groupId
+                            });
+                        }
+                    } return;
                 }
 
             } catch (err) {

@@ -36,14 +36,14 @@ function Group({ open, onClose, onSuccess }) {
         }
         const users = Array.from(members);
         users.unshift(currentUser?._id);
-        console.log(users);
+        // console.log(users);
         const data = {
             admin: currentUser?._id,
             members: users,
             groupName,
             defaultMessage: 'Group Created'
         }
-        console.log(data)
+        // console.log(data)
         const res = await api.postGroup(data);
         if (res.status === 200) {
             onClose()
@@ -77,7 +77,7 @@ function Group({ open, onClose, onSuccess }) {
         }
     }
 
-    console.log(memberList)
+    // console.log(memberList)
 
     return (
         <Dialog open={open} onClose={onClose}

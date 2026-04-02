@@ -63,9 +63,9 @@ function AddMember({ open, onClose, members, onSuccess }) {
                 groupId: userId,
                 members: Array.from(addMore)
             }
-            console.log(data);
+            // console.log(data);
             const res = await api.addMember(data);
-            console.log(res.data);
+            // console.log(res.data);
             onSuccess(res.data, memberList);
             handleClose();
         }
@@ -93,7 +93,7 @@ function AddMember({ open, onClose, members, onSuccess }) {
         onClose();
     }
 
-    console.log(members, allMutual, memberList)
+    // console.log(members, allMutual, memberList)
 
     return (
         <Dialog

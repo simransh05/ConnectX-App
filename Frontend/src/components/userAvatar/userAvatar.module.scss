@@ -3,6 +3,7 @@
 
 .image {
     border-radius: $circle;
+    // margin-left: 20px;
     // margin-top: $padding-md
 }
 
@@ -11,11 +12,13 @@
     background: orange;
     color: white;
     border-radius: $circle;
+    margin-left: 0;
 }
 
 .sidebarDiv {
     display: flex;
     align-items: center;
+    margin-left: 0;
 }
 
 .imageSidebar {

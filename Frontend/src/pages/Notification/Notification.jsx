@@ -41,6 +41,9 @@ function Notification() {
       case "message":
         return `${n.name} sent you a message`;
 
+      case "group-chat":
+        return `${n.name} sent message in the group`
+
       case "post":
         return `${n.name} has a new post`
       default:
@@ -76,7 +79,7 @@ function Notification() {
     }
   }
 
-  console.log(notification)
+  // console.log(notification)
   return (
     <>
       <Navbar />

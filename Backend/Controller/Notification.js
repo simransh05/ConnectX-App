@@ -17,6 +17,7 @@ module.exports.getNotification = async (req, res) => {
 
 module.exports.postNotification = async (sender, receiver, type, postId, groupId) => {
     try {
+        console.log('here post', sender, receiver, type, postId, groupId)
         let notify;
 
         if (type === 'post') {
@@ -29,17 +30,16 @@ module.exports.postNotification = async (sender, receiver, type, postId, groupId
 
         } else if (type === 'group') {
             const check = await Notification.findOne({
-                groupId,
+                receiver,
                 sender,
                 type: 'group'
             });
-
+            console.log('check notify', check)
             if (!check) {
                 notify = await Notification.create({
                     sender,
                     receiver,
-                    type: 'group',
-                    groupId
+                    type: 'group'
                 });
             } else {
                 notify = check;
@@ -51,7 +51,7 @@ module.exports.postNotification = async (sender, receiver, type, postId, groupId
                     sender,
                     receiver,
                     type,
-                    postId
+                    postId: postId || null
                 },
                 {
                     $set: { createdAt: Date.now() }

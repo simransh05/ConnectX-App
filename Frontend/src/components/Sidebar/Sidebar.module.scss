@@ -6,9 +6,7 @@
     width: 20%;
     border-right: $border-black;
     border-bottom: $border-black;
-    position: sticky;
-    top: 0;
-    height: 100vh;
+    height: fit-content;
     // background-color: lightgrey
 }
 
@@ -45,9 +43,10 @@
 .sidebar {
     @include flex-column;
     height: fit-content;
+    margin-top: $padding-md;
 
     &>input {
-        width: auto;
+        width: inherit;
     }
 
     &>div {
@@ -68,7 +67,7 @@
 
     input,
     input:focus {
-        width: auto;
+        width: inherit;
         border: $border-black;
         border-radius: $padding-md;
     }
@@ -84,11 +83,19 @@
     input {
         width: 60%;
     }
+
+    input:focus {
+        width: 60%;
+    }
 }
 
 .bioInfo {
     input {
         width: 75%
+    }
+
+    input:focus {
+        width: 75%;
     }
 }
 
@@ -105,6 +112,10 @@
 
 .nameInfo {
     input {
+        width: 80%;
+    }
+
+    input:focus {
         width: 80%;
     }
 }

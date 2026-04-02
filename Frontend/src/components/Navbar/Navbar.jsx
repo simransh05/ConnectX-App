@@ -49,18 +49,24 @@ function Navbar() {
   useEffect(() => {
     socket.on('receiver-notify', ({ sender, receiver, type, postId, status }) => {
       // number increase 
-      console.log(status)
+      const available = notify?.some(n => n.userId === sender && n.type === type)
+      console.log('receive', available)
+      // console.log(status)
       if (status === 'add') {
-        setNumber(prev => prev + 1)
+        if (!available) {
+          setNumber(prev => prev + 1)
+        }
       }
       else if (status === 'remove') {
-        setNumber(prev => prev - 1)
+        if (available) {
+          setNumber(prev => prev - 1)
+        }
       }
 
     })
     socket.on('message-send', ({ receiver, type }) => {
       const available = notify?.some(n => n.userId === receiver && n.type === type)
-      // console.log(available, receiver)
+      console.log('nav', available, receiver, notify , type)
       fetchNotification(currentUser?._id)
       if (available) {
         setNumber(prev => prev - 1);
@@ -81,7 +87,7 @@ function Navbar() {
     setSearchResult(null);
     navigate(`${ROUTES.PROFILE}/${id}`)
   }
-  console.log(number);
+  // console.log(number);
   return (
     <div className={style.navbar}>
       {/* image */}
