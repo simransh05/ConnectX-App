@@ -24,6 +24,7 @@ function Follow({ open, onClose, data, type }) {
             open={open}
             onClose={onClose}
             anchor="right"
+            className={style.followContainer}
             PaperProps={{
                 sx: {
                     width: "250px",
@@ -38,6 +39,9 @@ function Follow({ open, onClose, data, type }) {
                     <tr>
                         <th colSpan="3" className={style.headFollow}>{formatName(type)}</th>
                     </tr>
+                    <tr>
+                        <Divider/>
+                    </tr>
                 </thead>
 
                 <tbody>
@@ -45,7 +49,7 @@ function Follow({ open, onClose, data, type }) {
                         data.map((d, idx) => (
                             <tr key={idx} className={style.indFollow}>
                                 <td>
-                                    <UserAvatar user={d} size={60} />
+                                    <UserAvatar user={d} size={50} />
                                 </td>
 
                                 <td className={style.username}>{d?.name}</td>

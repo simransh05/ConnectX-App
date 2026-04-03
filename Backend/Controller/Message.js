@@ -157,6 +157,7 @@ module.exports.getIndividualMessage = async (req, res) => {
 
 module.exports.postMessage = async (sender, receiver, msg, type) => {
     try {
+        // console.log('message', sender, receiver, msg, type)
         const data = {
             sender,
             message: msg,

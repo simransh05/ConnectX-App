@@ -18,6 +18,7 @@ module.exports = (io) => {
             if (type === 'individual') {
                 await Notification.deleteSocketNotify(receiver, sender, "message")
             }
+            // console.log(res)
 
             if (res.status === 200) {
                 callback({ status: 200 })
@@ -63,7 +64,7 @@ module.exports = (io) => {
 
         socket.on('send-notify', async ({ sender, receiver, type, postId, status, groupId, groupName, members }, callback) => {
             try {
-                console.log('socket', sender, receiver, type, postId, status)
+                // console.log('socket', sender, receiver, type, postId, status)
                 if (type === "group") {
                     for (let m of receiver) {
                         if (m?._id?.toString() === sender) continue;
@@ -221,7 +222,7 @@ module.exports = (io) => {
                 }
 
                 if (type === 'group-chat') {
-                    console.log('here in group chat')
+                    // console.log('here in group chat')
                     for (let m of receiver) {
                         if (sender !== m._id) {
                             await Notification.postNotification(sender, m._id, type)

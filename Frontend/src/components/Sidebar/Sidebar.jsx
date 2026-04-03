@@ -119,7 +119,7 @@ function Sidebar({ isDrawer, open, onClose }) {
     }
 
     const res = await api.updateProfile(data);
-    // console.log(res.data)
+    console.log(res.data)
     if (res.status === 200) {
       setCurrentUser(res.data);
       setIsEditing(false);
@@ -136,7 +136,7 @@ function Sidebar({ isDrawer, open, onClose }) {
         isDrawer ?
 
           <Drawer className={style['sidebar-drawer']} PaperProps={{
-            sx: { width: '280px' }
+            sx: { width: '260px' }
           }} open={open} onClose={onClose}>
             {
               isEditing ?
@@ -147,6 +147,7 @@ function Sidebar({ isDrawer, open, onClose }) {
                         <Avatar
                           src={preview}
                           sx={{ width: 80, height: 80, margin: '0 auto' }}
+                          className={style.previewAvatar}
                         />
                         :
                         <UserAvatar
@@ -260,7 +261,8 @@ function Sidebar({ isDrawer, open, onClose }) {
                     {preview ?
                       <Avatar
                         src={preview}
-                        sx={{ width: 80, height: 80 }}
+                        sx={{ width: 80, height: 80, margin: '0 auto' }}
+                        className={style.previewAvatar}
                       />
                       :
                       <UserAvatar

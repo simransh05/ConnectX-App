@@ -152,7 +152,9 @@ function PostShow({ posts, loading, isProfile, isSavedPost }) {
             userId: currentUser?._id
         }
         if (saved.has(postId)) {
+            // console.log(saved.has(postId))
             const res = await api.deleteSave(postId);
+            // console.log(res.status)
             if (res.status === 200) {
                 setSaved(prev => {
                     const old = new Set(prev);
@@ -162,20 +164,21 @@ function PostShow({ posts, loading, isProfile, isSavedPost }) {
             }
             setCurrentUser(prev => ({
                 ...prev,
-                savedPost: (prev.savedPost || []).filter(s => s._id !== postId)
+                savedPost: (prev.savedPost || []).filter(s => s !== postId)
             }));
             if (isSavedPost) {
                 posts = posts.filter(p => p._id !== postId)
             }
             return;
-        }
-        const res = await api.savePost(data);
-        if (res.status === 200) {
-            setSaved(prev => new Set([...prev, postId]));
-            setCurrentUser(prev => ({
-                ...prev,
-                savedPost: [...(prev.savedPost || []), postId]
-            }));
+        } else {
+            const res = await api.savePost(data);
+            if (res.status === 200) {
+                setSaved(prev => new Set([...prev, postId]));
+                setCurrentUser(prev => ({
+                    ...prev,
+                    savedPost: [...(prev.savedPost || []), postId]
+                }));
+            }
         }
     }
 

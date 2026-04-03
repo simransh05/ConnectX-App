@@ -14,7 +14,6 @@
 
 .otherSidebar {
     @include flex-column;
-    display: inline;
     width: 20%;
     height: fit-content;
     border-right: $border-black;
@@ -22,6 +21,10 @@
 
     &>div {
         margin: $padding-md;
+    }
+
+    &>div:first-child {
+        margin: 0;
     }
 }
 
