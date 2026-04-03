@@ -8,6 +8,7 @@
 
 .notifyContainer {
     @include flex-center;
+    height: 80vh;
 }
 
 .containerNotify {
@@ -26,8 +27,8 @@
     }
 }
 
-.noNotifyContainer {
-    @include flex-center
+.noNotify {
+    margin: 0;
 }
 
 .profileView {
@@ -48,11 +49,6 @@
     padding: 20px;
     border-radius: $padding-md;
 
-}
-
-.noNotify {
-    @include flex-center;
-    margin-top: 30px;
 }
 
 @media (min-width : 300px) and (max-width : 768px) {

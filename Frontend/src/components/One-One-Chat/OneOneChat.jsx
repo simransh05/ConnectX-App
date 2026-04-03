@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import api from '../../utils/api'
 import { CurrentUserContext } from '../../Context/currentUserProvider';
-import UserAvatar from '../../components/userAvatar/UserAvatar';
+import UserAvatar from '../userAvatar/UserAvatar';
 import style from './OneOneChat.module.scss'
 import { SelectedUserContext } from '../../Context/SelectedUserProvider';
 import socket from '../../Socket/socket';
@@ -12,7 +12,7 @@ import Swal from 'sweetalert2';
 import { useNavigate, useParams } from 'react-router-dom';
 import { userStore } from '../../Zustand/AllUsers';
 import { MdGroups } from 'react-icons/md';
-import AddMember from '../../components/Modals/AddMember/AddMember';
+import AddMember from '../Modals/AddMember/AddMember';
 import ROUTES from '../../constant/Route/route';
 
 function OneOneChat({ leave }) {

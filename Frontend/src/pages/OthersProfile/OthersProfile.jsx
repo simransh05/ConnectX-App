@@ -55,7 +55,7 @@ function OthersProfile() {
             name: userInfo?.name,
             profilePic: userInfo?.profilePic
         }
-        // console.log(data)
+        console.log(data)
         setSelectedUser(data);
         // console.log(`${ROUTES.MESSAGES}/${userInfo._id}`)
         // set select user is this user and navigate to chat page

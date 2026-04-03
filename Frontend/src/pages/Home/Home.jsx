@@ -16,7 +16,7 @@ function Home() {
   useEffect(() => {
     if (!currentUser) return;
     fetchFollowInfo(currentUser?._id)
-  }, [currentUser])
+  }, [currentUser?._id])
 
   const { posts, loading } = useIndividualPosts(undefined, true)
 

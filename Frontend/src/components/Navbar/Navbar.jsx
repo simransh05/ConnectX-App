@@ -34,7 +34,7 @@ function Navbar() {
     }
     setNumber(notify?.length)
 
-  }, [loading, notify, currentUser])
+  }, [loading, currentUser])
 
   // console.log(allUsers)
 
@@ -47,10 +47,11 @@ function Navbar() {
   }
 
   useEffect(() => {
-    socket.on('receiver-notify', ({ sender, receiver, type, postId, status }) => {
+    socket.on('receiver-notify', ({ sender, receiver, type, postId, status, groupId }) => {
       // number increase 
-      const available = notify?.some(n => n.userId === sender && n.type === type)
-      console.log('receive', available)
+      console.log('sender', sender, 'receiver', receiver, 'type', type, 'postId', postId, 'status', status, 'groupId', groupId)
+      const available = notify?.some(n => (n.userId === sender || n.groupId === groupId) && n.type === type)
+      console.log('receive', available, notify)
       // console.log(status)
       if (status === 'add') {
         if (!available) {
@@ -66,7 +67,7 @@ function Navbar() {
     })
     socket.on('message-send', ({ receiver, type }) => {
       const available = notify?.some(n => n.userId === receiver && n.type === type)
-      console.log('nav', available, receiver, notify , type)
+      console.log('nav', available, receiver, notify, type)
       fetchNotification(currentUser?._id)
       if (available) {
         setNumber(prev => prev - 1);
@@ -128,27 +129,27 @@ function Navbar() {
       {/* routes */}
 
       <Link to={ROUTES.HOME} className={style.linkInfo}>
-        <IoIosHome className={currentUser ? style.navIcon : style.nonLoginIcon} />
+        <IoIosHome className={currentUser ? style.navIcon : style.nonLoginIcon} style={{ color: '#4F46E5' }} />
         <span className={currentUser ? style.textMenu : style.nonLoginText}>Home</span>
       </Link>
       {currentUser &&
         <>
           <div className={style.notifyLink}>
             <Link to={ROUTES.NOTIFICATION} className={style.linkInfo}>
-              <IoIosNotifications className={style.navIcon} />
+              <IoIosNotifications className={style.navIcon} style={{ color: '#EF4444' }} />
               <span className={style.textMenu}>Notification</span>
             </Link>
             {number > 0 && <div className={style.numNotify}>{number}</div>}
           </div>
 
           <Link to={ROUTES.MESSAGES} className={style.linkInfo} onClick={() => setSelectedUser(null)}>
-            <IoChatbubble className={style.navIcon} />
+            <IoChatbubble className={style.navIcon} style={{ color: '#10B981' }} />
             <span className={style.textMenu}>Messages</span>
           </Link>
         </>
       }
       <Link to={ROUTES.ABOUT} className={style.linkInfo}>
-        <FaInfoCircle className={currentUser ? style.navIcon : style.nonLoginIcon} />
+        <FaInfoCircle className={currentUser ? style.navIcon : style.nonLoginIcon} style={{color :'#3B82F6'}}/>
         <span className={currentUser ? style.textMenu : style.nonLoginText}>About</span>
       </Link>
       {currentUser && <Link to={ROUTES.PROFILE} className={style.linkInfo}>

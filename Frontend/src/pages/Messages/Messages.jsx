@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import useUserAvailable from '../../utils/helper/userAvailable'
 import ROUTES from '../../constant/Route/route'
 import Navbar from '../../components/Navbar/Navbar'
-import OneOneChat from '../One-One-Chat/OneOneChat'
+import OneOneChat from '../../components/One-One-Chat/OneOneChat'
 import api from '../../utils/api'
 import { CurrentUserContext } from '../../Context/currentUserProvider'
 import style from './Messages.module.scss'
@@ -47,19 +47,24 @@ function Messages() {
   useEffect(() => {
     if (userId) {
       const select = myChats?.find(c => c._id === userId);
-      // console.log(select)
       if (select) {
         setSelectedUser(select)
       } else {
-        const user = allUsers?.find(u => u._id === userId)
+        const user = allUsers?.find(u => u._id === userId);
+        const format = {
+          _id: user?._id,
+          type: 'individual',
+          name: user?.name,
+          profilePic: user?.profilePic
+        }
         if (user) {
-          setSelectedUser(user)
+          setSelectedUser(format)
         }
       }
     }
-  }, [userId, myChats])
+  }, [userId, myChats, allUsers])
 
-  // console.log(userId);
+  // console.log(selectedUser);
 
   const handleClick = (c) => {
     if (search.trim()) {
@@ -132,7 +137,7 @@ function Messages() {
     //   updateChatList(sender, type, groupName)
     // })
     socket.on('receiver-notify', ({ sender, receiver, groupId, type, groupName, members }) => {
-      if (type === 'group-chat') {
+      if (type === 'group-chat' || type === 'group') {
         updateChatList(groupId, type, groupName, members)
       } else {
         updateChatList(sender, type, groupName, members)
@@ -152,7 +157,9 @@ function Messages() {
     const { value } = e.target;
     setSearch(value);
     const lower = value.toLowerCase();
-    const result = myChats.filter(c => c.name.toLowerCase().includes(lower) || c.groupName.toLowerCase().includes(lower));
+    // console.log(myChats)
+    const result = myChats?.filter(c => (c?.name?.toLowerCase().includes(lower)) || (c?.groupName?.toLowerCase().includes(lower)));
+    // console.log(result)
     setSearchResult(result);
     // my chat filter
   }
@@ -212,7 +219,7 @@ function Messages() {
                       key={s._id}
                       onClick={() => handleClick(s)}
                     >
-                      <div className={style.userName}>{s.name}</div>
+                      <div className={style.userName}>{s.type === 'group' ? s.groupName : s.name}</div>
                     </div>
                   ))
                 ) : (

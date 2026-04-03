@@ -16,6 +16,10 @@ const notificationSchema = new mongoose.Schema({
         ref: "Post",
         default: null
     },
+    groupId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Group"
+    },
     type: {
         type: String,
         enum: ["like", "comment", "follow", "message", "post", "group", "group-chat"],
