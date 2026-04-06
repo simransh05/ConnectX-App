@@ -21,12 +21,15 @@ module.exports.postNotification = async (sender, receiver, type, postId, groupId
         const notify = await Notification.findOneAndUpdate(
             {
                 type,
-                receiver
+                receiver,
+                sender,
+                groupId: groupId || null,
+                postId: postId || null
             },
             {
-                sender,
-                groupId,
-                postId
+                $set: {
+                    createdAt: Date.now()
+                }
             },
             {
                 upsert: true, returnDocument: 'after'

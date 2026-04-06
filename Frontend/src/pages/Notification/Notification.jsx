@@ -12,6 +12,8 @@ import UserAvatar from '../../components/userAvatar/UserAvatar'
 import socket from '../../Socket/socket'
 import { NotificationStore } from '../../Zustand/Notification'
 import { useNavigate } from 'react-router-dom'
+import formatDate from '../../utils/helper/formatDate'
+
 
 function Notification() {
   useUserAvailable(`${ROUTES.NOTIFICATION}`);
@@ -101,7 +103,7 @@ function Notification() {
                       <button className={style.profileView} onClick={() => navigate(`${ROUTES.PROFILE}/${n.userId}`)}>View Profile</button>
                     </td>
                   }
-                  <td>{new Date(n.createdAt).toDateString()} {new Date(n?.createdAt).toTimeString()}</td>
+                  <td>{formatDate(n?.createdAt)}</td>
                 </tr>
               ))}
             </tbody>

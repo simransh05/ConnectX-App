@@ -1,0 +1,192 @@
+@use '../../Style/mixins' as *;
+@use '../../Style/variables' as *;
+
+.previewAvatar {
+    margin: auto 0;
+}
+
+.edit,
+.passwordChange {
+    @include flex-center;
+    gap: 5px;
+    padding: $padding-md;
+    margin: $padding-md;
+    cursor: pointer;
+    border-radius: 10px;
+    border: none;
+    background-color: blueviolet;
+    color: white;
+}
+
+.logout {
+    padding: $padding-md;
+    margin: $padding-md;
+    cursor: pointer;
+    border-radius: 10px;
+    border: none;
+    background-color: red;
+    color: white;
+    @include flex-center;
+    gap: 5px;
+
+    & :hover {
+        background-color: rgb(179, 4, 4);
+    }
+
+}
+
+.sidebar {
+    @include flex-column;
+    height: fit-content;
+    // margin-top: $padding-md;
+
+    &>input {
+        width: inherit;
+    }
+
+    &>div {
+        margin: $padding-md;
+    }
+
+    // align-items: center;
+}
+
+.editSidebar {
+    @include flex-column;
+    height: fit-content;
+
+    &>div {
+        display: flex;
+        margin: $padding-md;
+    }
+
+    input,
+    input:focus {
+        width: inherit;
+        border: $border-black;
+        border-radius: $padding-md;
+    }
+
+    input {
+        width: inherit;
+        padding: $padding-md;
+        padding-right: 0;
+    }
+}
+
+.locationInfo {
+    input {
+        width: 60%;
+    }
+
+    input:focus {
+        width: 60%;
+    }
+}
+
+.bioInfo {
+    input {
+        width: 75%
+    }
+
+    input:focus {
+        width: 75%;
+    }
+}
+
+.indSocial {
+    input {
+        width: 85%;
+        margin-bottom: 5px;
+    }
+
+    input:focus {
+        width: 85%;
+    }
+}
+
+.nameInfo {
+    input {
+        width: 80%;
+    }
+
+    input:focus {
+        width: 80%;
+    }
+}
+
+.savedPostBtn {
+    @include flex-center;
+    gap: 5px;
+    border: none;
+    background-color: blueviolet;
+    color: white;
+    border-radius: $padding-md;
+    cursor: pointer;
+    padding: $padding-md;
+    font-size: 15px;
+}
+
+.addSocial {
+    background-color: blue;
+    padding: $padding-md;
+    width: 50%;
+    color: white;
+    border-radius: $padding-md;
+    border: none;
+    margin: 0 auto;
+}
+
+.removeSocial {
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: $padding-md;
+    padding: $padding-md;
+}
+
+button {
+    cursor: pointer;
+}
+
+.btnUpdate {
+    @include flex-space;
+
+    .cancelProfile {
+        background-color: white;
+        // color: white;
+        border: $border-black;
+        border-radius: $padding-md;
+        padding: $padding-md;
+        width: 40%;
+    }
+
+    .updateProfile {
+        background-color: blueviolet;
+        color: white;
+        border: none;
+        width: 40%;
+        border-radius: $padding-md;
+        padding: $padding-md;
+    }
+}
+
+label {
+    padding: $padding-md;
+}
+
+.profilePicInfo {
+    @include flex-column;
+    justify-content: center;
+}
+
+.uploadBtn {
+    border: $border-black;
+    background-color: blueviolet;
+    color: white;
+    text-align: center;
+    padding: $padding-md;
+    border-radius: 10px;
+    margin: $padding-md;
+    cursor: pointer;
+}

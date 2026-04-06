@@ -17,7 +17,8 @@
 .head-profile {
     display: flex;
     justify-content: space-around;
-    border-bottom: $border-black;
+    border-bottom: 1px solid #e5e7eb;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     // height: 40px;
     // margin: $padding-md 0;
     padding: $padding-md 0;
