@@ -50,6 +50,7 @@ const useIndividualPosts = (userId, isHome) => {
     useEffect(() => {
         setPosts([]);
         setSkip(0);
+        setLoading(true);
         setHasMore(true);
         fetchPosts()
     }, [userId]);
@@ -65,7 +66,7 @@ const useIndividualPosts = (userId, isHome) => {
     useEffect(() => {
 
         const handleScroll = () => {
-            console.log(window.innerHeight, document.documentElement.scrollTop, document.documentElement.offsetHeight+15)
+            console.log(window.innerHeight, document.documentElement.scrollTop, document.documentElement.offsetHeight + 15)
             if (
                 window.innerHeight +
                 document.documentElement.scrollTop

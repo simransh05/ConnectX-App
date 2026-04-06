@@ -17,6 +17,7 @@ import Swal from 'sweetalert2';
 import { allPostStore } from '../../Zustand/AllPosts';
 import ROUTES from '../../constant/Route/route';
 import { CircularProgress } from '@mui/material';
+import formatDate from '../../utils/helper/formatDate';
 
 function PostShow({ posts, loading, isProfile, isSavedPost }) {
     const [commentDrawer, setCommentDawer] = useState(false);
@@ -273,7 +274,8 @@ function PostShow({ posts, loading, isProfile, isSavedPost }) {
                                 </div>
                                 <div className={style.postCaption}>{p?.caption}</div>
                                 <div className={style.postTypeInfo}>
-                                    <div className={style.timeCreated}>{new Date(p?.createdAt).toLocaleString()}</div>
+                                    {console.log(formatDate(p?.createdAt), p)}
+                                    <div className={style.timeCreated}>{formatDate(p?.createdAt)}</div>
                                     {isProfile && <div className={style.postType}>{p.postType}</div>}
                                 </div>
 

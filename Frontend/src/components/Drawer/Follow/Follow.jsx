@@ -40,7 +40,9 @@ function Follow({ open, onClose, data, type }) {
                         <th colSpan="3" className={style.headFollow}>{formatName(type)}</th>
                     </tr>
                     <tr>
-                        <Divider/>
+                        <td>
+                            <Divider />
+                        </td>
                     </tr>
                 </thead>
 

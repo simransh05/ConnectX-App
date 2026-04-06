@@ -13,11 +13,10 @@ module.exports = (io) => {
         socket.on('send', async ({ sender, receiver, msg, type }, callback) => {
             // console.log('send', sender, receiver, msg)
             // console.log('receive', receiverId);
-            // console.log('sending', res)
+            // console.log('sending', type)
             const res = await Message.postMessage(sender, receiver, msg, type);
-            if (type === 'individual') {
-                await Notification.deleteSocketNotify(receiver, sender, "message")
-            }
+            await Notification.deleteSocketNotify(receiver, sender, type === 'individual' ? "message" : type)
+
             // console.log(res)
 
             if (res.status === 200) {
