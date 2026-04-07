@@ -10,10 +10,12 @@
 
 .postUserInfo {
     display: flex;
-    gap: 4px;
+    // margin-bottom: $padding-md;
 
     .postUserName {
         margin: auto 0;
+        font-weight: 600;
+        margin-left: $padding-md;
     }
 }
 
@@ -22,6 +24,7 @@
     width: 100%;
     height: auto;
     border-radius: 10px;
+    margin: $padding-md 0;
     object-fit: contain;
 }
 
@@ -59,8 +62,19 @@
 
 .postCaption {
     overflow-wrap: break-word;
-    line-height: 1.5;
+    line-height: 1.2;
     margin: 5px 0;
+}
+
+.postHead {
+    display: flex;
+    justify-content: space-between;
+}
+
+.menuProfile {
+    margin: auto 0;
+    cursor: pointer;
+    box-shadow: 12px 10px 10px rgba(0, 0, 0, 0.05);
 }
 
 .isProfile {
@@ -93,6 +107,7 @@
 .postInfo {
     display: flex;
     gap: 5px;
+    margin-top: 5px;
 }
 
 .noPost {
@@ -109,8 +124,8 @@
 .postInd {
     height: fit-content;
     width: 400px;
-    border: $border-black;
-    // margin: $padding-md;
+    border: 1px solid #dedfe0;
+    box-shadow: 12px 10px 10px rgba(0, 0, 0, 0.05);
     margin: $padding-md;
     border-radius: $padding-md;
     padding: $padding-md;
@@ -122,16 +137,16 @@
 }
 
 .postType {
-    border: $border-black;
+    border: none;
     border-radius: $padding-md;
     color: white;
-    background-color: brown;
-    padding: $padding-md;
+    background-color: rgb(241, 57, 57);
+    padding: 7px;
 }
 
 .timeCreated {
     color: gray;
-    padding-bottom: $padding-md;
+    margin: auto 0;
 }
 
 @media (min-width : 300px) and (max-width : 768px) {

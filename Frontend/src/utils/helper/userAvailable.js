@@ -23,7 +23,6 @@ const useUserAvailable = (page) => {
                 showCancelButton: false,
                 showConfirmButton: false,
                 timer: 5000,
-                width: '50%'
             })
             navigate(`${ROUTES.LOGIN}`);
             return;

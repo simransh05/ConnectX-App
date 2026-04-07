@@ -10,7 +10,7 @@
     @include flex-center;
     gap: 5px;
     padding: $padding-md;
-    margin: $padding-md;
+    margin: $padding-md auto;
     cursor: pointer;
     border-radius: 10px;
     border: none;
@@ -20,7 +20,7 @@
 
 .logout {
     padding: $padding-md;
-    margin: $padding-md;
+    margin: $padding-md 0;
     cursor: pointer;
     border-radius: 10px;
     border: none;

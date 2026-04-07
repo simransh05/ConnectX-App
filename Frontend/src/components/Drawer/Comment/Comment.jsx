@@ -84,7 +84,7 @@ function Comment({ open, onClose, onSuccess, post }) {
                                 size={50}
                             />
                             <div className={style.commentName}>{c?.userId?.name}</div>
-                            <button onClick={() => handleDelete(c._id)} className={style.commentDelete}>Delete Comment</button>
+                            {currentUser._id === c.userId._id && <button onClick={() => handleDelete(c._id)} className={style.commentDelete}>Delete Comment</button>}
                         </div>
                         <div className={style.commentMessage}>
                             <p>{c?.message}</p>
