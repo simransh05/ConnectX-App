@@ -6,6 +6,7 @@
     height: fit-content;
     position: sticky;
     top: 0;
+    overflow-y: none;
 }
 
 .mobileMenu {
@@ -64,9 +65,13 @@
     padding: $padding-md;
 }
 
+.postInfo {
+    overflow-y: scroll;
+}
+
 .unFollowBtn {
     border: none;
-    background-color: lightgreen;
+    background-color: #ff4d4f;
     border-radius: $padding-md;
     color: white;
     padding: $padding-md;

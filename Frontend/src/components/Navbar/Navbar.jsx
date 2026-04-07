@@ -32,11 +32,13 @@ function Navbar() {
     if (!allUsers) {
       fetchAllUsers();
     }
-    setNumber(notify?.length)
-
   }, [loading, currentUser])
 
-  // console.log(allUsers)
+  useEffect(() => {
+    setNumber(notify?.length)
+  }, [notify])
+
+  console.log(notify)
 
   const handleChange = (e) => {
     const value = e.target.value;
@@ -149,7 +151,7 @@ function Navbar() {
         </>
       }
       <Link to={ROUTES.ABOUT} className={style.linkInfo}>
-        <FaInfoCircle className={currentUser ? style.navIcon : style.nonLoginIcon} style={{color :'#3B82F6'}}/>
+        <FaInfoCircle className={currentUser ? style.navIcon : style.nonLoginIcon} style={{ color: '#3B82F6' }} />
         <span className={currentUser ? style.textMenu : style.nonLoginText}>About</span>
       </Link>
       {currentUser && <Link to={ROUTES.PROFILE} className={style.linkInfo}>

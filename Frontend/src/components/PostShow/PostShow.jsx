@@ -16,8 +16,9 @@ import { CurrentUserContext } from '../../Context/currentUserProvider';
 import Swal from 'sweetalert2';
 import { allPostStore } from '../../Zustand/AllPosts';
 import ROUTES from '../../constant/Route/route';
-import { CircularProgress } from '@mui/material';
+import { CircularProgress, Menu, MenuItem } from '@mui/material';
 import formatDate from '../../utils/helper/formatDate';
+import { CiMenuKebab } from "react-icons/ci";
 
 function PostShow({ posts, loading, isProfile, isSavedPost }) {
     const [commentDrawer, setCommentDawer] = useState(false);
@@ -27,6 +28,7 @@ function PostShow({ posts, loading, isProfile, isSavedPost }) {
     const [postid, setpostId] = useState(null);
     const [post, setPost] = useState(null);
     const [liked, setLiked] = useState(new Set());
+    const [anchorEl, setAnchorEl] = useState(null);
     const [saved, setSaved] = useState(new Set());
     const [videoPlay, setVideoPlay] = useState(null);
     // console.log(currentUser)
@@ -43,7 +45,7 @@ function PostShow({ posts, loading, isProfile, isSavedPost }) {
             posts?.filter(p => currentUser?.savedPost?.includes(p?._id))
                 .map(p => p._id)
         )
-        console.log(savedSet, likedSet, currentUser)
+        // console.log(savedSet, likedSet, currentUser)
         const arr = [];
 
         posts.forEach(p => {
@@ -242,7 +244,19 @@ function PostShow({ posts, loading, isProfile, isSavedPost }) {
         navigate(`${ROUTES.PROFILE}/${userId}`)
     }
 
-    // console.log(posts)
+    const handleMenuClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
+
+    useEffect(() => {
+        setAnchorEl(null);
+    }, []);
+
+    console.log(posts)
     return (
         <div className={style.postContainer}>
             {post?.length > 0 ? (
@@ -253,6 +267,23 @@ function PostShow({ posts, loading, isProfile, isSavedPost }) {
                         // console.log(vid, p._id)
                         return (
                             <div key={p._id} className={style.postInd}>
+                                <div className={style.postHead}>
+                                    <div className={style.postUserInfo} onClick={() => handleUser(p.userId._id)}>
+                                        <UserAvatar
+                                            user={p.userId}
+                                            size={40}
+                                        />
+                                        <div className={style.postUserName}>{p?.userId?.name}</div>
+                                    </div>
+                                    {isProfile && <CiMenuKebab className={style.menuProfile} onClick={handleMenuClick} />}
+                                    <Menu anchorEl={anchorEl}
+                                        open={Boolean(anchorEl)}
+                                        onClose={handleMenuClose} className={style.deleteBtn}>
+                                        <MenuItem onClick={() => handleDelete(p._id)}>Delete Post</MenuItem>
+                                    </Menu>
+                                </div>
+
+
                                 {p?.fileType?.includes("image") && (
                                     <img src={p?.photoVideo} alt="Image" className={style.imagePost} />
                                 )}
@@ -265,20 +296,6 @@ function PostShow({ posts, loading, isProfile, isSavedPost }) {
                                         :
                                         <video src={p?.photoVideo} alt="Video" className={style.imagePost} controls />
                                 )}
-                                <div className={style.postUserInfo} onClick={() => handleUser(p.userId._id)}>
-                                    <UserAvatar
-                                        user={p.userId}
-                                        size={30}
-                                    />
-                                    <div className={style.postUserName}>{p?.userId?.name}</div>
-                                </div>
-                                <div className={style.postCaption}>{p?.caption}</div>
-                                <div className={style.postTypeInfo}>
-                                    {console.log(formatDate(p?.createdAt), p)}
-                                    <div className={style.timeCreated}>{formatDate(p?.createdAt)}</div>
-                                    {isProfile && <div className={style.postType}>{p.postType}</div>}
-                                </div>
-
                                 <div className={style.postInfo}>
                                     {liked.has(p._id) ?
                                         <AiFillLike className={style.likedImage} onClick={() => handleLikeClick(p.userId?._id, p._id)} />
@@ -290,10 +307,11 @@ function PostShow({ posts, loading, isProfile, isSavedPost }) {
                                     <span>{p.commentCount > 0 && p.commentCount}</span>
                                     {saved?.has(p._id) ? <FaBookmark className={style.alreadySave} onClick={() => handleSave(p._id)} /> : <CiBookmark className={style.addSave} onClick={() => handleSave(p._id)} />}
                                 </div>
-                                {isProfile &&
-                                    <div className={style.deletePost}>
-                                        <button onClick={() => handleDelete(p._id)} className={style.isProfile}>Delete Post</button>
-                                    </div>}
+                                <div className={style.postCaption}>{p?.caption}</div>
+                                <div className={style.postTypeInfo}>
+                                    <div className={style.timeCreated}>{formatDate(p?.createdAt)}</div>
+                                    {isProfile && <div className={style.postType}>{p.postType}</div>}
+                                </div>
                             </div>
                         )
                     }
