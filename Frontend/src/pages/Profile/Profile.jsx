@@ -47,7 +47,7 @@ function Profile() {
 
 
   return (
-    <>
+    <div className={style.profileScroll}>
       <Navbar />
       <div className={style['profile-container']}>
         <CiMenuBurger
@@ -84,7 +84,7 @@ function Profile() {
 
         </div>
       </div>
-    </>
+    </div>
   )
 }
 

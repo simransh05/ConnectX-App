@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import { allPostStore } from '../../Zustand/AllPosts';
 import { followStore } from '../../Zustand/Follow';
 import { useContext } from 'react';
+import style from './Home.module.scss'
 import { CurrentUserContext } from '../../Context/currentUserProvider';
 import useIndividualPosts from '../../utils/helper/IndividualPosts';
 
@@ -22,11 +23,12 @@ function Home() {
 
   // console.log(allPosts);
   return (
-    <div>
+    <div className={style.homeContainer}>
       <Navbar />
       <PostShow
         loading={loading}
         posts={posts}
+        isHome={true}
       />
     </div>
   )

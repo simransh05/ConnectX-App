@@ -20,7 +20,7 @@ import { CircularProgress, Menu, MenuItem } from '@mui/material';
 import formatDate from '../../utils/helper/formatDate';
 import { CiMenuKebab } from "react-icons/ci";
 
-function PostShow({ posts, loading, isProfile, isSavedPost }) {
+function PostShow({ posts, loading, isProfile, isSavedPost ,isHome }) {
     const [commentDrawer, setCommentDawer] = useState(false);
     const { fetchAllPosts } = allPostStore()
     const navigate = useNavigate()
@@ -257,8 +257,13 @@ function PostShow({ posts, loading, isProfile, isSavedPost }) {
     }, []);
 
     console.log(posts)
+    if (posts === null) return (
+        <div className={style.progressContainer}>
+            <CircularProgress className={style.progressCheck} />
+        </div>
+    )
     return (
-        <div className={style.postContainer}>
+        <div className={isProfile ? style.postContainerProfile : isHome? style.postContainerHome : style.postContainer}>
             {post?.length > 0 ? (
                 <>
                     {post?.map((p, idx) => {

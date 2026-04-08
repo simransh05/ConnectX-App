@@ -38,7 +38,7 @@ function Navbar() {
     setNumber(notify?.length)
   }, [notify])
 
-  console.log(notify)
+  // console.log(notify)
 
   const handleChange = (e) => {
     const value = e.target.value;
@@ -51,9 +51,9 @@ function Navbar() {
   useEffect(() => {
     socket.on('receiver-notify', ({ sender, receiver, type, postId, status, groupId }) => {
       // number increase 
-      console.log('sender', sender, 'receiver', receiver, 'type', type, 'postId', postId, 'status', status, 'groupId', groupId)
+      // console.log('sender', sender, 'receiver', receiver, 'type', type, 'postId', postId, 'status', status, 'groupId', groupId)
       const available = notify?.some(n => (n.userId === sender || n.groupId === groupId) && n.type === type)
-      console.log('receive', available, notify)
+      // console.log('receive', available, notify)
       // console.log(status)
       if (status === 'add') {
         if (!available) {
@@ -69,7 +69,7 @@ function Navbar() {
     })
     socket.on('message-send', ({ receiver, type }) => {
       const available = notify?.some(n => n.userId === receiver && n.type === type)
-      console.log('nav', available, receiver, notify, type)
+      // console.log('nav', available, receiver, notify, type)
       fetchNotification(currentUser?._id)
       if (available) {
         setNumber(prev => prev - 1);
@@ -100,6 +100,7 @@ function Navbar() {
         <input
           type="text"
           value={search}
+          name='search'
           className={style.inputBox}
           placeholder="Search User..."
           onChange={handleChange}

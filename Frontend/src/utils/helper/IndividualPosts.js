@@ -3,13 +3,12 @@ import api from "../api";
 
 const useIndividualPosts = (userId, isHome) => {
 
-    const [posts, setPosts] = useState([]);
+    const [posts, setPosts] = useState(null);
     const [skip, setSkip] = useState(0);
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
     const limit = 5;
 
-    console.log(hasMore)
 
     // fetch posts
     const fetchPosts = async () => {
@@ -24,12 +23,16 @@ const useIndividualPosts = (userId, isHome) => {
                 if (!userId) return;
                 res = await api.getIndividualPosts(userId, skip);
             }
-            // console.log(res.data, skip)
+            console.log(res.data)
             if (res.data.length < limit) {
                 setHasMore(false)
             }
             setPosts(prev => {
-                const all = [...prev, ...res.data]
+                let all;
+                if (!prev) all = res.data
+                else {
+                    all = [...prev, ...res.data]
+                }
 
                 const unique = all.filter(
                     (post, index, self) =>
@@ -48,7 +51,7 @@ const useIndividualPosts = (userId, isHome) => {
 
     // first load
     useEffect(() => {
-        setPosts([]);
+        setPosts(null);
         setSkip(0);
         setLoading(true);
         setHasMore(true);
