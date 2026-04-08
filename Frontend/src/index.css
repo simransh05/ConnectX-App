@@ -5,3 +5,7 @@
 button:disabled {
     cursor: not-allowed;
 }
+
+html {
+    height: 100%;
+}

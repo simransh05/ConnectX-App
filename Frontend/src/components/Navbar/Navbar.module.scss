@@ -91,7 +91,16 @@
 
 @media (min-width : 300px) and (max-width : 768px) {
   .searchUser {
-    width: 30%;
+    width: 25%;
+  }
+
+  .inputBox {
+    width: 90%;
+
+    .inputBox::placeholder {
+      content: "";
+      content: 'Search';
+    }
   }
 
   .nonLoginText {

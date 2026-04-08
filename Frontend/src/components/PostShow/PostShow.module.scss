@@ -6,6 +6,29 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    flex: 1;
+    overflow-y: auto;
+    // max-height: calc(100vh - 80px);
+    height: 75vh;
+}
+
+.postContainerProfile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    overflow-y: auto;
+    max-height: calc(100vh - 80px);
+}
+
+.postContainerHome {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    overflow-y: auto;
+    // max-height: calc(100vh - 80px);
+    height: 84vh;
 }
 
 .postUserInfo {
@@ -17,6 +40,14 @@
         font-weight: 600;
         margin-left: $padding-md;
     }
+}
+
+.progressContainer {
+    @include flex-center;
+}
+
+.progressCheck {
+    margin-top: 20px;
 }
 
 
