@@ -31,12 +31,14 @@ const useIndividualPosts = (userId, isHome) => {
             }
             setPosts(prev => {
                 let all;
-                if (!prev) all = res.data
+                if (!prev) {
+                    all = res.data
+                }
                 else {
                     all = [...prev, ...res.data]
                 }
 
-                const unique = all.filter(
+                const unique = all?.filter(
                     (post, index, self) =>
                         index === self.findIndex(p => p._id === post._id)
                 )
