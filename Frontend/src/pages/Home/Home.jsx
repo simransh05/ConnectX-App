@@ -1,4 +1,3 @@
-import React from 'react'
 import Navbar from '../../components/Navbar/Navbar'
 import useUserAvailable from '../../utils/helper/userAvailable'
 import ROUTES from '../../constant/Route/route';

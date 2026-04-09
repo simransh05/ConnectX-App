@@ -6,6 +6,11 @@
     align-items: stretch;
 }
 
+.othersContainer {
+    display: flex;
+    flex-direction: column;
+}
+
 .mobileMenu {
     display: none;
 }

@@ -2,5 +2,6 @@
 @use '../../Style/mixins' as *;
 
 .homeContainer {
-    height: 94vh;
+    height: 100vh;
+    // overflow: hidden;
 }

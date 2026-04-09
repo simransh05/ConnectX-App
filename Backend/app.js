@@ -6,6 +6,7 @@ const session = require('express-session');
 const mongoose = require('mongoose');
 const app = express();
 const cookie = require('cookie-parser')
+const PORT = process.env.PORT || 4000;
 
 app.use(cors({
   origin: process.env.BASE_URL,
@@ -41,7 +42,7 @@ require("./socket/socket")(io);
 
 mongoose.connect(process.env.MONGO_URL)
   .then(() => {
-    server.listen(4000, () => {
-      console.log(`Server started on port 4000`);
+    server.listen(PORT, () => {
+      console.log(`Server started on port ${PORT}`);
     });
   })

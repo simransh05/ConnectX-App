@@ -46,8 +46,9 @@ module.exports.postLogin = async (req, res) => {
 
         res.cookie('token', token, {
             httpOnly: true,
-            secure: false,
-            sameSite: 'lax'
+            secure: true,
+            sameSite: 'None',
+            maxAge: 24 * 60 * 60 * 1000
         });
         return res.status(200).json(formatUser(user))
     } catch (err) {
@@ -144,8 +145,8 @@ module.exports.getLogout = async (req, res) => {
     try {
         res.clearCookie("token", {
             httpOnly: true,
-            sameSite: "lax",
-            secure: false,
+            sameSite: "None",
+            secure: true,
         });
         return res.status(200).json({ message: 'successfully logout' })
     }
