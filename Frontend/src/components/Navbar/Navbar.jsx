@@ -94,7 +94,7 @@ function Navbar() {
   return (
     <div className={style.navbar}>
       {/* image */}
-      <img src="/ConnectX.png" alt="profile-image" height={80} width={80} />
+      <img src="/Navbar-Image.png" alt="profile-image" height={60} width={120} />
       {/* search bar (for user) */}
       {currentUser && <div className={style.searchUser}>
         <input

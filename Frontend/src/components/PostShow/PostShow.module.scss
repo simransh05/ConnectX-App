@@ -8,8 +8,7 @@
     align-items: center;
     flex: 1;
     overflow-y: auto;
-    // max-height: calc(100vh - 80px);
-    height: 75vh;
+    max-height: calc(100vh - 80px);
 }
 
 .postContainerProfile {
@@ -26,9 +25,8 @@
     flex-direction: column;
     align-items: center;
     flex: 1;
-    overflow-y: auto;
-    // max-height: calc(100vh - 80px);
-    height: 84vh;
+    // overflow-y: auto;
+    // height: calc(98vh - 60px);
 }
 
 .postUserInfo {

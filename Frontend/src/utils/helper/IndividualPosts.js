@@ -9,6 +9,7 @@ const useIndividualPosts = (userId, isHome) => {
     const [hasMore, setHasMore] = useState(true);
     const limit = 5;
 
+    // console.log(loading)
 
     // fetch posts
     const fetchPosts = async () => {
@@ -23,8 +24,9 @@ const useIndividualPosts = (userId, isHome) => {
                 if (!userId) return;
                 res = await api.getIndividualPosts(userId, skip);
             }
-            console.log(res.data)
+            // console.log(res.data)
             if (res.data.length < limit) {
+                // console.log('here')
                 setHasMore(false)
             }
             setPosts(prev => {
@@ -55,7 +57,7 @@ const useIndividualPosts = (userId, isHome) => {
         setSkip(0);
         setLoading(true);
         setHasMore(true);
-        fetchPosts()
+        fetchPosts();
     }, [userId]);
 
 
@@ -64,12 +66,10 @@ const useIndividualPosts = (userId, isHome) => {
         fetchPosts();
     }, [skip, userId, isHome, setHasMore]);
 
-
     // scroll listener
     useEffect(() => {
 
         const handleScroll = () => {
-            console.log(window.innerHeight, document.documentElement.scrollTop, document.documentElement.offsetHeight + 15)
             if (
                 window.innerHeight +
                 document.documentElement.scrollTop
@@ -78,7 +78,6 @@ const useIndividualPosts = (userId, isHome) => {
                 // console.log('here')
                 setSkip(prev => prev + limit);
             }
-
         };
 
         window.addEventListener("scroll", handleScroll);
